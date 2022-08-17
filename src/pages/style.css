@@ -1,0 +1,19 @@
+
+.nk-tb-col ul  {
+    display: flex;
+}
+
+
+.nk-tb-col ul li  {
+    margin-right: 9px;
+}
+
+.nk-tb-list{
+font-size: 18px;	
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #d32f2f;
+    border-color: #d32f2f;
+}

@@ -1,0 +1,121 @@
+.nk-ecwg6 .title {
+    font-size: 20px;
+}
+.nk-ecwg6-ck p {
+color: #9ca3af;
+    margin: 0 6px;
+    padding: 3px;
+    border-radius: 3px;	
+	
+}
+.nk-ecwg .data-group{
+
+    border-bottom: 1px solid #efefef;
+	
+}
+	
+.nk-ecwg6-ck{
+	height: unset;
+    font-weight: bold;
+    font-size: 15px;
+    margin-right: 20px;
+    margin-left: 0;
+	
+	}
+	
+.nk-ecwg6-ck span{ 
+
+    color: #d32f2f;
+    font-weight: unset;
+    margin-left: 4px;
+}	
+	
+.nk-ecwg .info{
+
+    padding-top: 10px;
+    height: 0;
+}
+	
+.nk-ecwg .info span{
+
+	background: #d32f2f;
+    color: #fff;
+    margin: 0 6px;
+    padding: 3px;
+    border-radius: 3px;
+}
+
+.dash-gs .card-full.card {
+    background: unset;
+}
+
+.dash-gs .form-control, .rdl-filter, .dual-listbox .dual-listbox__search, div.dataTables_wrapper div.dataTables_filter input {
+    width: 85%;
+    margin-right: 0;
+    padding-right: 0; 
+    height: 60px;
+    font-size: 16px;
+
+}
+.dash-gs h6 {
+    font-size: 30px;
+    color: #d32f2f;
+}
+.dash-gs .card-inner {
+    padding-left: 0;
+}
+.dash-gs .card-title span {
+    font-size: 18px;
+}
+.home_tbl .title {
+	font-size: 25px;
+    padding-bottom: 6px;
+}
+.home_tbl .card-inner {
+    padding-left: 0;
+    background: #f5f6fa;
+}
+.top_stu .card-inner {
+    padding-left: 0;
+}
+.top_stu .title {
+    font-size: 25px;
+}
+.top_stu .card-full.card {
+    background: #f5f6fa;
+}
+
+.top_stu .form-control, .rdl-filter, .dual-listbox .dual-listbox__search, div.dataTables_wrapper div.dataTables_filter input {
+    width: 85%; 
+    height: 60px;
+    font-size: 16px;
+
+}
+.top_stu_left .nk-ecwg7-ck {
+    width: 70%;
+    margin: 0;
+    float: left;
+}
+.nk-ecwg7-legends li {
+    width: 100%;
+    float: left;
+}
+.top_stu .card-inner {
+    background: #f5f6fa;
+}
+.top_stu_left h6 {
+    font-size: 35px;
+}
+.filter_inputs .card-full.card {
+    background: unset;
+}
+.filter_inputs .title {
+    font-size: 25px;
+	padding-bottom: 10%;
+}
+.filter_inputs .card-inner {
+    padding-left: 0;
+}
+.filter_inputs .form-control, .rdl-filter, .dual-listbox .dual-listbox__search, div.dataTables_wrapper div.dataTables_filter input {
+    height: 60px;
+}

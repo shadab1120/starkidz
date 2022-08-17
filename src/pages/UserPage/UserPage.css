@@ -1,0 +1,63 @@
+
+
+.our-team {
+    padding: 40px 10px 30px;
+    margin-bottom: 30px;
+    background-color: #D32F2F;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+    border-radius: 10px;
+  }
+  
+  .our-team .picture {
+    display: inline-block;
+    height: 150px;
+    width: 150px;
+    z-index: 1;
+    position: relative;
+  }
+  
+  .our-team .picture img {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    transform: scale(1);
+    transition: all 0.9s ease 0s;
+    border: 5px solid #FF4949;
+  }
+  
+  .our-team .name {
+    font-size: 20px;
+    color: #fff;
+    text-transform: capitalize;
+    font-weight: 400;
+  }
+  .our-team .title {
+    font-size: 14px;
+    color: #fff;
+    font-weight: 400;
+}
+  
+.user-divider{
+    height: 2px;
+    background-color: #f2f2f26c;
+    margin: 20px 0px;
+}
+
+.user-card-footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.user-card-footer h6{
+    font-size: 16px;
+    color: #fff;
+}
+.user-icon{
+    background-color: #FF4949;
+    width: 30px;
+    color: white;
+    height: 30px;
+    margin: 0px 5px;
+}
