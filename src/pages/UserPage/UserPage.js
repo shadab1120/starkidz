@@ -6,54 +6,87 @@ import "./UserPage.css";
 import { FiTwitter, FiFacebook } from "react-icons/fi";
 import avtar from "../../images/avatar/c-sm.jpg";
 import { useSelector } from "react-redux";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Api from "../../http/userApis";
+import toast, { Toaster } from "react-hot-toast";
 import { useForm } from "react-hook-form";
 
 const UserPage = () => {
-  const { data } = useSelector((state) => state.auth.user);
-  const userMutaion = useMutation(Api.getUser);
+  const data = useSelector((state) => state.auth.user);
+  const queryClient = useQueryClient();
+  const userMutaion = useMutation(Api.getUser, {
+    mutationKey: "userDetail",
+  });
   const mutation = useMutation(Api.updateUser);
   const { errors, register, handleSubmit } = useForm();
   const [userDetails, setUserDetails] = React.useState({});
 
   const onFormSubmit = (formData) => {
-    const { FullName, email, phone, ageProof, address, state, pinCode, dob } = formData;
+    const { FullName, email, phone, ageProof, address, state, pinCode, user_image } = formData;
+    let ageImage, userpic;
 
-    // dob yyyy-MM-dd to dd-MM-yyyy
-    const dobDate = dob.split("-");
-    const dobDateFormat = `${dobDate[1]}-${dobDate[0]}-${dobDate[2]}`;
+    let objToUpdate = {
+      username: data.user_login,
+      firstname: FullName.split(" ")?.[0],
+      lastname: FullName.split(" ")?.[1],
+      email,
+      phone,
+      gender: "",
+      address,
+      pin: pinCode,
+      state,
+    };
 
     // image to base64
-    const image = ageProof?.[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(image);
-    reader.onload = (event) => {
-      const base64 = event.target.result;
-      mutation.mutate(
-        {
-          username: data.user_login,
-          firstname: FullName.split(" ")?.[0],
-          lastname: FullName.split(" ")?.[1],
-          email,
-          phone,
-          dob: dobDateFormat,
-          gender: "",
-          address,
-          pin: pinCode,
-          state,
-          ageProof: base64,
+    if (ageProof.length > 0) {
+      console.log(ageProof);
+      const reader = new FileReader();
+      const image = ageProof?.[0];
+      reader.readAsDataURL(image);
+      reader.onloadend = (ev) => {
+        ageImage = ev.target.result.split(",")[1];
+        objToUpdate = {
+          ...objToUpdate,
+          ageProof: ageImage,
+        };
+      };
+    }
+
+    if (user_image) {
+      const userImageReader = new FileReader();
+      const userImage = user_image?.[0];
+      userImageReader.readAsDataURL(userImage);
+      userImageReader.onloadend = (e) => {
+        userpic = e.target.result.split(",")[1];
+        objToUpdate = {
+          ...objToUpdate,
+          user_image: userpic,
+        };
+      };
+    }
+
+    setTimeout(() => {
+      mutation.mutate(objToUpdate, {
+        onSuccess: (res) => {
+          toast.success("user Update");
+
+          userMutaion.mutate(
+            {
+              username: data.user_nicename,
+            },
+            {
+              onSuccess: (res) => {
+                setUserDetails(res.data.msg);
+              },
+            }
+          );
         },
-        {
-          onSuccess: (res) => {
-            console.log(res);
-          },
-        }
-      );
-    };
+      });
+    }, 2000);
   };
 
   useEffect(() => {
+    if (!data) return;
     userMutaion.mutate(
       {
         username: data.user_nicename,
@@ -66,6 +99,10 @@ const UserPage = () => {
     );
   }, [data]);
 
+  if (!data) {
+    return <div>loading...</div>;
+  }
+
   return (
     <React.Fragment>
       <Content>
@@ -73,10 +110,14 @@ const UserPage = () => {
           <Col xxl="4" md="3">
             <div className="our-team">
               <div className="picture">
-                <img className="img-fluid" src={avtar} alt="njkl" />
+                <img
+                  className="img-fluid"
+                  src={userDetails?.user_image ? `data:image/png;base64,${userDetails?.user_image}` : avtar}
+                  alt="njkl"
+                />
               </div>
               <div className="mt-4">
-                <h3 className="name">{data?.display_name}</h3>
+                <h3 className="name">{userDetails?.first_name}</h3>
                 <h4 className="title">{data?.user_email}</h4>
                 <div className="mt-2">
                   <Button txtColor="#D32F2F" size="sm" bgColor="#fff" bRadius="none">
@@ -143,19 +184,18 @@ const UserPage = () => {
                 </Col>
                 <Col lg="6">
                   <FormGroup className="form-group">
-                    <label className="form-label" htmlFor="phone">
-                      Date Of Birth
+                    <label className="form-label" htmlFor="ageProof">
+                      Upload Profile picture
                     </label>
                     <div className="form-control-wrap">
                       <input
-                        type="date"
-                        id="dob"
-                        name="dob"
+                        type="file"
+                        id="user_image"
+                        name="user_image"
                         ref={register({ required: "This field is required" })}
                         className="form-control"
-                        defaultValue={userDetails?.dob}
                       />
-                      {errors.dob && <span className="invalid">{errors.dob.message}</span>}
+                      {errors.user_image && <span className="invalid">{errors.user_image.message}</span>}
                     </div>
                   </FormGroup>
                 </Col>
@@ -165,13 +205,7 @@ const UserPage = () => {
                       Upload Age Proof
                     </label>
                     <div className="form-control-wrap">
-                      <input
-                        type="file"
-                        id="ageProof"
-                        name="ageProof"
-                        ref={register({ required: "This field is required" })}
-                        className="form-control"
-                      />
+                      <input type="file" id="ageProof" name="ageProof" ref={register()} className="form-control" />
                       {errors.ageProof && <span className="invalid">{errors.ageProof.message}</span>}
                     </div>
                   </FormGroup>
@@ -240,6 +274,7 @@ const UserPage = () => {
           </Col>
           <Col xxl="12" md="1" sm="12"></Col>
         </Row>
+        <Toaster position="top-right" />
       </Content>
     </React.Fragment>
   );

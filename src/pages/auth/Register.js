@@ -68,7 +68,7 @@ const Register = ({ history }) => {
               </BlockContent>
             </BlockHead>
             <form className="is-alter" onSubmit={handleSubmit(handleFormSubmit)}>
-              <Row>
+              <Row className="mb-2">
                 <Col md={4}>
                   <FormGroup>
                     <label className="form-label" htmlFor="firstname">
@@ -83,7 +83,7 @@ const Register = ({ history }) => {
                         ref={register({ required: true })}
                         className="form-control-lg form-control"
                       />
-                      {errors.firstname && <p className="invalid">This field is required</p>}
+                      {errors.firstname && <p className="invalid">Please Enter the Child Name</p>}
                     </div>
                   </FormGroup>
                 </Col>
@@ -101,7 +101,7 @@ const Register = ({ history }) => {
                         ref={register({ required: true })}
                         className="form-control-lg form-control"
                       />
-                      {errors.lastname && <p className="invalid">This field is required</p>}
+                      {errors.lastname && <p className="invalid">Please Enter the Child Name</p>}
                     </div>
                   </FormGroup>
                 </Col>
@@ -122,12 +122,12 @@ const Register = ({ history }) => {
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                       </select>
-                      {errors.gender && <p className="invalid">This field is required</p>}
+                      {errors.gender && <p className="invalid">Please select gender</p>}
                     </div>
                   </div>
                 </Col>
               </Row>
-              <Row>
+              <Row className="mb-2">
                 <Col md={8}>
                   <label className="form-label" htmlFor="Fname">
                     Address
@@ -155,12 +155,12 @@ const Register = ({ history }) => {
                       type="date"
                       ref={register({ required: true })}
                     />
-                    {errors.dob && <p className="invalid">This field is required</p>}
+                    {errors.dob && <p className="invalid">Please Select the DOB</p>}
                   </div>
                 </Col>
               </Row>
 
-              <Row>
+              <Row className="mb-2">
                 <Col md={4}>
                   <Label htmlFor="father_name" className="form-label">
                     Father Name
@@ -204,7 +204,7 @@ const Register = ({ history }) => {
                 </Col>
               </Row>
 
-              <Row>
+              <Row className="mb-2">
                 <Col md={4}>
                   <Label htmlFor="city" className="form-label">
                     City
@@ -249,13 +249,19 @@ const Register = ({ history }) => {
                       type="text"
                       name="pin"
                       id="pin"
+                      ref={register({
+                        pattern: {
+                          value: /^[0-9]{6}$/,
+                          message: "Invalid Pin",
+                        },
+                      })}
                       placeholder="Enter your pin"
                     ></input>
                   </div>
                 </Col>
               </Row>
 
-              <Row>
+              <Row className="mb-2">
                 <Col md={4}>
                   <Label htmlFor="phone" className="form-label">
                     Parent Mobile<span className="text-danger">*</span>
@@ -267,13 +273,14 @@ const Register = ({ history }) => {
                       name="phone"
                       id="phone"
                       ref={register({
-                        required: "This field is required",
+                        required: "Please Enter the Mobile Number",
                         pattern: {
                           value: /^[0-9]{10}$/,
+                          message: "Invalid Mobile Number",
                         },
                       })}
                     ></input>
-                    {errors.phone && <p className="invalid">This field is required</p>}
+                    {errors.phone && <p className="invalid">{errors.phone.message}</p>}
                   </div>
                 </Col>
                 <Col md={4}>
@@ -299,7 +306,7 @@ const Register = ({ history }) => {
                 </Col>
               </Row>
 
-              <Row>
+              <Row className="mb-2">
                 <Col md={4}>
                   <Label htmlFor="school_district" className="form-label">
                     School/ college District
@@ -351,11 +358,9 @@ const Register = ({ history }) => {
                   </div>
                 </Col>
               </Row>
-
-              <Row></Row>
-			  <FormGroup className="col-md-3">
-			  <input type="checkbox" required></input> I Agree  Term & condition 
-			  </FormGroup>
+              <FormGroup className="col-md-3">
+                <input type="checkbox" required></input> I Agree Term & condition
+              </FormGroup>
               <FormGroup className="col-md-5">
                 <Button type="submit" color="primary" size="lg" className="btn-block" bgColor={"#D32F2F"}>
                   {loading ? <Spinner size="sm" color="light" /> : "Register"}

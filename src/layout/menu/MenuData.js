@@ -48,7 +48,7 @@ let menu = [
     text: "Star-Bucks",
     link: "starbucks",
   },*/
-  
+
   {
     icon: StarBucks,
     text: "Purchase Star-Bucks",
@@ -104,14 +104,13 @@ let menu = [
 ];
 
 const user = JSON.parse(localStorage.getItem("user"))?.data;
-console.log(user);
 if (user?.role === "contest_managern") {
   menu = [
     {
-    icon: Kidz,
-    text: "Dashboard",
-    link: "content_dashboard",
-	},
+      icon: Kidz,
+      text: "Dashboard",
+      link: "content_dashboard",
+    },
     {
       icon: StarBucks,
       text: "Create Contest",
@@ -127,7 +126,7 @@ if (user?.role === "contest_managern") {
       text: "Close Contest",
       link: "close-contest",
     },
-/*    {
+    /*    {
       icon: StarBucks,
       text: "Leave management",
       link: "leave-management",
@@ -138,7 +137,7 @@ if (user?.role === "contest_managern") {
       text: "Result Preparation and announcement",
       link: "result-preparation-and-announcement",
     },
- /*   {
+    /*   {
       icon: StarBucks,
       text: "Generation of Certificates",
       link: "generation-of-certificates",
@@ -147,14 +146,13 @@ if (user?.role === "contest_managern") {
   ];
 }
 
-
 if (user?.role === "quality_analyst") {
   menu = [
     {
-    icon: Kidz,
-    text: "Dashboard",
-    link: "content_dashboard",
-	},
+      icon: Kidz,
+      text: "Dashboard",
+      link: "content_dashboard",
+    },
     {
       icon: StarBucks,
       text: "Verify Contestants",
@@ -177,7 +175,6 @@ if (user?.role === "quality_analyst") {
     },
   ];
 }
-
 
 if (user?.role === "judge") {
   menu = [
@@ -208,66 +205,64 @@ if (user?.role === "client_admin") {
       text: "Role Management",
       link: "roles",
     },
-	 {
+    {
       icon: StarBucks,
       text: "User Creation",
       link: "users",
     },
-	 {
+    {
       icon: StarBucks,
       text: "Children Enrollment",
       link: "children_enrollments",
     },
-	/* {
+    /* {
       icon: StarBucks,
       text: "Unique Id Generation",
       link: "old-contests",
     },
 	*/
-	 {
+    {
       icon: StarBucks,
       text: "Class Master",
       link: "class_master",
     },
-	 {
+    {
       icon: StarBucks,
       text: "Section Master",
       link: "section_master",
     },
-	 {
+    {
       icon: StarBucks,
       text: "House Master",
       link: "house_master",
     },
-	 {
+    {
       icon: StarBucks,
       text: "Stream Master",
       link: "stream_master",
     },
-	 {
+    {
       icon: StarBucks,
-	  text: "Create Contest",
-      link: "create-contest"
-    }
+      text: "Create Contest",
+      link: "create-contest",
+    },
   ];
 }
-
 
 if (user?.role === "administrator") {
   menu = [
     {
-    icon: Kidz,
-    text: "Dashboard",
-    link: "dashboard",
-	},
-	
-	 {
-    icon: Contest,
-    text: "Contests",
-    active: false,
-    subMenu: [
-		
-		/*{
+      icon: Kidz,
+      text: "Dashboard",
+      link: "dashboard",
+    },
+
+    {
+      icon: Contest,
+      text: "Contests",
+      active: false,
+      subMenu: [
+        /*{
 		  icon: StarBucks,
 		  text: "Contest Type ",
 		  link: "content_types",
@@ -288,41 +283,40 @@ if (user?.role === "administrator") {
 			text: "Close Judging Level",
 			link: "help",
 		  }*/
-		  
-		  {
-      icon: StarBucks,
-      text: "Create Contest",
-      link: "create-contest",
+
+        {
+          icon: StarBucks,
+          text: "Create Contest",
+          link: "create-contest",
+        },
+        {
+          icon: StarBucks,
+          text: "Monitor Contest",
+          link: "monitor-contest",
+        },
+        {
+          icon: StarBucks,
+          text: "Close Contest",
+          link: "close-contest",
+        },
+        {
+          icon: StarBucks,
+          text: "Result Preparation and announcement",
+          link: "result-preparation-and-announcement",
+        },
+      ],
     },
     {
-      icon: StarBucks,
-      text: "Monitor Contest",
-      link: "monitor-contest",
-    },
-    {
-      icon: StarBucks,
-      text: "Close Contest",
-      link: "close-contest",
-    },
-    {
-      icon: StarBucks,
-      text: "Result Preparation and announcement",
-      link: "result-preparation-and-announcement",
-    }, 
-		],
-	},
-		 {
-    icon: Judging,
-    text: "Judgings",
-    active: false,
-    subMenu: [
-	
-		{
-		  icon: StarBucks,
-		  text: "Judge Entries",
-		  link: "judge_gallery",
-		},	
-	/*	{
+      icon: Judging,
+      text: "Judgings",
+      active: false,
+      subMenu: [
+        {
+          icon: StarBucks,
+          text: "Judge Entries",
+          link: "judge_gallery",
+        },
+        /*	{
 		  icon: StarBucks,
 		  text: "judging parameter ",
 		  link: "judging_parameters",
@@ -333,121 +327,116 @@ if (user?.role === "administrator") {
 		  link: "prizes",
 		},
 		*/
-		],
-	},
-	{
-    icon: Verification,
-    text: "Verification",
-    active: false,
-    subMenu: [
-		
-		{
-		  icon: StarBucks,
-		  text: "Manage Registrations",
-		  link: "content_dashboard",
-		},
-		{
-		  icon: StarBucks,
-		  text: "Manage Entries",
-		  link: "judge_dashboard",
-		},
-		],
-	},
-	
-	{
-    icon: Reports,
-    text: "Reports",
-    active: false,
-    subMenu: [
-		
-			{
-		  icon: StarBucks,
-		  text: "Registrations Report",
-		  link: "registration_report",
-		},
-		{
-		  icon: StarBucks,
-		  text: "Contest Entry",
-		  link: "contest_entries",
-		},
-		{
-		  icon: StarBucks,
-		  text: "Login Report",
-		  link: "login_reports",
-		},
-		],
-	},
-   
-   
+      ],
+    },
     {
-    icon: Masters,
-    text: "Masters",
-    active: false,
-    subMenu: [
-			{
-		  icon: StarBucks,
-		  text: "Role Management",
-		  link: "roles",
-		},
-		 {
-		  icon: StarBucks,
-		  text: "User Creation",
-		  link: "users",
-		},
-		
-		 {
-		  icon: StarBucks,
-		  text: "Region Management",
-		  link: "regions",
-		},
-		 {
-		  icon: StarBucks,
-		  text: "State Management",
-		  link: "states",
-		},
-		 {
-		  icon: StarBucks,
-		  text: "City Management",
-		  link: "cities",
-		},
-		{
-		  icon: StarBucks,
-		  text: "Brackets Management",
-		  link: "brackets",
-		},
-		{
-		  icon: StarBucks,
-		  text: "Contest Type Management",
-		  link: "content_types",
-		},
-		{
-		  icon: StarBucks,
-		  text: "Contest Category Management",
-		  link: "contest_categories",
-		},
-		{
-		  icon: StarBucks,
-		  text: "star buck master",
-		  link: "starbucks",
-		},
-		{
-		  icon: StarBucks,
-		  text: "judging parameter ",
-		  link: "judging_parameters",
-		},
-		/*	
+      icon: Verification,
+      text: "Verification",
+      active: false,
+      subMenu: [
+        {
+          icon: StarBucks,
+          text: "Manage Registrations",
+          link: "content_dashboard",
+        },
+        {
+          icon: StarBucks,
+          text: "Manage Entries",
+          link: "judge_dashboard",
+        },
+      ],
+    },
+
+    {
+      icon: Reports,
+      text: "Reports",
+      active: false,
+      subMenu: [
+        {
+          icon: StarBucks,
+          text: "Registrations Report",
+          link: "registration_report",
+        },
+        {
+          icon: StarBucks,
+          text: "Contest Entry",
+          link: "contest_entries",
+        },
+        {
+          icon: StarBucks,
+          text: "Login Report",
+          link: "login_reports",
+        },
+      ],
+    },
+
+    {
+      icon: Masters,
+      text: "Masters",
+      active: false,
+      subMenu: [
+        {
+          icon: StarBucks,
+          text: "Role Management",
+          link: "roles",
+        },
+        {
+          icon: StarBucks,
+          text: "User Creation",
+          link: "users",
+        },
+
+        {
+          icon: StarBucks,
+          text: "Region Management",
+          link: "regions",
+        },
+        {
+          icon: StarBucks,
+          text: "State Management",
+          link: "states",
+        },
+        {
+          icon: StarBucks,
+          text: "City Management",
+          link: "cities",
+        },
+        {
+          icon: StarBucks,
+          text: "Brackets Management",
+          link: "brackets",
+        },
+        {
+          icon: StarBucks,
+          text: "Contest Type Management",
+          link: "content_types",
+        },
+        {
+          icon: StarBucks,
+          text: "Contest Category Management",
+          link: "contest_categories",
+        },
+        {
+          icon: StarBucks,
+          text: "star buck master",
+          link: "starbucks",
+        },
+        {
+          icon: StarBucks,
+          text: "judging parameter ",
+          link: "judging_parameters",
+        },
+        /*	
 		{
 		  icon: StarBucks,
 		  text: "prize master",
 		  link: "prizes",
 		},
 	*/
-	
-	
-		],
-	},
-   
-/*   
+      ],
+    },
+
+    /*   
 	
 	{
       icon: StarBucks,
@@ -455,14 +444,14 @@ if (user?.role === "administrator") {
       link: "rejection_reason",
     },
 	*/
-	
-	  {
-    icon: Help,
-    text: "Helpdesk",
-    link: "help",
-  },
-  
-   	/*
+
+    {
+      icon: Help,
+      text: "Helpdesk",
+      link: "help",
+    },
+
+    /*
 	{
       icon: StarBucks,
       text: "Photo Editor",
@@ -494,10 +483,8 @@ if (user?.role === "administrator") {
       text: "Schedule Stakeholders Leave",
       link: "City",
     },*/
-	
   ];
 }
-
 
 // Create Contest
 // Monitor Contest

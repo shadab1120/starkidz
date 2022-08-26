@@ -16,7 +16,7 @@ import LoginPageContainer from "../../layout/page-container/LoginPageContainer";
 import Head from "../../layout/head/Head";
 import AuthFooter from "./AuthFooter";
 import { useForm } from "react-hook-form";
-import { Link, useLocation, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useMutation } from "react-query";
 import api from "../../http/api";
 import toast, { Toaster } from "react-hot-toast";
@@ -27,12 +27,9 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [passState, setPassState] = useState(false);
   const [errorVal, setError] = useState("");
-  const history = useHistory();
   const dispatch = useDispatch();
   const mutation = useMutation(api.login, {
     onSuccess: ({ data }, variables, context) => {
-		console.log(data);
-	//	return false;
       if (data.error) {
         toast.error(data.error);
         setLoading(false);
@@ -45,32 +42,32 @@ const Login = () => {
       if (data.data.role === "administrator") {
         setTimeout(() => {
           // history.push("dashboard");
-         // window.location.href = "create-contest";
+          // window.location.href = "create-contest";
           window.location.href = "admin_dashboard";
         }, 1000);
       } else if (data.data.role === "editor") {
         setTimeout(() => {
           window.location.href = "dashboard";
         }, 1000);
-      }  else if (data.data.role === "judge") {
+      } else if (data.data.role === "judge") {
         setTimeout(() => {
           // history.push("dashboard");
-         // window.location.href = "create-contest";
+          // window.location.href = "create-contest";
           window.location.href = "judge_dashboard";
         }, 1000);
       } else if (data.data.role === "client_admin") {
         setTimeout(() => {
           // history.push("dashboard");
-         // window.location.href = "create-contest";
+          // window.location.href = "create-contest";
           window.location.href = "client_dashboard";
         }, 1000);
       } else if (data.data.role === "quality_analyst") {
         setTimeout(() => {
           // history.push("dashboard");
-         // window.location.href = "create-contest";
+          // window.location.href = "create-contest";
           window.location.href = "content_dashboard";
         }, 1000);
-      }  else {
+      } else {
         setTimeout(() => {
           // history.push("dashboard");
           window.location.href = "dashboard";
@@ -80,9 +77,6 @@ const Login = () => {
       setLoading(false);
     },
   });
-
-
-
 
   const onFormSubmit = (formData) => {
     setLoading(true);
@@ -143,8 +137,7 @@ const Login = () => {
                     type="text"
                     id="default-01"
                     name="name"
-                    defaultValue="chintu"
-                    ref={register({ required: "This field is required" })}
+                    ref={register({ required: "Please Enter username" })}
                     placeholder="Enter your email address or username"
                     className="form-control-lg form-control"
                   />
@@ -177,8 +170,7 @@ const Login = () => {
                     type={passState ? "text" : "password"}
                     id="password"
                     name="passcode"
-                    defaultValue="chintu@123"
-                    ref={register({ required: "This field is required" })}
+                    ref={register({ required: "Please Enter password" })}
                     placeholder="Enter your passcode"
                     className={`form-control-lg form-control ${passState ? "is-hidden" : "is-shown"}`}
                   />
