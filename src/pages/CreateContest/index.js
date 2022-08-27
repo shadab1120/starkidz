@@ -9,6 +9,7 @@ import ContestDetails from "./ContestDetails";
 import DurationLocation from "./DurationLocation";
 import Judging from "./Judging";
 import FeePrices from "./FeePrices";
+import MultiStepProgressBar from "../../components/MultiStepProgressBar/MultiStepProgressBar";
 
 const totalSteps = 4;
 
@@ -43,6 +44,8 @@ const CreateContest = () => {
             maxWidth: "756px",
           }}
         >
+          <MultiStepProgressBar currentStep={step} />
+
           {step === 1 && <ContestDetails handleStepChange={handleStepChange} />}
           {step === 2 && <DurationLocation handleStepChange={handleStepChange} />}
           {step === 3 && <Judging handleStepChange={handleStepChange} />}

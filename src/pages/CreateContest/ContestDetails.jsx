@@ -3,7 +3,6 @@ import { Row, Col, FormGroup, Button } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { setContestDetails } from "../../store/CreateContestSlice";
-
 const ContestDetails = ({ handleStepChange }) => {
   const [newContest, setNewContest] = useState(true);
   const { errors, handleSubmit, register } = useForm();
@@ -92,14 +91,14 @@ const ContestDetails = ({ handleStepChange }) => {
               <div className="form-row w-100">
                 <div className="form-group col-md-6  name-cls">
                   <label className="form-label" htmlFor="shortName">
-                    Contest Sort Name
+                    Contest Short Name
                   </label>
                   <input
                     name="contest_short_name"
                     id="shortName"
                     className="form-control"
-                    placeholder="Contest Sort Name"
-                    ref={register({ required: "This field is required" })}
+                    placeholder="Contest Short Name"
+                    ref={register({ required: "Please fill short name" })}
                   />
                   {errors.contest_short_name && <span className="error">{errors.contest_short_name.message}</span>}
                 </div>
@@ -160,7 +159,12 @@ const ContestDetails = ({ handleStepChange }) => {
             </Row>
             <Row className="mt-4">
               <Col xxl="12" md="12" sm="12">
-                <div className="d-flex justify-content-between">
+                <div
+                  className="d-flex justify-content-start"
+                  style={{
+                    gap: "10px",
+                  }}
+                >
                   <Button className="btn-primary" type="submit">
                     Next
                   </Button>
