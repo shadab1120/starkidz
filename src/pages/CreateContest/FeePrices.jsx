@@ -3,6 +3,7 @@ import { Button } from "../../components/Component";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { useMutation } from "react-query";
+import { useHistory } from "react-router-dom";
 import Api from "../../http/ContestApi";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -10,7 +11,7 @@ const FeePrices = () => {
   const { errors, handleSubmit, register, reset } = useForm();
   const contestDeatils = useSelector((state) => state.contest);
   const mutation = useMutation(Api.createContest);
-
+  const histor = useHistory();
   const onSubmit = (data) => {
     const payload = {
       ...contestDeatils,
@@ -19,6 +20,7 @@ const FeePrices = () => {
     mutation.mutate(payload, {
       onSuccess: () => {
         toast.success("Contest created successfully");
+        histor.push("/monitor-contest");
         reset();
       },
     });

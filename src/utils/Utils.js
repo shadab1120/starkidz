@@ -156,3 +156,10 @@ export const bulkActionOptions = [
   { value: "suspend", label: "Suspend User" },
   { value: "delete", label: "Delete User" },
 ];
+
+export const toastOptions = {
+  duration: 4000000,
+  position: 'top-center',
+  style: { height:'50px'},
+  className: '',
+}

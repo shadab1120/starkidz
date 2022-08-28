@@ -334,7 +334,7 @@ const Register = ({ history }) => {
                   <div className="form-control-wrap">
                     <input
                       className=" form-control"
-                      type="text"
+                      type="password"
                       name="password"
                       id="password"
                       ref={register({ required: true })}
@@ -349,7 +349,7 @@ const Register = ({ history }) => {
                   <div className="form-control-wrap">
                     <input
                       className=" form-control"
-                      type="text"
+                      type="password"
                       name="confirmPassword"
                       id="confirmPassword"
                       ref={register({ required: true })}

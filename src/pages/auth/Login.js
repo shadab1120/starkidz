@@ -22,6 +22,7 @@ import api from "../../http/api";
 import toast, { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { login } from "../../store/AuthSlice";
+import {toastOptions} from "./../../utils/Utils"
 import "./css.css";
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -36,7 +37,7 @@ const Login = () => {
         return;
       }
       localStorage.setItem("accessToken", "token");
-      toast.success("Login Successful");
+      toast.success("Login Successful",toastOptions);
       dispatch(login(data));
       localStorage.setItem("user", JSON.stringify(data));
       if (data.data.role === "administrator") {
