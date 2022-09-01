@@ -36,16 +36,11 @@ const ContestDetails = ({ handleStepChange }) => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Row className="g-4">
               <div className="form-group">
-                <div className="form-group col-md-12">
+                <div className="form-group col-md-12 p-0">
                   <label className="form-label">Contest Type:</label>
-                  <div
-                    className="form-group d-flex"
-                    style={{
-                      gap: "10px",
-                    }}
-                  >
+                  <div className="form-group d-flex">
                     <p className="radio-inline"></p>
-                    <label className="radio-inline">
+                    <label className="radio-inline d-flex justify-content-center">
                       <input
                         className="radioButtonBig"
                         type="radio"
@@ -56,7 +51,7 @@ const ContestDetails = ({ handleStepChange }) => {
                       New Contest
                     </label>
                     <p className="radio-inline"></p>
-                    <label className="radio-inline">
+                    <label className="radio-inline pl-2 d-flex justify-content-center">
                       <input
                         className="radioButtonBig"
                         type="radio"
@@ -119,7 +114,7 @@ const ContestDetails = ({ handleStepChange }) => {
               </div>
             </Row>
             <Row>
-              <div className="form-group col-md-6 name-cls">
+              <div className="form-group col-md-6 name-cls pl-0">
                 <label className="form-label" htmlFor="age_bracket">
                   Age Bracket
                 </label>
@@ -132,12 +127,12 @@ const ContestDetails = ({ handleStepChange }) => {
                 />
                 {errors.age_bracket && <span className="error">{errors.age_bracket.message}</span>}
               </div>
-              <div className="form-group col-md-6 name-cls">
+              <div className="form-group col-md-6 name-cls pl-0">
                 <label className="form-label" htmlFor="contest_type_2">
                   Contest Type
                 </label>
                 <select
-                  className="form-select form-select-lg form-control"
+                  className="form-select form-select form-control"
                   name="contest_type_2"
                   id="contest_type_2"
                   ref={register({ required: "This field is required" })}
