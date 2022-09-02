@@ -2,18 +2,12 @@ import React from "react";
 import Content from "../../layout/content/Content";
 import {
   Button,
-  Block,
   BlockBetween,
-  BlockDes,
   BlockHead,
   BlockHeadContent,
-  BlockTitle,
-  PaginationComponent,
-  Icon,
   DataTableHead,
   DataTableRow,
   DataTableItem,
-  UserAvatar,
 } from "../../components/Component";
 import { RoleData } from "./RoleData";
 import "../style.css";
@@ -82,7 +76,7 @@ const DataList = () => {
             </Row>
 
             {/* submit btn */}
-            <Button type="submit" color="primary" className="mt-3">
+            <Button type="submit" color="danger" className="mt-3">
               Submit
             </Button>
           </Form>
