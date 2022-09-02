@@ -89,6 +89,16 @@ const Judging = ({ handleStepChange }) => {
             </select>
             {errors.level_judging && <span className="text-danger">This field is required</span>}
           </Col>
+         
+          <Col xxl="6" md="6" sm="12">
+           <FormGroup className="w-100">
+                <label className="form-label" htmlFor="percentage_jugdge_level">
+                Percentage of entries judged at level
+                </label>
+                <textarea className="form-control" rows="3" name="percentage_jugdge_level" id="percentage_jugdge_level"></textarea>
+                {errors.percentage_jugdge_level && <span className="error">{errors.percentage_jugdge_level.message}</span>}
+              </FormGroup>
+          </Col> 
           <Col xxl="6" md="6" sm="12">
             <label className="form-label">Select a Judge From</label>
             <select className="form-select form-select-lg form-control">

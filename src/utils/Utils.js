@@ -163,3 +163,6 @@ export const toastOptions = {
   style: { height:'50px'},
   className: '',
 }
+
+export const DATE_AND_TIME_FORMAT=`YYYY-MM-DD h:mm A`
+export const DATE_FORMAT=`YYYY-MM-DD`

@@ -27,18 +27,34 @@ const DurationLocation = ({ handleStepChange }) => {
         <Form className="w-100" onSubmit={handleSubmit(onSubmit)}>
           <Col xxl="6" md="6" sm="12">
             <FormGroup>
-              <label className="form-label" htmlFor="contest_start_end_date">
-                Select Contest Start & End Date
+              <label className="form-label" htmlFor="contest_start_date">
+                Contest Start Date
               </label>
               <input
                 className="form-control datepicker"
                 type="date"
-                name="contest_start_end_date"
-                id="contest_start_end_date"
+                name="contest_start_date"
+                id="contest_start_date"
                 ref={register({ required: "This field is required" })}
               />
 
-              {errors.contest_start_end_date && <span className="text-danger">This field is required</span>}
+              {errors.contest_start_date && <span className="text-danger">This field is required</span>}
+            </FormGroup>
+          </Col>
+          <Col xxl="6" md="6" sm="12">
+            <FormGroup>
+              <label className="form-label" htmlFor="contest_end_date">
+                Contest End Date
+              </label>
+              <input
+                className="form-control datepicker"
+                type="date"
+                name="contest_end_date"
+                id="contest_end_date"
+                ref={register({ required: "This field is required" })}
+              />
+
+              {errors.contest_end_date && <span className="text-danger">This field is required</span>}
             </FormGroup>
           </Col>
           <Col xxl="6" md="6" sm="12">

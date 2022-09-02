@@ -89,21 +89,7 @@ const ContestDetails = ({ handleStepChange }) => {
             </Row>
             <Row>
               <div className="form-row w-100">
-                <div className="form-group col-md-6  name-cls">
-                  <label className="form-label" htmlFor="shortName">
-                    Contest Short Name
-                  </label>
-                  <input
-                    name="contest_short_name"
-                    id="shortName"
-                    className="form-control"
-                    placeholder="Contest Short Name"
-                    ref={register({ required: "Please fill short name" })}
-                  />
-                  {errors.contest_short_name && <span className="error">{errors.contest_short_name.message}</span>}
-                </div>
-
-                <div className="form-group col-md-6 name-cls">
+                 <div className="form-group col-md-6 name-cls">
                   <label className="form-label" htmlFor="contest_image">
                     Contest Image
                   </label>
@@ -116,10 +102,7 @@ const ContestDetails = ({ handleStepChange }) => {
                   />
                   {errors.contest_image && <span className="error">{errors.contest_image.message}</span>}
                 </div>
-              </div>
-            </Row>
-            <Row>
-              <div className="form-group col-md-6 name-cls">
+                <div className="form-group col-md-6 name-cls">
                 <label className="form-label" htmlFor="age_bracket">
                   Age Bracket
                 </label>
@@ -132,6 +115,11 @@ const ContestDetails = ({ handleStepChange }) => {
                 />
                 {errors.age_bracket && <span className="error">{errors.age_bracket.message}</span>}
               </div>
+              </div>
+              
+            </Row>
+            <Row>
+              
               <div className="form-group col-md-6 name-cls">
                 <label className="form-label" htmlFor="contest_type_2">
                   Contest Type
@@ -147,11 +135,24 @@ const ContestDetails = ({ handleStepChange }) => {
                 </select>
                 {errors.contest_type_2 && <span className="error">{errors.contest_type_2.message}</span>}
               </div>
+              <div className="form-group col-md-6 name-cls">
+                <label className="form-label" htmlFor="contest_theme">
+                Contest Theme
+                </label>
+                <input
+                  name="contest_theme"
+                  id="contest_theme"
+                  className="form-control"
+                  placeholder="Contest Theme"
+                  ref={register({ required: "This field is required" })}
+                />
+                {errors.contest_theme && <span className="error">{errors.contest_theme.message}</span>}
+              </div>
             </Row>
             <Row>
               <FormGroup className="w-100">
                 <label className="form-label" htmlFor="contestDescription">
-                  Contest Description
+                About Contest
                 </label>
                 <textarea className="form-control" rows="3" name="description" id="contestDescription"></textarea>
                 {errors.description && <span className="error">{errors.description.message}</span>}

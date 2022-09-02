@@ -20,7 +20,7 @@ const FeePrices = () => {
     mutation.mutate(payload, {
       onSuccess: () => {
         toast.success("Contest created successfully");
-        histor.push("/monitor-contest");
+        histor.push("/backend/frontend/monitor-contest");
         reset();
       },
     });
@@ -38,7 +38,7 @@ const FeePrices = () => {
           <Col xxl="6" md="6" sm="12">
             <FormGroup>
               <label className="form-label" htmlFor="contest_fee">
-                Contest Fee
+              Contest Fee & Prizes
               </label>
               <select
                 className="form-select form-select-lg form-control"
@@ -54,7 +54,7 @@ const FeePrices = () => {
           </Col>
           <Col xxl="6" md="6" sm="12">
             <FormGroup>
-              <label className="form-label">Select </label>
+              <label className="form-label">Location Type </label>
               <select
                 className="form-select form-select-lg form-control"
                 name="prize"
@@ -65,18 +65,6 @@ const FeePrices = () => {
                 <option value="2">Two</option>
               </select>
               {errors.prize && <span className="text-danger">This field is required</span>}
-            </FormGroup>
-          </Col>
-          <Col xxl="12" md="12" sm="12">
-            <FormGroup>
-              <label className="form-label ">Terms & Condition</label>
-              <textarea
-                rows="4"
-                className="form-control "
-                ref={register({ required: "This field is required" })}
-                name="terms_conditions"
-                id="terms_conditions"
-              ></textarea>
             </FormGroup>
           </Col>
         </Row>
