@@ -1,18 +1,21 @@
 import React from "react";
 import Content from "../../layout/content/Content";
-import {  Button,
+import {
+  Button,
   Block,
   BlockBetween,
   BlockDes,
   BlockHead,
   BlockHeadContent,
   BlockTitle,
-  PaginationComponent,Icon,DataTableHead, DataTableRow, DataTableItem, UserAvatar } from "../../components/Component";
-import { CatestCategoriesData } from "./CatestCategoriesData";
+  PaginationComponent, Icon, DataTableHead, DataTableRow, DataTableItem, UserAvatar
+} from "../../components/Component";
+import { useQuery } from "react-query";
+import Api from "../../http/masterApis";
 import avtar from "../../images/avatar/c-sm.jpg";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import {
-	Card,
+  Card,
   DropdownMenu,
   DropdownToggle,
   UncontrolledDropdown,
@@ -22,15 +25,28 @@ import {
   Modal,
   DropdownItem,
   Form,
-  Col,Row
+  Col, Row
 } from "reactstrap";
 const CatestCategories = () => {
+  const { data, error, isLoading } = useQuery('getCategories', Api.getCategories);
+  const handleDelete = (row) => {
+    console.error('row',row)
+}
+
+  if (isLoading) {
+    return (
+      <>
+        <Content>loading...</Content>
+      </>
+    );
+  }
+
   return (
     <Content>
-	 <div>
+      <div>
         <form>
           <Row className="mt-4">
-		    <Col>
+            <Col>
               <FormGroup className="form-group">
                 <label className="form-label" htmlFor="bucksTo">
                   Category Name :
@@ -42,7 +58,7 @@ const CatestCategories = () => {
                     name="bucksTo"
                     className="form-control"
                   />
-                
+
                 </div>
               </FormGroup>
             </Col>
@@ -58,11 +74,11 @@ const CatestCategories = () => {
                     name="bucksFrom"
                     className="form-control"
                   />
-                 
+
                 </div>
               </FormGroup>
             </Col>
-          
+
             <Col className="d-flex align-items-end">
               <Button color="primary" size="md" bgColor="#D32F2F" bRadius="none" width="50%">
                 Submit
@@ -72,9 +88,9 @@ const CatestCategories = () => {
         </form>
       </div>
       <Card className="card-full mt-4">
-	  
-       
-         <div className="nk-tb-list">
+
+
+        <div className="nk-tb-list">
           <DataTableHead>
             <DataTableRow>
               <span>Sr No.</span>
@@ -85,45 +101,45 @@ const CatestCategories = () => {
             <DataTableRow size="sm">
               <span> Image</span>
             </DataTableRow>
-          
+
             <DataTableRow>
               <span className="d-none d-sm-inline">Status</span>
             </DataTableRow>
-			  <DataTableRow>
+            <DataTableRow>
               <span className="d-none d-sm-inline">Action</span>
             </DataTableRow>
           </DataTableHead>
-          {CatestCategoriesData.map((item, idx) => (
+          {data?.data?.map((item, idx) => (
             <DataTableItem key={idx}>
+              {console.log('item', item)}
               <DataTableRow>
                 <span className="tb-lead">
                   <a href="#order" onClick={(ev) => ev.preventDefault()}>
-                    {item.id}
+                    {idx}
                   </a>
                 </span>
               </DataTableRow>
-			  <DataTableRow size="md">
-                <span className="tb-lead">{item.name}</span>
+              <DataTableRow size="md">
+                <span className="tb-lead">{item.category}</span>
               </DataTableRow>
               <DataTableRow size="md">
-               <img className="img-fluid" src={avtar} alt="njkl" />
+                <img className="img-fluid" src={item.category_image ? item.category_image : UserAvatar} alt="njkl" />
               </DataTableRow>
-             
-			
+
+
               <DataTableRow>
                 <span
-                  className={`badge badge-dot badge-dot-xs badge-${
-                    item.status === "Paid" ? "success" : item.status === "Due" ? "warning" : "danger"
-                  }`}
+                  className={`badge badge-dot badge-dot-xs badge-${item.status === "Paid" ? "success" : item.status === "Due" ? "warning" : "danger"
+                    }`}
                 >
                   {item.status}
                 </span>
               </DataTableRow>
-			   <DataTableRow className="">
-			    <FiEdit color="green" />
-                      <FiTrash2 className="ml-2" color="#d32f2f" />
-			           
-                      </DataTableRow>
+              <DataTableRow className="">
+                <FiEdit color="green" />
+                <FiTrash2 className="ml-2" color="#d32f2f" onClick={(e) => handleDelete(item)}/>
+
+              </DataTableRow>
             </DataTableItem>
           ))}
         </div>

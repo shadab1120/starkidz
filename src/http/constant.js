@@ -1,5 +1,9 @@
 const ApiUrls = {
   master: {
+    role: {
+      getRole: "/get_role.php",
+      manageRole: "/role_management.php",
+    },
     ageBrackets: {
       getAgeBrackets: "/get_age_bracket.php",
       addAgeBracket: "/add_age_bracket.php",

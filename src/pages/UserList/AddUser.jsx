@@ -6,7 +6,7 @@ import { useMutation } from "react-query";
 import Api from "../../http/ContestApi";
 import toast, { Toaster } from "react-hot-toast";
 
-const FeePrices = () => {
+const AddUser = () => {
   const { errors, handleSubmit, register, reset } = useForm();
   const contestDeatils = useSelector((state) => state.contest);
   const mutation = useMutation(Api.createContest);
@@ -87,11 +87,11 @@ const FeePrices = () => {
               }}
             >
               <Button className="btn-primary" type="submit" bgColor="#D32F2F">
-                Create Contest
+                Create User
               </Button>
-              <Button className="btn-primary" type="submit">
+              {/* <Button className="btn-primary" type="submit">
                 Draft
-              </Button>
+              </Button> */}
             </div>
           </Col>
         </Row>
@@ -102,4 +102,4 @@ const FeePrices = () => {
   );
 };
 
-export default FeePrices;
+export default AddUser;

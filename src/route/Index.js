@@ -151,9 +151,13 @@ import RoleList from "../pages/RoleList/RoleList";
 import CatestCategories from "../pages/CatestCategories/CatestCategories";
 import JudgingParameters from "../pages/JudgingParameters/JudgingParameters";
 import Regions from "../pages/Regions/Regions";
+import AddRegion from "../pages/Regions/AddRegions";
 import States from "../pages/States/States";
+import AddState from "../pages/States/AddStates";
 import Cities from "../pages/Cities/Cities";
+import AddCity from "../pages/Cities/AddCity";
 import Brackets from "../pages/Brackets/Brackets";
+import AddAgeBracket from "../pages/Brackets/AddAgeBracket";
 import ContentTypes from "../pages/ContentTypes/ContentTypes";
 import RegistrationsReport from "../pages/ContentTypes/RegistrationsReport";
 import ContentEntries from "../pages/ContentTypes/ContentEntries";
@@ -188,6 +192,7 @@ const Pages = () => {
         <Route exact path={`${process.env.PUBLIC_URL}/add_role`} component={AddRole}></Route>
 		
 		  <Route exact path={`${process.env.PUBLIC_URL}/users`} component={UserList}></Route>
+      <Route exact path={`${process.env.PUBLIC_URL}/add-users`} component={AddUser}></Route>
 		  <Route exact path={`${process.env.PUBLIC_URL}/children_enrollments`} component={ChildrenEnrollment}></Route>
 		  <Route exact path={`${process.env.PUBLIC_URL}/class_master`} component={ClassMaster}></Route>
 		  <Route exact path={`${process.env.PUBLIC_URL}/section_master`} component={SectionMaster}></Route>
@@ -198,9 +203,13 @@ const Pages = () => {
 		   <Route exact path={`${process.env.PUBLIC_URL}/contest_categories`} component={CatestCategories}></Route>
 		   <Route exact path={`${process.env.PUBLIC_URL}/judging_parameters`} component={JudgingParameters}></Route>
 		   <Route exact path={`${process.env.PUBLIC_URL}/regions`} component={Regions}></Route>
+       <Route exact path={`${process.env.PUBLIC_URL}/add-region`} component={AddRegion}></Route>
 		   <Route exact path={`${process.env.PUBLIC_URL}/states`} component={States}></Route>
+       <Route exact path={`${process.env.PUBLIC_URL}/add-state`} component={AddState}></Route>
 		   <Route exact path={`${process.env.PUBLIC_URL}/cities`} component={Cities}></Route>
+       <Route exact path={`${process.env.PUBLIC_URL}/add-city`} component={AddCity}></Route>
 		   <Route exact path={`${process.env.PUBLIC_URL}/brackets`} component={Brackets}></Route>
+       <Route exact path={`${process.env.PUBLIC_URL}/add-age-bracket`} component={AddAgeBracket}></Route>
 		   <Route exact path={`${process.env.PUBLIC_URL}/content_types`} component={ContentTypes}></Route>
 		   <Route exact path={`${process.env.PUBLIC_URL}/registration_report`} component={RegistrationsReport}></Route>
 		   <Route exact path={`${process.env.PUBLIC_URL}/contest_entries`} component={ContentEntries}></Route>

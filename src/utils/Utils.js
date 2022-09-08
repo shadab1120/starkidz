@@ -160,9 +160,12 @@ export const bulkActionOptions = [
 export const toastOptions = {
   duration: 4000000,
   position: 'top-center',
-  style: { height:'50px'},
+  style: { height: '50px' },
   className: '',
 }
 
-export const DATE_AND_TIME_FORMAT=`YYYY-MM-DD h:mm A`
-export const DATE_FORMAT=`YYYY-MM-DD`
+export const DATE_AND_TIME_FORMAT = `YYYY-MM-DD h:mm A`
+export const DATE_FORMAT = `YYYY-MM-DD`
+export const STATUS_OPTIONS = [
+  { "name": 'Active', "value": '1' },
+  { "name": 'InActive', "value": '0' }]

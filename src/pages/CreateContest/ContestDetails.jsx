@@ -36,16 +36,11 @@ const ContestDetails = ({ handleStepChange }) => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Row className="g-4">
               <div className="form-group">
-                <div className="form-group col-md-12">
+                <div className="form-group col-md-12 p-0">
                   <label className="form-label">Contest Type:</label>
-                  <div
-                    className="form-group d-flex"
-                    style={{
-                      gap: "10px",
-                    }}
-                  >
+                  <div className="form-group d-flex">
                     <p className="radio-inline"></p>
-                    <label className="radio-inline">
+                    <label className="radio-inline d-flex justify-content-center">
                       <input
                         className="radioButtonBig"
                         type="radio"
@@ -56,7 +51,7 @@ const ContestDetails = ({ handleStepChange }) => {
                       New Contest
                     </label>
                     <p className="radio-inline"></p>
-                    <label className="radio-inline">
+                    <label className="radio-inline pl-2 d-flex justify-content-center">
                       <input
                         className="radioButtonBig"
                         type="radio"
@@ -125,7 +120,7 @@ const ContestDetails = ({ handleStepChange }) => {
                   Contest Type
                 </label>
                 <select
-                  className="form-select form-select-lg form-control"
+                  className="form-select form-select form-control"
                   name="contest_type_2"
                   id="contest_type_2"
                   ref={register({ required: "This field is required" })}

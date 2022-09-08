@@ -1,49 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import { useMutation, useQueryClient, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import moment from "moment"
-import {DATE_AND_TIME_FORMAT} from "./../../utils/Utils.js"
+import { DATE_AND_TIME_FORMAT } from "./../../utils/Utils.js"
 import Api from "../../http/ContestApi";
 import Content from "../../layout/content/Content";
 import { Icon, DataTableHead, DataTableRow, DataTableItem, UserAvatar } from "../../components/Component";
-import { recentOrderData } from "./data";
 import "./downloads.css";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import {
   Card,
-  DropdownMenu,
-  DropdownToggle,
-  UncontrolledDropdown,
-  Progress,
-  FormGroup,
-  ModalBody,
-  Modal,
-  DropdownItem,
-  Form,
 } from "reactstrap";
 
 const MonitorContest = () => {
-  const data = useSelector((state) => state.contest);
+
   const users = useSelector((state) => state.auth.user);
-  const contestMutaion = useMutation(Api.getContest);
-  const [contestDetails, setContestDetails] = useState({});
-console.log('users',users)
+  const { data, isLoading } = useQuery('randomFacts', Api.getContest);
 
-  useEffect(() => {
-    if (!data) return;
-    contestMutaion.mutate(
-      {
-    
-      },
-      {
-        onSuccess: (res) => {
-          setContestDetails(res.data);
-        },
-      }
+  if (isLoading) {
+    return (
+      <>
+        <Content>loading...</Content>
+      </>
     );
-  }, [data]);
-
-
+  }
 
   return (
 
@@ -92,7 +72,7 @@ console.log('users',users)
               <span className="d-none d-sm-inline">Action</span>
             </DataTableRow>
           </DataTableHead>
-          {Object.values(contestDetails)?.map((item, idx) => (
+          {Object.values(data?.data)?.map((item, idx) => (
             <DataTableItem key={idx}>
               <DataTableRow>
                 <span className="tb-lead">
@@ -125,7 +105,7 @@ console.log('users',users)
               </DataTableRow>
               <DataTableRow>
                 <span className="tb-sub tb-amount">
-                {moment(item.contest_start_end_date).format(DATE_AND_TIME_FORMAT)}
+                  {moment(item.contest_start_end_date).format(DATE_AND_TIME_FORMAT)}
                 </span>
               </DataTableRow>
               <DataTableRow>
@@ -142,7 +122,7 @@ console.log('users',users)
 
               <DataTableRow>
                 <span className="tb-sub tb-amount">
-                {moment(item.updated_at).format(DATE_AND_TIME_FORMAT)}
+                  {moment(item.updated_at).format(DATE_AND_TIME_FORMAT)}
                 </span>
               </DataTableRow>
 
@@ -158,7 +138,6 @@ console.log('users',users)
               <DataTableRow className="">
                 <FiEdit color="green" />
                 <FiTrash2 className="ml-2" color="#d32f2f" />
-
               </DataTableRow>
             </DataTableItem>
           ))}
