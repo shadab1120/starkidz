@@ -149,7 +149,7 @@ const DataList = () => {
             </Row>
 
             {/* submit btn */}
-            <Button type="submit" color="primary" className="mt-3">
+            <Button type="submit" color="danger" className="mt-3">
               Submit
             </Button>
           </form>
