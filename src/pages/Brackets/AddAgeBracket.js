@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Content from "../../layout/content/Content";
 import {
     Button,
 } from "../../components/Component";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
-import { useHistory } from "react-router-dom";
+import { useMutation, useQuery } from "react-query";
+import { useHistory, useParams } from "react-router-dom";
 import Api from "../../http/masterApis";
 import toast from "react-hot-toast";
 import "../style.css";
@@ -16,21 +16,41 @@ import {
 
 const AddAgeBracket = () => {
     const history = useHistory();
-    const { errors, handleSubmit, register, reset } = useForm();
+    const params = useParams();
+    const { id } = params;
+    const { errors, handleSubmit, register, reset, setValue } = useForm();
+    const { data: age_bracket } = useQuery(['getAgeBrackets', id], Api.getAgeBrackets);
+    const mutation = useMutation(Api.manageAgeBracket);
 
-    const mutation = useMutation(Api.createAgeBracket);
     const onSubmit = (data) => {
+        const event = id ? `update` : `insert`
+        const message = id ? `update` : `created`
+
+        if (id) {
+            data.id = id;
+        }
         const payload = {
             ...data,
+            event: event,
         };
         mutation.mutate(payload, {
-            onSuccess: () => {
-                toast.success("Brackets created successfully");
-                history.push("/backend/frontend/brackets");
+            onSuccess: (response) => {
+                if (response?.data?.status === 'Failed') {
+                    return toast.error(response?.data?.msg);
+                }
+                toast.success(`Brackets ${message} successfully`);
+                history.push(`${process.env.PUBLIC_URL}/brackets`);
                 reset();
             },
         });
     };
+    useEffect(() => {
+        if (age_bracket && id) {
+            setValue('age_from', age_bracket?.data[0]?.age_from)
+            setValue('age_to', age_bracket?.data[0]?.age_to)
+            setValue('description', age_bracket?.data[0]?.desc)
+        }
+    }, [setValue, age_bracket, id]);
 
     return (
         <Content fluid>

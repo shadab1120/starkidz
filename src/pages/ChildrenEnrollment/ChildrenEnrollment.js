@@ -99,7 +99,7 @@ const ChildrenList = () => {
               <DataTableRow>
                 <span className="tb-lead">
                   <a href="#order" onClick={(ev) => ev.preventDefault()}>
-                    {item.id}
+                    {idx}
                   </a>
                 </span>
               </DataTableRow>

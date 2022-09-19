@@ -1,11 +1,35 @@
+import React, { useEffect } from "react"
 import { Row, Col, FormGroup, Button, Form } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import { setContestDetails } from "../../store/CreateContestSlice";
+import mApi from "../../http/masterApis"
+import { useQuery } from "react-query";
+import Api from "../../http/ContestApi";
 
 const Judging = ({ handleStepChange }) => {
-  const { errors, handleSubmit, register } = useForm();
+  const params = useParams();
   const dispatch = useDispatch();
+  const { id } = params;
+  const { errors, handleSubmit, register, setValue } = useForm();
+  const { data: contest_data } = useQuery(['getContest', id], Api.getContest);
+
+  const { data: judge_params } = useQuery('getJudgingParametersList', mApi.getJudgingParametersList);
+  const { data: role_list } = useQuery('getRole', mApi.getRole);
+
+  useEffect(() => {
+    if (contest_data) {
+      const contestDetails = contest_data[0] || []
+      const { judging_parameter, qa_form, qa, level_judging, percentage_jugdge_level, select_judge_form } = contestDetails
+      setValue('judging_parameter', judging_parameter || -1);
+      setValue('qa_form', qa_form);
+      setValue('qa', qa);
+      setValue('level_judging', level_judging);
+      setValue('percentage_jugdge_level', percentage_jugdge_level);
+      setValue('select_judge_form', select_judge_form);
+    }
+  }, [contest_data])
 
   const onSubmit = (data) => {
     const payload = {
@@ -15,7 +39,7 @@ const Judging = ({ handleStepChange }) => {
     dispatch(setContestDetails(payload));
     handleStepChange("next");
   };
-
+console.log('role_list',role_list)
   return (
     <>
       <Row>
@@ -36,8 +60,8 @@ const Judging = ({ handleStepChange }) => {
                 id="judging_parameter"
                 ref={register({ required: "This field is required" })}
               >
-                <option value="1"></option>
-                <option value="2">Two</option>
+                <option key="-1" value="-1">Select Judging Parameters </option>
+                {judge_params?.data?.map((list, i) => <option key={i} value={list.id}>{list.judging_para_name}</option>)}
               </select>
               {errors.judging_parameter && <span className="text-danger">This field is required</span>}
             </FormGroup>
@@ -51,10 +75,10 @@ const Judging = ({ handleStepChange }) => {
                 className="form-select form-select-lg form-control"
                 name="qa_form"
                 id="qa_form"
+                multiple={true}
                 ref={register({ required: "This field is required" })}
               >
-                <option value="1"></option>
-                <option value="2">Two</option>
+                {role_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.name}</option>)}
               </select>
               {errors.qa_form && <span className="text-danger">This field is required</span>}
             </FormGroup>
@@ -67,10 +91,14 @@ const Judging = ({ handleStepChange }) => {
               className="form-select form-select-lg form-control"
               name="qa"
               id="qa"
+              multiple={true}
               ref={register({ required: "This field is required" })}
             >
-              <option value="1"></option>
-              <option value="2">Two</option>
+              {[
+                { id: '0', name: 'One' },
+                { id: '1', name: 'Two' },
+                { id: '2', name: 'Three' }
+              ].map((list, i) => <option key={i} value={list.id}>{list.name}</option>)}
             </select>
             {errors.qa && <span className="text-danger">This field is required</span>}
           </Col>
@@ -84,26 +112,36 @@ const Judging = ({ handleStepChange }) => {
               id="level_judging"
               ref={register({ required: "This field is required" })}
             >
-              <option value="1"></option>
-              <option value="2">Two</option>
+              {[
+                { id: '0', name: 'One' },
+                { id: '1', name: 'Two' },
+                { id: '2', name: 'Three' }
+              ].map((list, i) => <option key={i} value={list.id}>{list.name}</option>)}
             </select>
             {errors.level_judging && <span className="text-danger">This field is required</span>}
           </Col>
-         
+
           <Col xxl="6" md="6" sm="12">
-           <FormGroup className="w-100">
-                <label className="form-label" htmlFor="percentage_jugdge_level">
+            <FormGroup className="w-100">
+              <label className="form-label" htmlFor="percentage_jugdge_level">
                 Percentage of entries judged at level
-                </label>
-                <textarea className="form-control" rows="3" name="percentage_jugdge_level" id="percentage_jugdge_level"></textarea>
-                {errors.percentage_jugdge_level && <span className="error">{errors.percentage_jugdge_level.message}</span>}
-              </FormGroup>
-          </Col> 
+              </label>
+              <textarea className="form-control" rows="3" name="percentage_jugdge_level" id="percentage_jugdge_level"></textarea>
+            </FormGroup>
+          </Col>
           <Col xxl="6" md="6" sm="12">
             <label className="form-label">Select a Judge From</label>
-            <select className="form-select form-select-lg form-control">
-              <option value="1"></option>
-              <option value="2">Two</option>
+            <select
+              className="form-select form-select-lg form-control"
+              name="select_judge_form"
+              id="select_judge_form"
+              multiple={true}
+            >
+              {[
+                { id: '0', name: 'One' },
+                { id: '1', name: 'Two' },
+                { id: '2', name: 'Three' }
+              ].map((list, i) => <option key={i} value={list.id}>{list.name}</option>)}
             </select>
           </Col>
         </Row>

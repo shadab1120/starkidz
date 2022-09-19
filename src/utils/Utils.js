@@ -169,3 +169,16 @@ export const DATE_FORMAT = `YYYY-MM-DD`
 export const STATUS_OPTIONS = [
   { "name": 'Active', "value": '1' },
   { "name": 'InActive', "value": '0' }]
+
+export const convertBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file)
+    fileReader.onload = () => {
+      resolve(fileReader.result);
+    }
+    fileReader.onerror = (error) => {
+      reject(error);
+    }
+  })
+}

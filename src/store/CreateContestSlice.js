@@ -7,6 +7,8 @@ const initialState = {
   age_bracket: "",
   contest_type_2: "",
   contest_start_end_date: "",
+  contest_start_date:"",
+  select_judge_form:"",
   result_date: "",
   state: "",
   district: "",
@@ -29,8 +31,6 @@ export const CreateContestSlice = createSlice({
       state.contest_type = action.payload;
     },
     setContestDetails: (state, action) => {
-      console.log(state);
-      console.log(action.payload);
       // set new state with previous state
       return { ...state, ...action.payload };
     },

@@ -4,19 +4,17 @@ import {
   Button,
   Block,
   BlockBetween,
-  BlockDes,
   BlockHead,
   BlockHeadContent,
-  BlockTitle,
-  PaginationComponent, Icon, DataTableHead, DataTableRow, DataTableItem, UserAvatar
+  DataTableHead, DataTableRow, DataTableItem
 } from "../../components/Component";
-import { STATUS_OPTIONS } from "./../../utils/Utils";
+import Api from "../../http/masterApis";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import "../style.css";
-import Api from "../../http/masterApis";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import toast from "react-hot-toast";
 import {
   Card,
   FormGroup,
@@ -26,33 +24,34 @@ import {
   Col,
   Spinner
 } from "reactstrap";
-import toast from "react-hot-toast";
 
-const SectionDataList = () => {
+const PrizeList = () => {
 
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [reFetech, setReFetch] = useState(false);
   const [row, setRow] = useState("");
   const history = useHistory();
   const toggle = () => setModal(!modal);
   const { errors, handleSubmit, register, reset, setValue } = useForm();
 
-  const { data: section_list } = useQuery(['getClassSectionHouseStreamList', 'section'], Api.getClassSectionHouseStreamList);
-  const manageMutation = useMutation(Api.manageClassSectionHouseStream)
+  const { data } = useQuery(['getPrizeList'], Api.getPrizeList);
 
-  const { data: section_details } = useQuery(
-    ['getClassSectionHouseStream', row?.id, 'section'],
-    Api.getClassSectionHouseStream,
+  const manageMutation = useMutation(Api.managePrize)
+
+  const { data: prize_list } = useQuery(
+    ['getPrize', row?.id],
+    Api.getPrize,
     {
       enabled: !!row,
     }
   )
   useEffect(() => {
-    if (section_details) {
-      let { name } = section_details?.data[0]
-      setValue('name', name);
+    if (prize_list) {
+      let { prize_name } = prize_list?.data[0]
+      setValue('prize_name', prize_name);
     }
-  }, [section_details])
+  }, [prize_list, setValue])
 
   const onSubmit = (data) => {
 
@@ -63,8 +62,7 @@ const SectionDataList = () => {
     }
     const payload = {
       ...data,
-      event: event,
-      module: `section`
+      event: event
     };
 
     manageMutation.mutate(payload, {
@@ -73,9 +71,10 @@ const SectionDataList = () => {
         if (response?.data?.status === 'Failed') {
           return toast.error(response?.data?.msg);
         }
-        toast.success(`Section ${message} successfully`);
+        setReFetch(true);
+        toast.success(`Prize ${message} successfully`);
         toggle();
-        history.push(`${process.env.PUBLIC_URL}/section_master`);
+        history.push(`${process.env.PUBLIC_URL}/prizes`);
         reset();
       }
     });
@@ -84,7 +83,6 @@ const SectionDataList = () => {
     setLoading(true);
     const { id } = row;
     const payload = {
-      module: `section`,
       event: 'delete',
       id: id
     }
@@ -95,8 +93,9 @@ const SectionDataList = () => {
         if (response?.data?.status === 'Failed') {
           return toast.error(response?.data?.msg);
         }
-        toast.success(`Section delete successfully`);
-        history.push(`${process.env.PUBLIC_URL}/section_master`);
+        setReFetch(true);
+        toast.success(`Prize delete successfully`);
+        history.push(`${process.env.PUBLIC_URL}/prizes`);
       }
     });
   }
@@ -106,12 +105,13 @@ const SectionDataList = () => {
   }
 
 
+
   return (
     <Content>
       <Modal isOpen={modal} toggle={toggle} className="modal-dialog-centered modal-lg">
         <div className="modal-header">
           <h5 className="modal-title" id="exampleModalLabel">
-            {row ? `Update` : `Add`} Section
+            {row ? `Update` : `Add`} Prize
           </h5>
           <button aria-label="Close" className="close" data-dismiss="modal" type="button" onClick={toggle}>
             <span aria-hidden={true}>×</span>
@@ -122,18 +122,18 @@ const SectionDataList = () => {
             <Row>
               <Col md="6">
                 <FormGroup>
-                  <label className="form-control-label" htmlFor="role_name">
-                    Section Name
+                  <label className="form-control-label" htmlFor="prize_name">
+                    Prize Name
                   </label>
                   <input
                     type="text"
-                    id="name"
-                    name="name"
+                    id="prize_name"
+                    name="prize_name"
                     className="form-control"
-                    placeholder="Section Name"
+                    placeholder="Prize Name"
                     ref={register({ required: "This field is required" })}
                   />
-                  {errors.name && <span className="error" style={{ color: 'red' }}>{errors.name.message}</span>}
+                  {errors.prize_name && <span className="error" style={{ color: 'red' }}>{errors.prize_name.message}</span>}
                 </FormGroup>
 
               </Col>
@@ -150,20 +150,21 @@ const SectionDataList = () => {
           </form>
         </ModalBody>
       </Modal>
+
       <div >
         <div className="card-title-group">
           <div className="card-title">
-            <h6 className="title">Section List</h6>
+            <h6 className="title">Prize List</h6>
 
           </div>
         </div>
-        <BlockHead size="sm">
+        <BlockHead size="sm" >
           <BlockBetween>
             <BlockHeadContent>
               <ul className="nk-block-tools g-3">
                 <li>
                   <a href="#" className="btn btn-danger" onClick={toggle}>
-                    Add Section
+                    Add Prize
                   </a>
                 </li>
               </ul>
@@ -173,6 +174,9 @@ const SectionDataList = () => {
       </div>
       <Card className="card-full">
 
+
+
+
         <div className="nk-tb-list mt-n2">
           <DataTableHead>
             <DataTableRow>
@@ -180,7 +184,7 @@ const SectionDataList = () => {
             </DataTableRow>
 
             <DataTableRow>
-              <span>Section Name</span>
+              <span>Prize Name</span>
             </DataTableRow>
 
             <DataTableRow>
@@ -188,19 +192,21 @@ const SectionDataList = () => {
             </DataTableRow>
           </DataTableHead>
           {loading && <Spinner size="sm" color="danger" />}
-          {section_list?.data.map((item, idx) => (
+          {data?.data.map((item, idx) => (
             <DataTableItem key={idx}>
               <DataTableRow size="md">
-                <span className="tb-lead">{item.id}</span>
+                <span className="tb-lead">{idx}</span>
               </DataTableRow>
 
               <DataTableRow size="md">
-                <span className="tb-lead">{item.name}</span>
+                <span className="tb-lead">{item.prize_name}</span>
               </DataTableRow>
 
               <DataTableRow className="">
                 <FiEdit color="green" onClick={(e) => handleEdit(item)} />
                 <FiTrash2 className="ml-2" color="#d32f2f" onClick={(e) => handleDelete(item)} />
+
+
               </DataTableRow>
             </DataTableItem>
           ))}
@@ -209,4 +215,4 @@ const SectionDataList = () => {
     </Content>
   );
 };
-export default SectionDataList;
+export default PrizeList;

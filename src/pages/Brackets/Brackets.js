@@ -1,26 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 import Content from "../../layout/content/Content";
 import {
   BlockBetween,
   BlockHead,
   BlockHeadContent,
- DataTableHead, DataTableRow, DataTableItem
+  DataTableHead, DataTableRow, DataTableItem
 } from "../../components/Component";
-import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
+import { useQuery, useMutation } from "react-query";
+import { Link, useHistory } from "react-router-dom";
 import Api from "../../http/masterApis";
 import "../style.css";
 
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import {
-  Card
+  Card, Spinner
 } from "reactstrap";
+import toast from "react-hot-toast";
 
 const ManageBracket = () => {
-  const { data, error, isLoading } = useQuery('getBracket', Api.getAgeBrackets);
+  const [loading, setLoading] = useState(false);
+  const history = useHistory();
+  const { data, isLoading } = useQuery('getAgeBracketsList', Api.getAgeBracketsList);
+  const manageMutation = useMutation(Api.manageAgeBracket);
+
   const handleDelete = (row) => {
-    console.error('row',row)
-}
+    setLoading(true);
+    const { id } = row;
+    const payload = {
+      id: id,
+      event: 'delete'
+    }
+    manageMutation.mutate(payload, {
+      onSuccess: async (response) => {
+        setLoading(false);
+        if (response?.data?.status === 'Failed') {
+          return toast.error(response?.data?.msg);
+        }
+        toast.success("Age bracket deleted successfully");
+      }
+    });
+  }
+  const handleEdit = (row) => {
+    const { id } = row;
+    history.push(`${process.env.PUBLIC_URL}/add-age-bracket/${id}`);
+  }
+
   if (isLoading) {
     return (
       <>
@@ -69,6 +93,7 @@ const ManageBracket = () => {
               <span className="d-none d-sm-inline">Action</span>
             </DataTableRow>
           </DataTableHead>
+          {loading && <Spinner size="sm" color="danger" />}
           {Object.values(data?.data)?.map((item, idx) => (
             <DataTableItem key={idx}>
               <DataTableRow size="md">
@@ -84,8 +109,8 @@ const ManageBracket = () => {
                 </span>
               </DataTableRow>
               <DataTableRow className="">
-                <FiEdit color="green" />
-                <FiTrash2 className="ml-2" color="#d32f2f"  onClick={(e) => handleDelete(item)}/>
+                <FiEdit color="green" onClick={(e) => handleEdit(item)} />
+                <FiTrash2 className="ml-2" color="#d32f2f" onClick={(e) => handleDelete(item)} />
 
               </DataTableRow>
             </DataTableItem>

@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Content from "../../layout/content/Content";
 import {
     Button,
 } from "../../components/Component";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "react-query";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import Api from "../../http/masterApis";
 import toast from "react-hot-toast";
 import "../style.css";
@@ -16,23 +16,47 @@ import {
 
 const AddCity = () => {
     const history = useHistory();
-    const { errors, handleSubmit, register, reset } = useForm();
-    const { data: region_list } = useQuery('getRegion', Api.getRegion);
-    const { data: state_list } = useQuery('getState', Api.getState);
+    const params = useParams();
+    const { id } = params;
+    const { errors, handleSubmit, register, reset, setValue } = useForm();
+    const { data: city } = useQuery(['getCity', id], Api.getCity);
+    const { data: region_list } = useQuery('getRegionList', Api.getRegionList);
+    const { data: state_list } = useQuery('getStateList', Api.getStateList);
 
-    const mutation = useMutation(Api.createCity);
+    const mutation = useMutation(Api.manageCity);
     const onSubmit = (data) => {
+
+        const event = id ? `update` : `insert`
+        const message = id ? `update` : `created`
+
+        if (id) {
+            data.id = id;
+        }
         const payload = {
             ...data,
+            event: event,
         };
         mutation.mutate(payload, {
-            onSuccess: () => {
-                toast.success("City created successfully");
-                history.push("/backend/frontend/cities");
+            onSuccess: (response) => {
+                if (response?.data?.status === 'Failed') {
+                    return toast.error(response?.data?.msg);
+                }
+                toast.success(`City ${message} successfully`);
+                history.push(`${process.env.PUBLIC_URL}/cities`);
                 reset();
             },
         });
     };
+
+
+    useEffect(() => {
+        if (city && id) {
+            setValue('region_name', city?.data[0]?.region_name)
+            setValue('state_name', city?.data[0]?.state_name)
+            setValue('city_name', city?.data[0]?.city_name)
+        }
+    }, [setValue, city, id]);
+
 
     return (
         <Content fluid>
@@ -54,6 +78,7 @@ const AddCity = () => {
                                         width: "100%",
                                         height: "38px",
                                     }}
+
                                 >
                                     {region_list?.data?.map((list, i) => <option key={i} value={list.region_name}>{list.region_name}</option>)}
                                 </select>

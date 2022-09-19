@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Content from "../../layout/content/Content";
 import {
   Button,
@@ -16,19 +16,31 @@ import { useMutation, useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import "../style.css";
 import Api from "../../http/masterApis";
-import { Card, FormGroup, ModalBody, Modal, Form, Row, Col ,Spinner} from "reactstrap";
+import { Card, FormGroup, ModalBody, Modal, Row, Col, Spinner } from "reactstrap";
 import toast from "react-hot-toast";
 
 const DataList = () => {
-  const [modal, setModal] = React.useState(false);
+  const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [row, setRow] = useState("");
   const history = useHistory();
   const toggle = () => setModal(!modal);
   const { errors, handleSubmit, register, reset } = useForm();
   const { data: role_list } = useQuery('getRole', Api.getRole);
+
+  const { data: user_list } = useQuery(
+    ['getUser', row],
+    Api.getUsers,
+    {
+      enabled: !!row,
+    }
+  )
+
   const mutation = useMutation(Api.manageRole);
+  const updateMutation = useMutation(Api.updateRole)
 
   const onSubmit = (data) => {
+    setLoading(true)
     data.event = 'insert'
     const payload = {
       ...data,
@@ -40,6 +52,7 @@ const DataList = () => {
           return toast.error(response?.data?.msg);
         }
         toast.success("Role created successfully");
+        toggle();
         history.push("/backend/frontend/roles");
         reset();
       }
@@ -60,10 +73,32 @@ const DataList = () => {
           return toast.error(response?.data?.msg);
         }
         toast.success("Role deleted successfully");
-        history.push("/backend/frontend/roles");
+        history.push(`${process.env.PUBLIC_URL}/roles`);
       }
     });
   }
+  const handleEdit = (row) => {
+    setRow(row);
+    toggle();
+  }
+  const onUpdate = (data) => {
+    setLoading(true)
+    const payload = {
+      ...data,
+    };
+    updateMutation.mutate(payload, {
+      onSuccess: async (response) => {
+        if (response?.data?.status === 'Failed') {
+          setLoading(false);
+          return toast.error(response?.data?.msg);
+        }
+        toast.success("Role updated successfully");
+        toggle();
+        history.push("/backend/frontend/roles");
+        reset();
+      }
+    });
+  };
 
   return (
     <Content>
@@ -71,31 +106,50 @@ const DataList = () => {
       <Modal isOpen={modal} toggle={toggle} className="modal-dialog-centered modal-lg">
         <div className="modal-header">
           <h5 className="modal-title" id="exampleModalLabel">
-            Add Role
+            {row ? `Update` : `Add`} Role
           </h5>
           <button aria-label="Close" className="close" data-dismiss="modal" type="button" onClick={toggle}>
             <span aria-hidden={true}>×</span>
           </button>
         </div>
         <ModalBody>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Row>
+          {row ? <form onSubmit={handleSubmit(onUpdate)}>
+           <Row>
+              <Col md="6">
+                <FormGroup>
+                  <label className="form-control-label" htmlFor="role_name">
+                    User Name
+                  </label>
+                  <select className="form-control"
+                    ref={register}
+                    {...register('user_id')}
+                    name="user_id"
+                    id="user_id">
+                    {user_list?.data?.map((item, idx) => <option key={idx} value={item.id}>{item.name}</option>)}
+                  </select>
+                  {errors.user_id && <span className="error" style={{ color: 'red' }}>{errors.user_id.message}</span>}
+                </FormGroup>
+
+              </Col>
               <Col md="6">
                 <FormGroup>
                   <label className="form-control-label" htmlFor="role_name">
                     Role Name
                   </label>
-                  <input
-                    type="text"
-                    id="role_name"
+                  <select className="form-control"
+                    ref={register}
+                    {...register('role_name')}
                     name="role_name"
-                    className="form-control"
-                    placeholder="Role Name"
-                    ref={register({ required: "This field is required" })}
-                  />
+                    id="role_name">
+                    {role_list?.data?.map((item, idx) => <option key={idx} value={item.name}>{item.role_name}</option>)}
+                  </select>
                   {errors.role_name && <span className="error" style={{ color: 'red' }}>{errors.role_name.message}</span>}
                 </FormGroup>
+
+
               </Col>
+            </Row>
+            <Row>
               <Col md="6">
                 <FormGroup>
                   <label className="form-control-label" htmlFor="role_short_name">
@@ -111,48 +165,94 @@ const DataList = () => {
                   />
                   {errors.role_short_name && <span className="error" style={{ color: 'red' }}>{errors.role_short_name.message}</span>}
                 </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col md="6">
-                <FormGroup>
-                  <label className="form-control-label" htmlFor="example3cols3Input">
-                    Role Order
-                  </label>
-                  <input
-                    type="text"
-                    id="role_order"
-                    name="role_order"
-                    className="form-control"
-                    placeholder="Role Order"
-                    ref={register({ required: "This field is required" })}
-                  />
-                  {errors.role_order && <span className="error" style={{ color: 'red' }}>{errors.role_order.message}</span>}
-                </FormGroup>
+
               </Col>
               <Col md="6">
-                <FormGroup>
-                  <label className="form-control-label" htmlFor="active">
-                    Role Status
-                  </label>
-                  {/* dropdown for status */}
-                  <select className="form-control"
-                    ref={register}
-                    {...register('active')}
-                    name="active"
-                    id="active">
-                    {STATUS_OPTIONS.map((list, i) => <option key={i} value={list.value}>{list.name}</option>)}
-                  </select>
-                  {errors.active && <span className="error" style={{ color: 'red' }}>{errors.active.message}</span>}
-                </FormGroup>
+
               </Col>
             </Row>
 
             {/* submit btn */}
             <Button type="submit" color="danger" className="mt-3">
               Submit
-            </Button>
-          </form>
+             </Button>
+          </form> :
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Row>
+                <Col md="6">
+                  <FormGroup>
+                    <label className="form-control-label" htmlFor="role_name">
+                      Role Name
+                    </label>
+                    <input
+                      type="text"
+                      id="role_name"
+                      name="role_name"
+                      className="form-control"
+                      placeholder="Role Name"
+                      ref={register({ required: "This field is required" })}
+                    />
+                    {errors.role_name && <span className="error" style={{ color: 'red' }}>{errors.role_name.message}</span>}
+                  </FormGroup>
+                </Col>
+                <Col md="6">
+                  <FormGroup>
+                    <label className="form-control-label" htmlFor="role_short_name">
+                      Role Short Name
+                    </label>
+                    <input
+                      type="text"
+                      id="role_short_name"
+                      name="role_short_name"
+                      className="form-control"
+                      placeholder="Role Short Name"
+                      ref={register({ required: "This field is required" })}
+                    />
+                    {errors.role_short_name && <span className="error" style={{ color: 'red' }}>{errors.role_short_name.message}</span>}
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col md="6">
+                  <FormGroup>
+                    <label className="form-control-label" htmlFor="example3cols3Input">
+                      Role Order
+                    </label>
+                    <input
+                      type="text"
+                      id="role_order"
+                      name="role_order"
+                      className="form-control"
+                      placeholder="Role Order"
+                      ref={register({ required: "This field is required" })}
+                    />
+                    {errors.role_order && <span className="error" style={{ color: 'red' }}>{errors.role_order.message}</span>}
+                  </FormGroup>
+                </Col>
+                <Col md="6">
+                  <FormGroup>
+                    <label className="form-control-label" htmlFor="active">
+                      Role Status
+                    </label>
+                    {/* dropdown for status */}
+                    <select className="form-control"
+                      ref={register}
+                      {...register('active')}
+                      name="active"
+                      id="active">
+                      {STATUS_OPTIONS.map((list, i) => <option key={i} value={list.value}>{list.name}</option>)}
+                    </select>
+                    {errors.active && <span className="error" style={{ color: 'red' }}>{errors.active.message}</span>}
+                  </FormGroup>
+                </Col>
+              </Row>
+
+              {/* submit btn */}
+              <Button type="submit" color="danger" className="mt-3">
+                Submit
+              </Button>
+            </form>
+          }
         </ModalBody>
       </Modal>
 
@@ -197,7 +297,7 @@ const DataList = () => {
             </DataTableRow>
           </DataTableHead>
           {loading && <Spinner size="sm" color="danger" />}
-          
+
           {role_list?.data?.map((item, idx) => (
             <DataTableItem key={idx}>
               <DataTableRow size="md">
@@ -219,12 +319,12 @@ const DataList = () => {
                 </span>
               </DataTableRow>
               <DataTableRow className="">
-                <FiEdit color="green" />
+                <FiEdit color="green" onClick={(e) => handleEdit(item)} />
                 <FiTrash2 className="ml-2" color="#d32f2f" onClick={(e) => handleDelete(item)} />
               </DataTableRow>
             </DataTableItem>
           ))}
-          
+
         </div>
       </Card>
     </Content>

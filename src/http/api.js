@@ -104,10 +104,14 @@ class FetchData {
     return fetchApi.post(ApiUrls.master.prize.managePrize, data);
   }
 
-  async getStarBucks() {
+  async getStarBucksList() {
     return fetchApi.get(ApiUrls.master.starBucks.getStarBucks);
   }
-
+  async getStarBucks({ queryKey }) {
+    const [_, starId] = queryKey
+    return fetchApi.get(`${ApiUrls.master.starBucks.getStarBucks}?id=${starId}`);
+  }
+  
   async manageStarBucks(data) {
     return fetchApi.post(ApiUrls.master.starBucks.manageStarBucks, data);
   }

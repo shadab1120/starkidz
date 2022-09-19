@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Content from "../../layout/content/Content";
 import {
   Button,
@@ -10,7 +10,7 @@ import {
   BlockTitle,
   PaginationComponent, Icon, DataTableHead, DataTableRow, DataTableItem, UserAvatar
 } from "../../components/Component";
-import { Link } from "react-router-dom";
+import { Link,useHistory } from "react-router-dom";
 import "../style.css";
 
 import { FiEdit, FiTrash2 } from "react-icons/fi";
@@ -25,15 +25,45 @@ import {
   Modal,
   DropdownItem,
   Form,
+  Spinner
 } from "reactstrap";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import Api from "../../http/masterApis";
-const ManageState = () => {
+import toast from "react-hot-toast";
 
-  const { data, error, isLoading } = useQuery('getState', Api.getState);
+const ManageState = () => {
+  const [loading, setLoading] = useState(false);
+  const history = useHistory();
+  const [row, setRow] = useState("");
+  const { data, error, isLoading } = useQuery('getStateList', Api.getStateList);
+  const manageMutation = useMutation(Api.manageState);
+
   const handleDelete = (row) => {
-    console.error('row',row)
+    setLoading(true);
+    const { id } = row;
+    const payload = {
+      id: id,
+      event: 'delete'
+    }
+
+    manageMutation.mutate(payload, {
+      onSuccess: async (response) => {
+        setLoading(false);
+        if (response?.data?.status === 'Failed') {
+          return toast.error(response?.data?.msg);
+        }
+        toast.success("State deleted successfully");
+        history.push(`${process.env.PUBLIC_URL}/states`);
+      }
+    });
   }
+  const handleEdit = (row) => {
+    const { id } = row;
+    setRow(row)
+    history.push(`${process.env.PUBLIC_URL}/add-state/${id}`);
+  }
+
+
   if (isLoading) {
     return (
       <>
@@ -57,7 +87,7 @@ const ManageState = () => {
             <BlockHeadContent>
               <ul className="nk-block-tools g-3">
                 <li>
-                <Link to="add-state" className="btn btn-danger">
+                  <Link to="add-state" className="btn btn-danger">
                     Add State
                   </Link>
                 </li>
@@ -84,6 +114,7 @@ const ManageState = () => {
               <span className="d-none d-sm-inline">Action</span>
             </DataTableRow>
           </DataTableHead>
+          {loading && <Spinner size="sm" color="danger" />}
           {data?.data?.map((item, idx) => (
             <DataTableItem key={idx}>
               <DataTableRow size="md">
@@ -98,7 +129,7 @@ const ManageState = () => {
                 </span>
               </DataTableRow>
               <DataTableRow className="">
-                <FiEdit color="green" />
+                <FiEdit color="green" onClick={(e) => handleEdit(item)} />
                 <FiTrash2 className="ml-2" color="#d32f2f" onClick={(e) => handleDelete(item)} />
 
               </DataTableRow>

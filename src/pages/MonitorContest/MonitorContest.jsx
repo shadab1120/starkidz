@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
+import { useParams, useHistory } from "react-router-dom";
 import moment from "moment"
-import { DATE_AND_TIME_FORMAT } from "./../../utils/Utils.js"
+import { DATE_AND_TIME_FORMAT } from "./../../utils/Utils"
 import Api from "../../http/ContestApi";
 import Content from "../../layout/content/Content";
 import { Icon, DataTableHead, DataTableRow, DataTableItem, UserAvatar } from "../../components/Component";
@@ -10,13 +11,40 @@ import "./downloads.css";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import {
   Card,
+  Spinner
 } from "reactstrap";
+import toast from "react-hot-toast";
 
 const MonitorContest = () => {
-
+  const history = useHistory();
+  const params = useParams();
+  const { id } = params;
+  const [loading, setLoading] = useState(false);
   const users = useSelector((state) => state.auth.user);
-  const { data, isLoading } = useQuery('randomFacts', Api.getContest);
+  const { data, isLoading } = useQuery('getContestList', Api.getContestList);
+  const manageMutation = useMutation(Api.manageContest);
+  const handleDelete = (row) => {
+    setLoading(true);
+    const { id } = row;
+    const payload = {
+      id: id,
+      event: 'delete',
+    }
 
+    manageMutation.mutate(payload, {
+      onSuccess: async (response) => {
+        setLoading(false);
+        if (response?.data?.status === 'Failed') {
+          return toast.error(response?.data?.msg);
+        }
+        toast.success("Contest deleted successfully");
+      }
+    });
+  }
+  const handleEdit = (row) => {
+    const { id } = row;
+    history.push(`${process.env.PUBLIC_URL}/create-contest/${id}`);
+  }
   if (isLoading) {
     return (
       <>
@@ -72,7 +100,8 @@ const MonitorContest = () => {
               <span className="d-none d-sm-inline">Action</span>
             </DataTableRow>
           </DataTableHead>
-          {Object.values(data?.data)?.map((item, idx) => (
+          {loading && <Spinner size="sm" color="danger" />}
+          {data?.data?.map((item, idx) => (
             <DataTableItem key={idx}>
               <DataTableRow>
                 <span className="tb-lead">
@@ -136,8 +165,8 @@ const MonitorContest = () => {
                 </span>
               </DataTableRow>
               <DataTableRow className="">
-                <FiEdit color="green" />
-                <FiTrash2 className="ml-2" color="#d32f2f" />
+                <FiEdit color="green" onClick={(e) => handleEdit(item)} />
+                <FiTrash2 className="ml-2" color="#d32f2f" onClick={(e) => handleDelete(item)} />
               </DataTableRow>
             </DataTableItem>
           ))}

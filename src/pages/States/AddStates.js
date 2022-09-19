@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Content from "../../layout/content/Content";
 import { Button } from "../../components/Component";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "react-query";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import Api from "../../http/masterApis";
 import toast from "react-hot-toast";
 import "../style.css";
@@ -12,21 +12,42 @@ import { Row, Col } from "reactstrap";
 
 const AddStates = () => {
     const history = useHistory();
-    const { errors, handleSubmit, register, reset } = useForm();
-    const { data: region_list, error, isLoading } = useQuery('getRegion', Api.getRegion);
-    const mutation = useMutation(Api.createState);
+    const params = useParams();
+    const { id } = params;
+    const { errors, handleSubmit, register, reset, setValue } = useForm();
+    const { data: region_list } = useQuery('getRegionList', Api.getRegionList);
+    const { data: state_list, error, isLoading } = useQuery(['getState', id], Api.getState);
+    const mutation = useMutation(Api.manageState);
+
     const onSubmit = (data) => {
+        const event = id ? `update` : `insert`
+        const message = id ? `update` : `created`
+
+        if (id) {
+            data.id = id;
+        }
         const payload = {
             ...data,
+            event: event,
         };
         mutation.mutate(payload, {
-            onSuccess: () => {
-                toast.success("State created successfully");
-                history.push("/backend/frontend/states");
+            onSuccess: (response) => {
+                if (response?.data?.status === 'Failed') {
+                    return toast.error(response?.data?.msg);
+                }
+                toast.success(`State ${message} successfully`);
+                history.push(`${process.env.PUBLIC_URL}/states`);
                 reset();
             },
         });
     };
+    useEffect(() => {
+        if (state_list && id) {
+            setValue('region_name', state_list?.data[0]?.region_name)
+            setValue('state', state_list?.data[0]?.state_name)
+
+        }
+    }, [setValue, state_list, id]);
     return (
         <Content fluid>
             <div>

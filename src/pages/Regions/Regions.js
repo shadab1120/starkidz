@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Content from "../../layout/content/Content";
 import {
   Button,
@@ -11,27 +11,50 @@ import {
   PaginationComponent, Icon, DataTableHead, DataTableRow, DataTableItem, UserAvatar
 } from "../../components/Component";
 import "../style.css";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import { Link } from "react-router-dom";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import {
   Card,
-  DropdownMenu,
-  DropdownToggle,
-  UncontrolledDropdown,
-  Progress,
-  FormGroup,
-  ModalBody,
-  Modal,
-  DropdownItem,
-  Form,
+  Spinner
 } from "reactstrap";
 import Api from "../../http/masterApis";
+import toast from "react-hot-toast";
+import { useHistory } from "react-router-dom";
+
 const ManageRegion = () => {
-  const { data, error, isLoading } = useQuery('getRegion', Api.getRegion);
+  const history = useHistory();
+  const [loading, setLoading] = useState(false);
+  const [row, setRow] = useState("");
+  const { data, isLoading } = useQuery('getRegionList', Api.getRegionList);
+  const manageMutation = useMutation(Api.manageRegion);
+
   const handleDelete = (row) => {
-    console.error('row',row)
+    setLoading(true);
+    const { id } = row;
+    const payload = {
+      id: id,
+      event: 'delete'
+    }
+
+    manageMutation.mutate(payload, {
+      onSuccess: async (response) => {
+        setLoading(false);
+        if (response?.data?.status === 'Failed') {
+          return toast.error(response?.data?.msg);
+        }
+        toast.success("Region deleted successfully");
+        history.push("/backend/frontend/regions");
+      }
+    });
   }
+  const handleEdit = (row) => {
+    const { id } = row;
+    setRow(row)
+    history.push(`${process.env.PUBLIC_URL}/add-region/${id}`);
+  }
+
+
   if (isLoading) {
     return (
       <>
@@ -80,6 +103,7 @@ const ManageRegion = () => {
               <span className="d-none d-sm-inline">Action</span>
             </DataTableRow>
           </DataTableHead>
+          {loading && <Spinner size="sm" color="danger" />}
           {data?.data?.map((item, idx) => (
             <DataTableItem key={idx}>
               <DataTableRow size="md">
@@ -95,8 +119,8 @@ const ManageRegion = () => {
                 </span>
               </DataTableRow>
               <DataTableRow className="">
-                <FiEdit color="green" />
-                <FiTrash2 className="ml-2" color="#d32f2f" onClick={(e) => handleDelete(item)}/>
+                <FiEdit color="green" onClick={(e) => handleEdit(item)} />
+                <FiTrash2 className="ml-2" color="#d32f2f" onClick={(e) => handleDelete(item)} />
 
               </DataTableRow>
             </DataTableItem>

@@ -3,11 +3,18 @@ import Apis from "./constant";
 
 class FetchData {
   async createContest(data) {
-    return await fetchApi.post(Apis.contest.create_contest, data);
+    return fetchApi.post(Apis.contest.create_contest, data);
   }
 
-  async getContest() {
-    return await fetchApi.get(Apis.contest.get_contest);
+  async getContestList() {
+    return fetchApi.get(Apis.contest.get_contest);
+  }
+  async getContest({queryKey}) {
+    const [_, contestId] = queryKey
+    return fetchApi.get(`${Apis.contest.get_contest}?id=${contestId}`);
+  }
+  async manageContest(data) {
+    return fetchApi.post(Apis.contest.manageContest, data);
   }
 }
 

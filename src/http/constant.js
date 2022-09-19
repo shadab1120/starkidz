@@ -3,6 +3,7 @@ const ApiUrls = {
     role: {
       getRole: "/get_role.php",
       manageRole: "/role_management.php",
+      changeRole: "/change_user_role.php",
     },
     ageBrackets: {
       getAgeBrackets: "/get_age_bracket.php",
@@ -20,6 +21,10 @@ const ApiUrls = {
     states: {
       getStates: "/get_states.php",
       manageStates: "/manage_state.php",
+    },
+    district: {
+      getDistrict: "/get_district.php",
+      manageDistrict: "/manage_district.php",
     },
     rejectionReasons: {
       getRejectionReasons: "/get_rejecting_reason.php",
@@ -53,6 +58,10 @@ const ApiUrls = {
       getStarBucks: "/get_startbucks.php",
       manageStarBucks: "/manage_startbucks.php",
     },
+    section: {
+      getClassSectionHouseStream: "/get_class_house_section_stream.php",
+      manageClassSectionHouseStream: "/class_section_house_stream.php",
+    },
   },
   auth: {
     login: "/userlogin.php",
@@ -62,6 +71,7 @@ const ApiUrls = {
   contest: {
     create_contest: "/create_contest.php",
     get_contest: "/get_contest.php",
+    manageContest: "/manage_contest.php",
   },
   users: {
     getUserInfo: "/getuseinfo.php",

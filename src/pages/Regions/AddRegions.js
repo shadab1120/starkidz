@@ -1,38 +1,54 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Content from "../../layout/content/Content";
 import {
     Button,
 } from "../../components/Component";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
-import { useHistory } from "react-router-dom";
+import { useMutation, useQuery } from "react-query";
+import { useHistory, useParams } from "react-router-dom";
 import Api from "../../http/masterApis";
 import toast from "react-hot-toast";
-import { STATUS_OPTIONS } from "./../../utils/Utils.js"
 import "../style.css";
 import {
     Row, Col
-
 } from "reactstrap";
 
 
 const AddRegion = () => {
     const history = useHistory();
-    const { errors, handleSubmit, register, reset } = useForm();
-
-    const mutation = useMutation(Api.createRegion);
+    const params = useParams();
+    const { id } = params;
+    const { errors, handleSubmit, register, reset, setValue } = useForm();
+    const { data: region } = useQuery(['getRegion', id], Api.getRegion);
+    const mutation = useMutation(Api.manageRegion);
     const onSubmit = (data) => {
+        const event = id ? `update` : `insert`
+        const message = id ? `update` : `created`
+
+        if (id) {
+            data.id = id;
+        }
         const payload = {
             ...data,
+            event: event
         };
         mutation.mutate(payload, {
-            onSuccess: () => {
-                toast.success("Region created successfully");
-                history.push("/backend/frontend/regions");
+            onSuccess: (response) => {
+
+                if (response?.data?.status === 'Failed') {
+                    return toast.error(response?.data?.msg);
+                }
+                toast.success(`Region ${message} successfully`);
+                history.push(`${process.env.PUBLIC_URL}/regions`);
                 reset();
             },
         });
     };
+    useEffect(() => {
+        if (region && id) {
+            setValue('region_name', region?.data[0]?.region_name)
+        }
+    }, [setValue, region, id]);
 
     return (
         <Content fluid>
@@ -81,7 +97,7 @@ const AddRegion = () => {
                         </Col>
                     </Row> */}
                     <Row className="mt-4" md={8}>
-                    <Col md={2}>
+                        <Col md={2}>
                             <Button color="primary" size="md" bgColor="#D32F2F" bRadius="none" width="50%">
                                 Submit
                             </Button>

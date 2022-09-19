@@ -1,17 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Row, Col, FormGroup, Button } from "reactstrap";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useQuery } from "react-query";
 import { setContestDetails } from "../../store/CreateContestSlice";
+import Api from "../../http/ContestApi";
+import mApi from "../../http/masterApis";
+
 const ContestDetails = ({ handleStepChange }) => {
-  const [newContest, setNewContest] = useState(true);
-  const { errors, handleSubmit, register } = useForm();
+  const params = useParams();
   const dispatch = useDispatch();
+  const { id } = params;
+  const [newContest, setNewContest] = useState(true);
+  const { errors, handleSubmit, register, setValue } = useForm();
+  const { data, error, isLoading } = useQuery(['getContest', id], Api.getContest);
+  const { data: age_bracket_list } = useQuery('getAgeBracketsList', mApi.getAgeBracketsList);
+  const { data: contest_category } = useQuery('getContestTypeList', mApi.getContestTypeList);
+
+  useEffect(() => {
+    if (data) {
+      const contestDetails = data?.data[0] || []
+      const { age_bracket, contest_theme, contest_type_2, contest_type, copy_from, about_contest } = contestDetails
+      setValue('contest_type', contest_type);
+      setValue('contest_type_2', contest_type_2);
+      setValue('contest_theme', contest_theme);
+      setValue('age_bracket', age_bracket);
+      setValue('about_contest', about_contest);
+      setValue('copy_from', copy_from);
+    }
+  }, [data])
 
   const onSubmit = (data) => {
+    const event = id ? `update` : `insert`
     const payload = {
       contest_type: newContest ? "New_Contest" : "existing",
       ...data,
+      event: event
     };
 
     // image to base64
@@ -44,7 +69,7 @@ const ContestDetails = ({ handleStepChange }) => {
                       <input
                         className="radioButtonBig"
                         type="radio"
-                        name="rbg6"
+                        name="contest_type"
                         value="yes"
                         onChange={() => setNewContest(true)}
                       />
@@ -55,7 +80,7 @@ const ContestDetails = ({ handleStepChange }) => {
                       <input
                         className="radioButtonBig"
                         type="radio"
-                        name="rbg6"
+                        name="contest_type"
                         value="no"
                         onChange={() => setNewContest(false)}
                       />
@@ -76,15 +101,15 @@ const ContestDetails = ({ handleStepChange }) => {
                       height: "52px",
                     }}
                   >
-                    <option value="1">Copy From Existing</option>
-                    <option value="2">Two</option>
+                    {data?.data?.map((list, i) => <option key={i} value={list.id}>{list.copy_from} - {list.copy_from}</option>)}
                   </select>
+                  {errors.age_bracket && <span className="error">{errors.age_bracket.message}</span>}
                 </div>
               </div>
             </Row>
             <Row>
               <div className="form-row w-100">
-                 <div className="form-group col-md-6 name-cls">
+                <div className="form-group col-md-6 name-cls">
                   <label className="form-label" htmlFor="contest_image">
                     Contest Image
                   </label>
@@ -98,23 +123,31 @@ const ContestDetails = ({ handleStepChange }) => {
                   {errors.contest_image && <span className="error">{errors.contest_image.message}</span>}
                 </div>
                 <div className="form-group col-md-6 name-cls">
-                <label className="form-label" htmlFor="age_bracket">
-                  Age Bracket
-                </label>
-                <input
-                  name="age_bracket"
-                  id="age_bracket"
-                  className="form-control"
-                  placeholder="Age Bracket"
-                  ref={register({ required: "This field is required" })}
-                />
-                {errors.age_bracket && <span className="error">{errors.age_bracket.message}</span>}
+                  <label className="form-label" htmlFor="age_bracket">
+                    Age Bracket
+                  </label>
+                  <select
+                    ref={register}
+                    {...register('age_bracket')}
+                    name="age_bracket"
+                    id="age_bracket"
+                    multiple={true}
+                    placeholder="Age Bracket"
+                    className="form-select form-select-lg form-control"
+                    style={{
+                      width: "100%",
+                      height: "80px",
+                    }}
+                  >
+                    {age_bracket_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.age_from} - {list.age_to}</option>)}
+                  </select>
+                  {errors.age_bracket && <span className="error">{errors.age_bracket.message}</span>}
+                </div>
               </div>
-              </div>
-              
+
             </Row>
             <Row>
-              
+
               <div className="form-group col-md-6 name-cls">
                 <label className="form-label" htmlFor="contest_type_2">
                   Contest Type
@@ -125,14 +158,14 @@ const ContestDetails = ({ handleStepChange }) => {
                   id="contest_type_2"
                   ref={register({ required: "This field is required" })}
                 >
-                  <option value="1">Copy From Existing</option>
-                  <option value="2">Two</option>
+               {contest_category?.data?.map((list, i) => <option key={i} value={list.id}>{list.contest_type_name}</option>)}
+              
                 </select>
                 {errors.contest_type_2 && <span className="error">{errors.contest_type_2.message}</span>}
               </div>
               <div className="form-group col-md-6 name-cls">
                 <label className="form-label" htmlFor="contest_theme">
-                Contest Theme
+                  Contest Theme/Topic
                 </label>
                 <input
                   name="contest_theme"
@@ -146,11 +179,18 @@ const ContestDetails = ({ handleStepChange }) => {
             </Row>
             <Row>
               <FormGroup className="w-100">
-                <label className="form-label" htmlFor="contestDescription">
-                About Contest
+                <label className="form-label" htmlFor="about_contest">
+                  About Contest
                 </label>
-                <textarea className="form-control" rows="3" name="description" id="contestDescription"></textarea>
-                {errors.description && <span className="error">{errors.description.message}</span>}
+                <textarea
+                  className="form-control"
+                  rows="3"
+                  ref={register({ required: "This field is required" })}
+                  {...register('about_contest')}
+                  name="about_contest"
+                  id="about_contest"
+                ></textarea>
+                {errors.about_contest && <span className="error">{errors.about_contest.message}</span>}
               </FormGroup>
             </Row>
             <Row className="mt-4">
