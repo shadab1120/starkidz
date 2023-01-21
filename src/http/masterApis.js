@@ -165,10 +165,14 @@ class FetchData {
         return fetchApi.get(Apis.ageProof.getAgeProof, params);
     }
 
+    async manageVerifyAgeProof(params) {
+        return fetchApi.post(Apis.ageProof.manageAgeProof, params);
+    }
 
     async getClientContestList(params) {
         return fetchApi.get(Apis.clientAdmin.get_contest, params);
     }
+
 }
 
 export default new FetchData();

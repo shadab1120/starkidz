@@ -1,19 +1,41 @@
 import React from "react";
 import Content from "../../layout/content/Content";
 import { DataTableHead, DataTableRow, DataTableItem, UserAvatar } from "../../components/Component";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import Api from "../../http/masterApis";
 import moment from "moment"
 import "./downloads.css";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import toast, { Toaster } from "react-hot-toast";
 import {
   Card
 } from "reactstrap";
 
+
 const VerifyAge = () => {
 
   const { data: ageProofList, error, isLoading } = useQuery(['getContest'], Api.getVerifyAgeProofLits);
+  const mutation = useMutation(Api.manageVerifyAgeProof);
 
+  const handleUpdateStatus = (row) => {
+    console.log('------', row)
+
+    const payload = {
+      user_id: row?.user_id,
+      id: row?.id,
+      status: row?.status === "Approved" ? 'Approved' : 'Unapproved'
+    };
+    mutation.mutate(payload, {
+      onSuccess: (response) => {
+
+        if (response?.data?.status === 'Failed') {
+          return toast.error(response?.data?.msg);
+        }
+        toast.success(`Status updated successfully`);
+      },
+    });
+
+  }
   return (
     <Content>
       <Card className="card-full">
@@ -100,7 +122,8 @@ const VerifyAge = () => {
                   className={`badge badge-dot badge-dot-xs badge-${item.status === "Paid" ? "success" : item.status === "Due" ? "warning" : "danger"
                     }`}
                 >
-                  {item.status}
+                  <a href="#" onClick={() => handleUpdateStatus(item)} className={item.status === 'Approved' ? `link-danger` : `link-success`} title={item.status === 'Approved' ? `UnApproved` : `Approved`}>{item.status === 'Approved' ? `UnApproved` : `Approved`}
+                  </a>
                 </span>
               </DataTableRow>
               <DataTableRow>

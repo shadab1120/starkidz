@@ -461,6 +461,11 @@ if (user?.role.search(/administrator/) === 0) {
       text: `Helpdesk`,
       link: `${process.env.PUBLIC_URL}/help`,
     },
+    {
+      icon: Help,
+      text: `Photo Editor`,
+      link: `https://starkids.thefitnesssfactory.com/photoeditor/index.php`,
+    },
 
     /*
   {
