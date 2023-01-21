@@ -1,8 +1,0 @@
-2022/12/18-14:17:38.032 5 Creating DB /media/varun/workspace/react/starkidz/”/var/tmp/Chrome”/Default/Local Storage/leveldb since it was missing.
-2022/12/18-14:17:38.097 5 Reusing MANIFEST /media/varun/workspace/react/starkidz/”/var/tmp/Chrome”/Default/Local Storage/leveldb/MANIFEST-000001
-2022/12/18-14:35:21.925 9 Level-0 table #5: started
-2022/12/18-14:35:21.930 9 Level-0 table #5: 18521 bytes OK
-2022/12/18-14:35:21.935 9 Delete type=0 #3
-2022/12/18-14:36:06.244 5 Level-0 table #7: started
-2022/12/18-14:36:06.252 5 Level-0 table #7: 18449 bytes OK
-2022/12/18-14:36:06.272 5 Delete type=0 #4
