@@ -31,6 +31,9 @@ const HouseMasterList = () => {
   const [row, setRow] = useState("");
   const history = useHistory();
   const toggle = () => setModal(!modal);
+  const [result, setResult] = useState('');
+
+
   const { errors, handleSubmit, register, reset, setValue } = useForm();
 
   const { data: house_list } = useQuery(['getClassSectionHouseStreamList', 'house'], Api.getClassSectionHouseStreamList);
@@ -49,7 +52,9 @@ const HouseMasterList = () => {
       setValue('name', name);
     }
   }, [house_details])
-
+  const onSubmitFilter = ({ house_name }) => {
+    house_name ? setResult(house_name) : setResult('')
+  };
   const onSubmit = (data) => {
 
     const event = row ? `update` : `insert`
@@ -105,6 +110,39 @@ const HouseMasterList = () => {
 
   return (
     <Content>
+      <div>
+        <form onSubmit={handleSubmit(onSubmitFilter)}>
+          <Row className="mt-4">
+            <Col md="4">
+              <FormGroup className="form-group">
+                <div className="form-control-wrap">
+                  <label className="form-label" htmlFor="house_name">
+                    House Master :
+                  </label>
+                  <select
+                    ref={register}
+                    {...register('house_name')}
+                    name="house_name"
+                    id="house_name"
+                    placeholder="House Name"
+                    className="form-select form-select-lg form-control"
+                  >
+                    <option key="-1" value="">House Master</option>
+                    {house_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.name}</option>)}
+                  </select>
+                  {errors.house_name && <span className="error">{errors.house_name.message}</span>}
+                </div>
+              </FormGroup>
+            </Col>
+            <Col className="d-flex align-items-end" md="4">
+              <Button color="primary" size="md" bgColor="#D32F2F" bRadius="none" width="30%">
+                Search
+              </Button>
+            </Col>
+          </Row>
+        </form>
+      </div>
+      <br />
       <Modal isOpen={modal} toggle={toggle} className="modal-dialog-centered modal-lg">
         <div className="modal-header">
           <h5 className="modal-title" id="exampleModalLabel">
@@ -155,7 +193,7 @@ const HouseMasterList = () => {
           </div>
         </div>
         <BlockHead size="sm">
-          <BlockBetween>
+          <BlockBetween className="move-right">
             <BlockHeadContent>
               <ul className="nk-block-tools g-3">
                 <li>
@@ -169,10 +207,6 @@ const HouseMasterList = () => {
         </BlockHead>
       </div>
       <Card className="card-full">
-
-
-
-
         <div className="nk-tb-list mt-n2">
           <DataTableHead>
             <DataTableRow>
@@ -189,10 +223,10 @@ const HouseMasterList = () => {
           </DataTableHead>
           {loading && <Spinner size="sm" color="danger" />}
           {
-            house_list?.data.map((item, idx) => (
+            house_list?.data.filter((l) => !result || l.id === result).map((item, idx) => (
               <DataTableItem key={idx}>
                 <DataTableRow size="md">
-                  <span className="tb-lead">{idx}</span>
+                  <span className="tb-lead">{idx+1}</span>
                 </DataTableRow>
 
                 <DataTableRow size="md">

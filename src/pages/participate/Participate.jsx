@@ -20,12 +20,12 @@ const Participate = () => {
     <React.Fragment>
       <Content>
         <Row>
-              <Card>
-			  <video loop autoPlay>
-                            <source
-                 type="video/mp4" alt="Card image cap" control  src={Video_link} width="100%" />
-                </video>
-              </Card>
+          <Card>
+            <video loop autoPlay>
+              <source
+                type="video/mp4" alt="Card image cap" control src={Video_link} width="100%" />
+            </video>
+          </Card>
         </Row>
         <div></div>
       </Content>

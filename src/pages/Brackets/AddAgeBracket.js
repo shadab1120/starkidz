@@ -119,7 +119,7 @@ const AddAgeBracket = () => {
                     <Row className="mt-4" md={8}>
                         <Col md={2}>
                             <Button color="primary" size="md" bgColor="#D32F2F" bRadius="none" width="50%">
-                                Submit
+                                {id ? `Update` : `Save`}
                             </Button>
                         </Col>
                     </Row>

@@ -105,7 +105,7 @@ let menu = [
 
 const user = JSON.parse(localStorage.getItem("user"))?.data;
 
-if (user?.role === "contest_manager") {
+if (user?.role.search(/contest_manager/) === 0) {
   menu = [
     {
       icon: Kidz,
@@ -147,7 +147,7 @@ if (user?.role === "contest_manager") {
   ];
 }
 
-if (user?.role === "quality_analyst") {
+if (user?.role.search(/quality_analyst/) === 0) {
   menu = [
     {
       icon: Kidz,
@@ -177,7 +177,7 @@ if (user?.role === "quality_analyst") {
   ];
 }
 
-if (user?.role === "judge") {
+if (user?.role.search(/judge/) === 0) {
   menu = [
     {
       icon: StarBucks,
@@ -193,7 +193,7 @@ if (user?.role === "judge") {
   ];
 }
 
-if (user?.role === "client_admin") {
+if (user?.role.search(/client_admin/) === 0) {
   menu = [
     {
       icon: StarBucks,
@@ -247,10 +247,15 @@ if (user?.role === "client_admin") {
       text: `Create Contest`,
       link: `${process.env.PUBLIC_URL}/create-contest`,
     },
+    {
+      icon: StarBucks,
+      text: `View Contest`,
+      link: `${process.env.PUBLIC_URL}/view-contest`,
+    },
   ];
 }
 
-if (user?.role === "administrator") {
+if (user?.role.search(/administrator/) === 0) {
   menu = [
     {
       icon: Kidz,
@@ -440,15 +445,16 @@ if (user?.role === "administrator") {
 
       ],
     },
-
-    /*   
-	
-  {
+    {
       icon: StarBucks,
-      text:`Rejection Reason Management`,
-      link:`${process.env.PUBLIC_URL}/rejection_reason`,
+      text: `Rejection Reason Management`,
+      link: `${process.env.PUBLIC_URL}/rejection_reason`,
     },
-  */
+     {
+      icon: StarBucks,
+      text: `School Center`,
+      link: `${process.env.PUBLIC_URL}/school_center`,
+    },
 
     {
       icon: Help,

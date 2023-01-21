@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Content from "../../layout/content/Content";
 import {
   BlockBetween,
+  Button,
   BlockHead,
   BlockHeadContent,
   DataTableHead, DataTableRow, DataTableItem
@@ -14,15 +15,29 @@ import toast from "react-hot-toast";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import {
   Card,
-  Spinner
+  Spinner,
+  Row, Col,
+  FormGroup
 } from "reactstrap";
+import { useForm } from "react-hook-form";
 
 const ManageCity = () => {
   const [loading, setLoading] = useState(false);
   const history = useHistory();
   const [row, setRow] = useState("");
+  const [result, setResult] = useState('');
+  const [selectedState, setSelectedState] = useState("");
+
+  const { errors, handleSubmit, register, } = useForm();
+
+  const { data: state_list, } = useQuery('getStateList', Api.getStateList);
   const { data, isLoading } = useQuery('getCityList', Api.getCityList);
   const manageMutation = useMutation(Api.manageCity);
+
+
+  const onSubmitFilter = ({ city_name }) => {
+    city_name ? setResult(city_name) : setResult('')
+  };
 
   const handleDelete = (row) => {
     setLoading(true);
@@ -56,8 +71,64 @@ const ManageCity = () => {
       </>
     );
   }
+
   return (
     <Content>
+      <div>
+        <form onSubmit={handleSubmit(onSubmitFilter)}>
+          <Row className="mt-4">
+            <Col md="4">
+              <FormGroup className="form-group">
+                <div className="form-control-wrap">
+                  <label className="form-label" htmlFor="state_name">
+                    State Name :
+                  </label>
+                  <select
+                    ref={register}
+                    {...register('state_name')}
+                    name="state_name"
+                    id="state_name"
+                    placeholder="State Name"
+                    className="form-select form-select-lg form-control"
+                    onChange={(ev) => setSelectedState(ev.target.value)}
+                  >
+                    <option key="-1" value="">State Name</option>
+                    {state_list?.data?.map((list, i) => <option key={i} value={list.state_name}>{list.state_name}</option>)}
+                  </select>
+                  {errors.state_name && <span className="error">{errors.state_name.message}</span>}
+                </div>
+              </FormGroup>
+            </Col>
+            <Col md="4">
+              <FormGroup className="form-group">
+                <div className="form-control-wrap">
+                  <label className="form-label" htmlFor="city_name">
+                    City Name :
+                  </label>
+                  <select
+                    ref={register}
+                    {...register('city_name')}
+                    name="city_name"
+                    id="city_name"
+                    placeholder="City Name"
+                    className="form-select form-select-lg form-control"
+                  >
+                    <option key="-1" value="">City Name</option>
+                    {data?.data?.filter((l) => l.state_name === selectedState).map((list, i) => <option key={i} value={list.city_name}>{list.city_name}</option>)}
+                  </select>
+                  {errors.city_name && <span className="error">{errors.city_name.message}</span>}
+                </div>
+              </FormGroup>
+            </Col>
+            <Col className="d-flex align-items-end" md="4">
+              <Button color="primary" size="md" bgColor="#D32F2F" bRadius="none" width="30%">
+                Search
+              </Button>
+            </Col>
+          </Row>
+        </form>
+      </div>
+      <br />
       <div >
         <div className="card-title-group">
           <div className="card-title">
@@ -66,7 +137,7 @@ const ManageCity = () => {
           </div>
         </div>
         <BlockHead size="sm">
-          <BlockBetween>
+          <BlockBetween className="move-right">
             <BlockHeadContent>
               <ul className="nk-block-tools g-3">
                 <li>
@@ -88,15 +159,15 @@ const ManageCity = () => {
             <DataTableRow size="sm">
               <span>City Name</span>
             </DataTableRow>
-            <DataTableRow>
+            {/* <DataTableRow>
               <span className="d-none d-sm-inline">Status</span>
-            </DataTableRow>
+            </DataTableRow> */}
             <DataTableRow>
               <span className="d-none d-sm-inline">Action</span>
             </DataTableRow>
           </DataTableHead>
           {loading && <Spinner size="sm" color="danger" />}
-          {data?.data?.map((item, idx) => (
+          {data?.data?.filter((l) => !result || l.city_name === result).map((item, idx) => (
             <DataTableItem key={idx}>
               <DataTableRow size="md">
                 <span className="tb-lead"> {item.state_name}</span>
@@ -106,14 +177,14 @@ const ManageCity = () => {
                 <span className="tb-lead"> {item.city_name}</span>
               </DataTableRow>
 
-              <DataTableRow>
+              {/* <DataTableRow>
                 <span
                   className={`badge badge-dot badge-dot-xs badge-${item.status === "Paid" ? "success" : item.status === "Due" ? "warning" : "danger"
                     }`}
                 >
                   {item.status}
                 </span>
-              </DataTableRow>
+              </DataTableRow> */}
               <DataTableRow className="">
                 <FiEdit color="green" onClick={(e) => handleEdit(item)} />
                 <FiTrash2 className="ml-2" color="#d32f2f" onClick={(e) => handleDelete(item)} />

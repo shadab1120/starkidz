@@ -25,14 +25,16 @@ import {
   Spinner
 } from "reactstrap";
 
-const DistrictList = () => {
 
+const DistrictList = () => {
+  const history = useHistory();
+  const toggle = () => setModal(!modal);
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [reFetech, setReFetch] = useState(false);
   const [row, setRow] = useState("");
-  const history = useHistory();
-  const toggle = () => setModal(!modal);
+  const [result, setResult] = useState('');
+
   const { errors, handleSubmit, register, reset, setValue } = useForm();
 
   const { data: district_list } = useQuery(['getDistrictList'], Api.getDistrictList);
@@ -55,6 +57,9 @@ const DistrictList = () => {
     }
   }, [district_details, setValue])
 
+  const onSubmitFilter = ({ district }) => {
+    district ? setResult(district) : setResult('')
+  };
   const onSubmit = (data) => {
 
     const event = row ? `update` : `insert`
@@ -109,6 +114,40 @@ const DistrictList = () => {
 
   return (
     <Content>
+      <div>
+        <form onSubmit={handleSubmit(onSubmitFilter)}>
+          <Row className="mt-4">
+            <Col md="4">
+              <FormGroup className="form-group">
+                <div className="form-control-wrap">
+                  <label className="form-label" htmlFor="district">
+                    District Name :
+                  </label>
+                  <select
+                    ref={register}
+                    {...register('district')}
+                    name="district"
+                    id="district"
+                    placeholder="District Name"
+                    className="form-select form-select-lg form-control"
+                  >
+                    <option value="">Select District</option>
+                    {district_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.district_name}</option>)}
+                  </select>
+                  {errors.district && <span className="error">{errors.district.message}</span>}
+                </div>
+              </FormGroup>
+            </Col>
+
+            <Col className="d-flex align-items-end">
+              <Button color="primary" size="md" bgColor="#D32F2F" bRadius="none" width="15%">
+                Search
+              </Button>
+            </Col>
+          </Row>
+        </form>
+      </div>
+      <br />
       <Modal isOpen={modal} toggle={toggle} className="modal-dialog-centered modal-lg">
         <div className="modal-header">
           <h5 className="modal-title" id="exampleModalLabel">
@@ -123,13 +162,12 @@ const DistrictList = () => {
             <Row>
               <Col md={6}>
 
-                <label className="form-label" htmlFor="state_name">
+                <label className="form-control-label" htmlFor="state_name">
                   State Name :
                 </label>
                 <div className="form-control-wrap">
                   <select
-                    ref={register}
-                    {...register('state_name')}
+                    ref={register({ required: "This field is required" })}
                     name="state_name"
                     id="state_name"
                     className="form-select form-select-lg form-control"
@@ -138,6 +176,7 @@ const DistrictList = () => {
                       height: "38px",
                     }}
                   >
+                    <option value="">Select District</option>
                     {state_list?.data?.map((list, i) => <option key={i} value={list.state_name}>{list.state_name}</option>)}
                   </select>
                   {errors.state_name && <span className="error" style={{ color: 'red' }}>{errors.state_name.message}</span>}
@@ -165,7 +204,7 @@ const DistrictList = () => {
               <Col md="6">
                 <FormGroup style={{ 'marginTop': '38px' }}>
                   <Button type="submit" color="danger" >
-                    Submit
+                    {row?.id ? `Update` : `Save`}
                   </Button>
                 </FormGroup>
 
@@ -184,11 +223,11 @@ const DistrictList = () => {
           </div>
         </div>
         <BlockHead size="sm">
-          <BlockBetween>
+          <BlockBetween className="move-right">
             <BlockHeadContent>
               <ul className="nk-block-tools g-3">
                 <li>
-                  <a href="#" className="btn btn-danger" onClick={toggle}>
+                  <a href="#" className="btn btn-danger" onClick={(e) => { toggle(); setRow(""); }}>
                     Add District
                   </a>
                 </li>
@@ -198,10 +237,6 @@ const DistrictList = () => {
         </BlockHead>
       </div>
       <Card className="card-full">
-
-
-
-
         <div className="nk-tb-list mt-n2">
           <DataTableHead>
             <DataTableRow>
@@ -217,10 +252,10 @@ const DistrictList = () => {
             </DataTableRow>
           </DataTableHead>
           {loading && <Spinner size="sm" color="danger" />}
-          {district_list?.data.map((item, idx) => (
+          {district_list?.data.filter((l) => !result || l.id === result).map((item, idx) => (
             <DataTableItem key={idx}>
               <DataTableRow size="md">
-                <span className="tb-lead">{idx}</span>
+                <span className="tb-lead">{idx+1}</span>
               </DataTableRow>
 
               <DataTableRow size="md">

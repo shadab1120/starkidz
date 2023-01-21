@@ -5,6 +5,13 @@ class FetchData {
     async getUsers(params) {
         return fetchApi.post(Apis.master.users.getUsers, params);
     }
+    async changePassword(params) {
+        return fetchApi.post(Apis.master.users.changePassword, params);
+    }
+    async getMultiSelectUsers({ queryKey }) {
+        const [_, roleList] = queryKey
+        return fetchApi.get(`${Apis.master.users.getUsers}?role=${roleList}`);
+    }
     async getRegion({ queryKey }) {
         const [_, regionId] = queryKey
         return fetchApi.get(`${Apis.master.region.getRegion}?id=${regionId}`);
@@ -18,6 +25,14 @@ class FetchData {
 
     async manageRole(data) {
         return fetchApi.post(Apis.master.role.manageRole, data);
+    }
+    async getRoleByName({ queryKey }) {
+        const [_, roleName] = queryKey
+        return fetchApi.get(`${Apis.master.role.getRole}?role=${roleName}`);
+    }
+    async getMultiRoleByName({ queryKey }) {
+        const [_, roleName] = queryKey
+        return fetchApi.get(`${Apis.master.role.getRole}?role=${roleName}`);
     }
     async updateRole(data) {
         return fetchApi.post(Apis.master.role.changeRole, data);
@@ -59,8 +74,8 @@ class FetchData {
     }
     async getPrize({ queryKey }) {
 
-        const [_, districtId] = queryKey
-        return fetchApi.get(`${Apis.master.prize.getPrize}?id=${districtId}`);
+        const [_, prizeId] = queryKey
+        return fetchApi.get(`${Apis.master.prize.getPrize}?id=${prizeId}`);
     }
     async getPrizeList(params) {
         return fetchApi.get(Apis.master.prize.getPrize, params);
@@ -114,6 +129,10 @@ class FetchData {
         return fetchApi.post(Apis.master.judgingParameters.manageJudgingParameters, params);
     }
 
+    async manageJudgingAssignment(params) {
+        return fetchApi.post(Apis.master.judgingParameters.manageJudgingAssignment, params);
+    }
+
     async getClassSectionHouseStream({ queryKey }) {
         const [_, sectionId, module] = queryKey
         console.log('queryKey', queryKey)
@@ -125,6 +144,30 @@ class FetchData {
     }
     async manageClassSectionHouseStream(params) {
         return fetchApi.post(Apis.master.section.manageClassSectionHouseStream, params);
+    }
+
+    async getRejectionReason({ queryKey }) {
+        const [_, cityId] = queryKey
+        return fetchApi.get(`${Apis.master.rejectionReasons.getRejectionReasons}?id=${cityId}`);
+    }
+    async getRejectionReasonList(params) {
+        return fetchApi.get(Apis.master.rejectionReasons.getRejectionReasons, params);
+    }
+    async manageRejectionReason(data) {
+        return fetchApi.post(Apis.master.rejectionReasons.manageRejectionReasons, data);
+    }
+
+    async manageChildrenEnroll(data) {
+        return fetchApi.post(Apis.childrenEnroll.enroll, data);
+    }
+
+    async getVerifyAgeProofLits(params) {
+        return fetchApi.get(Apis.ageProof.getAgeProof, params);
+    }
+
+
+    async getClientContestList(params) {
+        return fetchApi.get(Apis.clientAdmin.get_contest, params);
     }
 }
 

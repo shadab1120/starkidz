@@ -35,6 +35,7 @@ const SectionDataList = () => {
   const [row, setRow] = useState("");
   const history = useHistory();
   const toggle = () => setModal(!modal);
+  const [result, setResult] = useState('');
   const { errors, handleSubmit, register, reset, setValue } = useForm();
 
   const { data: section_list } = useQuery(['getClassSectionHouseStreamList', 'section'], Api.getClassSectionHouseStreamList);
@@ -47,6 +48,9 @@ const SectionDataList = () => {
       enabled: !!row,
     }
   )
+  const onSubmitFilter = ({ section_name }) => {
+    section_name ? setResult(section_name) : setResult('')
+  };
   useEffect(() => {
     if (section_details) {
       let { name } = section_details?.data[0]
@@ -108,6 +112,39 @@ const SectionDataList = () => {
 
   return (
     <Content>
+      <div>
+        <form onSubmit={handleSubmit(onSubmitFilter)}>
+          <Row className="mt-4">
+            <Col md="4">
+              <FormGroup className="form-group">
+                <div className="form-control-wrap">
+                  <label className="form-label" htmlFor="section_name">
+                    Section Name :
+                  </label>
+                  <select
+                    ref={register}
+                    {...register('section_name')}
+                    name="section_name"
+                    id="section_name"
+                    placeholder="Bracket Name"
+                    className="form-select form-select-lg form-control"
+                  >
+                    <option key="-1" value="">Section Name</option>
+                    {section_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.name}</option>)}
+                  </select>
+                  {errors.section_name && <span className="error">{errors.section_name.message}</span>}
+                </div>
+              </FormGroup>
+            </Col>
+            <Col className="d-flex align-items-end" md="4">
+              <Button color="primary" size="md" bgColor="#D32F2F" bRadius="none" width="30%">
+                Search
+              </Button>
+            </Col>
+          </Row>
+        </form>
+      </div>
+      <br />
       <Modal isOpen={modal} toggle={toggle} className="modal-dialog-centered modal-lg">
         <div className="modal-header">
           <h5 className="modal-title" id="exampleModalLabel">
@@ -158,7 +195,7 @@ const SectionDataList = () => {
           </div>
         </div>
         <BlockHead size="sm">
-          <BlockBetween>
+          <BlockBetween className="move-right">
             <BlockHeadContent>
               <ul className="nk-block-tools g-3">
                 <li>
@@ -188,10 +225,10 @@ const SectionDataList = () => {
             </DataTableRow>
           </DataTableHead>
           {loading && <Spinner size="sm" color="danger" />}
-          {section_list?.data.map((item, idx) => (
+          {section_list?.data.filter((l) => !result || l.id === result).map((item, idx) => (
             <DataTableItem key={idx}>
               <DataTableRow size="md">
-                <span className="tb-lead">{item.id}</span>
+                <span className="tb-lead">{idx+1}</span>
               </DataTableRow>
 
               <DataTableRow size="md">

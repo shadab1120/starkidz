@@ -16,11 +16,12 @@ import {
 } from "../../../components/Component";
 import { galleryData } from "./GalleryData";
 import { useQuery } from "react-query";
-import api from "../../../http/api";
+import Api from "./../../../http/ContestApi";
 
-const JudgeGalleryPreview  = () => {
-  const [data] = useState(galleryData);
-  const { data: result, isLoading } = useQuery("gallery", api.getGallery);
+const JudgeGalleryPreview = () => {
+  const judgeId = JSON.parse(localStorage.getItem("user"))?.data?.ID;
+
+  const { data: result, isLoading } = useQuery(['getContestByRole', '', judgeId], Api.getContestByRole);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -32,7 +33,7 @@ const JudgeGalleryPreview  = () => {
       <Content>
         <Block>
           <Row className="g-gs">
-		  {/*<!--{Object.values(result?.data)?.map((item) => {
+            {/*<!--{Object.values(result?.data)?.map((item) => {
               return (
                 <Col sm={6} lg={3} xxl={3} key={item.id}>
                   <GalleryCard
@@ -46,21 +47,22 @@ const JudgeGalleryPreview  = () => {
                 </Col>
               );
 				})}-->*/}
-            {data.map((item) => {
+            {result?.data?.map((item) => {
               return (
                 <Col sm={6} lg={3} xxl={3} key={item.id}>
                   <JudgeGalleryCard
-                    img={item.img}
-                    userName={item.userName}
-                    userEmail={item.userEmail}
-                    theme={item.theme}
+                    img={item.contest_image}
+                    userName={item.contest_short_name}
+                    userEmail={item.contest_short_name}
+                    theme={item.contest_short_name}
                     userImg={item.userImg}
-                    heartCount={item.heart}
+                    heartCount={item.contest_short_name}
                     newGallery={true}
+                    item={item}
                   />
                 </Col>
               );
-            })} 
+            })}
           </Row>
         </Block>
       </Content>

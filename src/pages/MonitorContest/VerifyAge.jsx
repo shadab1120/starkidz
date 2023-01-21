@@ -1,23 +1,19 @@
 import React from "react";
 import Content from "../../layout/content/Content";
-import { Icon,DataTableHead, DataTableRow, DataTableItem, UserAvatar } from "../../components/Component";
-import { recentOrderData } from "./data";
+import { DataTableHead, DataTableRow, DataTableItem, UserAvatar } from "../../components/Component";
+import { useQuery } from "react-query";
+import Api from "../../http/masterApis";
+import moment from "moment"
 import "./downloads.css";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import {
-	Card,
-  DropdownMenu,
-  DropdownToggle,
-  UncontrolledDropdown,
-  Progress,
-  FormGroup,
-  ModalBody,
-  Modal,
-  DropdownItem,
-  Form,
+  Card
 } from "reactstrap";
 
 const VerifyAge = () => {
+
+  const { data: ageProofList, error, isLoading } = useQuery(['getContest'], Api.getVerifyAgeProofLits);
+
   return (
     <Content>
       <Card className="card-full">
@@ -33,9 +29,6 @@ const VerifyAge = () => {
             <DataTableRow>
               <span>S. No.</span>
             </DataTableRow>
-			 <DataTableRow size="sm">
-              <span>ID</span>
-            </DataTableRow>
             <DataTableRow size="sm">
               <span>Contestant Name</span>
             </DataTableRow>
@@ -45,91 +38,81 @@ const VerifyAge = () => {
             <DataTableRow>
               <span>Age</span>
             </DataTableRow>
-		 	<DataTableRow>
+            <DataTableRow>
               <span className="d-none d-sm-inline">Phone</span>
             </DataTableRow>
-		    <DataTableRow>
+            <DataTableRow>
               <span>Proof Submitted Date</span>
             </DataTableRow>
-			 <DataTableRow>
+            <DataTableRow>
               <span>Staus</span>
             </DataTableRow>
-		 <DataTableRow>
+            <DataTableRow>
               <span>View</span>
             </DataTableRow>
-		
-			  <DataTableRow>
+
+            <DataTableRow>
               <span className="d-none d-sm-inline">Action</span>
             </DataTableRow>
           </DataTableHead>
-          {recentOrderData.map((item, idx) => (
+          {ageProofList?.data?.map((item, idx) => (
             <DataTableItem key={idx}>
               <DataTableRow>
                 <span className="tb-lead">
-                  <a href="#order" onClick={(ev) => ev.preventDefault()}>
-                    {item.order}
-                  </a>
+                  {idx + 1}
                 </span>
               </DataTableRow>
-			    <DataTableRow>
+              <DataTableRow>
                 <span className="tb-lead">
                   <a href="#order" onClick={(ev) => ev.preventDefault()}>
-                    {item.order}
+                    {item.firstName}  {item.lastName}
                   </a>
                 </span>
               </DataTableRow>
-			
-			  <DataTableRow size="md">
-                   <div className="user-name">
-                    <span className="tb-lead">{item.name}</span>
-                  </div>
+
+              <DataTableRow size="md">
+                <div className="user-name">
+                  <span className="tb-lead">
+                    <img src={`data:image/png;base64,${item.age_proof}`} />
+                  </span>
+                </div>
               </DataTableRow>
               <DataTableRow size="sm">
                 <div className="user-card">
-                  {item.date}
+                  {moment(item.dob).format('YYYY-MM-DD')}
                 </div>
               </DataTableRow>
-              
-			                <DataTableRow>
-                <span className="tb-sub tb-amount">
-                15
-                </span>
-              </DataTableRow>
-			       
+
               <DataTableRow>
                 <span className="tb-sub tb-amount">
-                              8209240091
+                  {item.phone}
                 </span>
               </DataTableRow>
-              
-			  
-			  <DataTableRow>
+
+              <DataTableRow>
                 <span className="tb-sub tb-amount">
-                   {item.date}
+                  {moment(item.proof_added_on).format('YYYY-MM-DD')}
                 </span>
               </DataTableRow>
-              
-			  
-			  <DataTableRow>
+
+              <DataTableRow>
                 <span
-                  className={`badge badge-dot badge-dot-xs badge-${
-                    item.status === "Paid" ? "success" : item.status === "Due" ? "warning" : "danger"
-                  }`}
+                  className={`badge badge-dot badge-dot-xs badge-${item.status === "Paid" ? "success" : item.status === "Due" ? "warning" : "danger"
+                    }`}
                 >
                   {item.status}
                 </span>
               </DataTableRow>
-			  <DataTableRow>
+              <DataTableRow>
                 <a href="#" className="btn btn-danger">
-				 View
-				 </a>	
+                  View
+                </a>
               </DataTableRow>
-			  
-			  <DataTableRow className="">
-			    <FiEdit color="green" />
-                      <FiTrash2 className="ml-2" color="#d32f2f" />
-			           
-                      </DataTableRow>
+
+              <DataTableRow className="">
+                <FiEdit color="green" />
+                <FiTrash2 className="ml-2" color="#d32f2f" />
+              </DataTableRow>
             </DataTableItem>
           ))}
         </div>

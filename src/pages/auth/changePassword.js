@@ -1,5 +1,6 @@
-import React from "react";
-import { Block, BlockContent, BlockHead, BlockTitle, Button, PreviewCard } from "../../components/Component";
+import React, { useState } from "react";
+import { useMutation } from "react-query";
+import { Block, BlockContent, BlockHead, BlockTitle, Button, PreviewCard, Icon } from "../../components/Component";
 import Logo from "../../images/logo.png";
 import LogoDark from "../../images/logo-dark.png";
 import { FormGroup } from "reactstrap";
@@ -8,9 +9,33 @@ import Head from "../../layout/head/Head";
 import AuthFooter from "./AuthFooter";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import Api from "../../http/masterApis"
+import toast from "react-hot-toast";
 
 const ChangePassword = () => {
-  const { errors, register, handleSubmit } = useForm();
+  const [passState, setPassState] = useState(false);
+  const [cPassState, setCPassState] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user"))?.data;
+  const { errors, handleSubmit, register, reset } = useForm();
+  const manageMutation = useMutation(Api.changePassword);
+
+  const handleUpdatePassword = (data) => {
+    const payload = {
+      ...data,
+      username: user?.user_login
+    };
+    manageMutation.mutate(payload, {
+      onSuccess: async (response) => {
+
+        if (response?.data?.status === 'Failed') {
+          return toast.error(response?.data?.msg);
+        }
+        toast.success(`Password change successfully`);
+        reset();
+      }
+    });
+  };
+
 
   return (
     <React.Fragment>
@@ -32,19 +57,38 @@ const ChangePassword = () => {
                 </BlockDes> */}
               </BlockContent>
             </BlockHead>
-            <form>
+            <form onSubmit={handleSubmit(handleUpdatePassword)}>
               <FormGroup>
                 <div className="form-label-group">
                   <label className="form-label" htmlFor="default-01">
                     New Password
                   </label>
                 </div>
-                <input
-                  type="password"
-                  className="form-control form-control-lg"
-                  id="new-password"
-                  placeholder="Enter your new password"
-                />
+                <div className="form-control-wrap">
+                  <a
+                    href="#password"
+                    onClick={(ev) => {
+                      ev.preventDefault();
+                      setPassState(!passState);
+                    }}
+                    className={`form-icon lg form-icon-right passcode-switch ${passState ? "is-hidden" : "is-shown"}`}
+                  >
+                    <Icon name="eye" className="passcode-icon icon-show"></Icon>
+
+                    <Icon name="eye-off" className="passcode-icon icon-hide"></Icon>
+                  </a>
+
+                  <input
+                    ref={register({ required: "Please Enter password" })}
+                    {...register('password')}
+                    type={passState ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    className={`form-control-lg form-control ${passState ? "is-hidden" : "is-shown"}`}
+                  />
+                  {errors.password && <span className="invalid">{errors.password.message}</span>}
+                </div>
               </FormGroup>
 
               <FormGroup>
@@ -53,16 +97,37 @@ const ChangePassword = () => {
                     Confirm Password
                   </label>
                 </div>
-                <input
-                  type="password"
-                  className="form-control form-control-lg"
-                  id="confirm-password"
-                  placeholder="Confirm your new password"
-                />
+                <div className="form-control-wrap">
+                  <a
+                    href="#password"
+                    onClick={(ev) => {
+                      ev.preventDefault();
+                      setCPassState(!cPassState);
+                    }}
+                    className={`form-icon lg form-icon-right passcode-switch ${cPassState ? "is-hidden" : "is-shown"}`}
+                  >
+                    <Icon name="eye" className="passcode-icon icon-show"></Icon>
+
+                    <Icon name="eye-off" className="passcode-icon icon-hide"></Icon>
+                  </a>
+
+                  <input
+                    ref={register({ required: "Please Enter confirm password" })}
+                    {...register('cnf_password')}
+                    type={cPassState ? "text" : "password"}
+                    id="cnf_password"
+                    name="cnf_password"
+                    placeholder="Enter your confirm password"
+                    className={`form-control-lg form-control ${cPassState ? "is-hidden" : "is-shown"}`}
+                  />
+                  {errors.cnf_password && <span className="invalid">{errors.cnf_password.message}</span>}
+                </div>
               </FormGroup>
 
               <FormGroup>
-                <Button color="primary" size="lg" className="btn-block" onClick={(ev) => ev.preventDefault()}>
+                <Button color="primary" size="lg" className="btn-block" type="submit"
+                // onClick={(ev) => ev.preventDefault()}
+                >
                   Verify
                 </Button>
               </FormGroup>
@@ -74,7 +139,6 @@ const ChangePassword = () => {
             </div>
           </PreviewCard>
         </Block>
-        <AuthFooter />
       </PageContainer>
     </React.Fragment>
   );

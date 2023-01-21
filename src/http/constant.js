@@ -17,6 +17,7 @@ const ApiUrls = {
       getUsers: "/get_users.php",
       createUser: "/user.php",
       updateUser: "/update_user.php",
+      changePassword: "/change_password.php"
     },
     states: {
       getStates: "/get_states.php",
@@ -49,6 +50,7 @@ const ApiUrls = {
     judgingParameters: {
       getJudgingParameters: "/get_judging.php",
       manageJudgingParameters: "/manage_judging.php",
+      manageJudgingAssignment: "/assign_judge.php",
     },
     prize: {
       getPrize: "/get_prize.php",
@@ -72,9 +74,30 @@ const ApiUrls = {
     create_contest: "/create_contest.php",
     get_contest: "/get_contest.php",
     manageContest: "/manage_contest.php",
+    getAppliedContest: "/get_applied_contest.php",
+    manageSubmitJudgeEntry: "/submit_judging.php"
   },
   users: {
     getUserInfo: "/getuseinfo.php",
+  },
+  helpDesk: {
+    manageHelpDesk: "/insert_query.php",
+  },
+  childrenEnroll: {
+    enroll: "/children_enroll.php",
+  },
+  school: {
+    getSchoolCenterList: "/get_school_center.php",
+    getSchoolCenter: "/get_school_center.php",
+    manageSchoolCenter: "/manage_school_center.php",
+  },
+  ageProof: {
+    getAgeProof: "/get_age_proof.php",
+    manageAgeProof: "/manage_age_proof.php",
+  },
+  clientAdmin: {
+    get_contest: "/get_contest_client_admin.php",
+    manageContest: "/manage_contest_client_admin.php",
   },
 };
 

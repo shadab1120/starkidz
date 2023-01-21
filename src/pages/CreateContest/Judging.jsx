@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { Row, Col, FormGroup, Button, Form } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -12,12 +12,17 @@ const Judging = ({ handleStepChange }) => {
   const params = useParams();
   const dispatch = useDispatch();
   const { id } = params;
+  const [roleList, setRoleList] = useState([])
   const { errors, handleSubmit, register, setValue } = useForm();
   const { data: contest_data } = useQuery(['getContest', id], Api.getContest);
+  const { data: user_list } = useQuery('getUsers', mApi.getUsers);
 
   const { data: judge_params } = useQuery('getJudgingParametersList', mApi.getJudgingParametersList);
   const { data: role_list } = useQuery('getRole', mApi.getRole);
-
+  const { data: selected_role } = useQuery(['getRoleByName', id], mApi.getRoleByName);
+  const { data: multi_selected_role } = useQuery(['getMultiSelectUsers', roleList?.join()], mApi.getMultiSelectUsers);
+  
+  console.log('multi_selected_role', multi_selected_role)
   useEffect(() => {
     if (contest_data) {
       const contestDetails = contest_data[0] || []
@@ -39,7 +44,11 @@ const Judging = ({ handleStepChange }) => {
     dispatch(setContestDetails(payload));
     handleStepChange("next");
   };
-console.log('role_list',role_list)
+
+  const onChangeMultiSelect = (evt) => {
+    setRoleList([...evt.target.selectedOptions].map(o => o.value));
+  }
+
   return (
     <>
       <Row>
@@ -72,13 +81,15 @@ console.log('role_list',role_list)
                 Select Quality Analyst Form
               </label>
               <select
+                style={{height:'100px'}}
                 className="form-select form-select-lg form-control"
                 name="qa_form"
                 id="qa_form"
                 multiple={true}
+                onChange={onChangeMultiSelect}
                 ref={register({ required: "This field is required" })}
               >
-                {role_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.name}</option>)}
+                {role_list?.data?.map((list, i) => <option key={i} value={list.role}>{list.role_name}</option>)}
               </select>
               {errors.qa_form && <span className="text-danger">This field is required</span>}
             </FormGroup>
@@ -94,11 +105,7 @@ console.log('role_list',role_list)
               multiple={true}
               ref={register({ required: "This field is required" })}
             >
-              {[
-                { id: '0', name: 'One' },
-                { id: '1', name: 'Two' },
-                { id: '2', name: 'Three' }
-              ].map((list, i) => <option key={i} value={list.id}>{list.name}</option>)}
+              {multi_selected_role?.data?.map((item, idx) => <option key={idx} value={item.id}>{item.name}</option>)}
             </select>
             {errors.qa && <span className="text-danger">This field is required</span>}
           </Col>
@@ -112,11 +119,8 @@ console.log('role_list',role_list)
               id="level_judging"
               ref={register({ required: "This field is required" })}
             >
-              {[
-                { id: '0', name: 'One' },
-                { id: '1', name: 'Two' },
-                { id: '2', name: 'Three' }
-              ].map((list, i) => <option key={i} value={list.id}>{list.name}</option>)}
+              <option key="-1" value="">State Judge</option>
+              {Array.from({ length: 5 }, (_, i) => i + 1).map((list, i) => <option key={i} value={list}>{list}</option>)}
             </select>
             {errors.level_judging && <span className="text-danger">This field is required</span>}
           </Col>
@@ -137,11 +141,8 @@ console.log('role_list',role_list)
               id="select_judge_form"
               multiple={true}
             >
-              {[
-                { id: '0', name: 'One' },
-                { id: '1', name: 'Two' },
-                { id: '2', name: 'Three' }
-              ].map((list, i) => <option key={i} value={list.id}>{list.name}</option>)}
+              <option key="-1" value="">Judge From</option>
+              {user_list?.data?.map((item, idx) => <option key={idx} value={item.id}>{item.name}</option>)}
             </select>
           </Col>
         </Row>

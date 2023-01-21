@@ -21,7 +21,7 @@ const DurationLocation = ({ handleStepChange }) => {
   const { data: district_list } = useQuery('getDistrictList', mApi.getDistrictList);
   const { data: contest_data } = useQuery(['getContest', id], Api.getContest);
 
-  console.log('city_list',city_list)
+
   useEffect(() => {
     if (contest_data) {
       const contestDetails = contest_data?.data[0] || []

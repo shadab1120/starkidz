@@ -8,10 +8,12 @@ import avtar from "../../images/avatar/c-sm.jpg";
 import { useSelector } from "react-redux";
 import { useMutation, useQueryClient } from "react-query";
 import Api from "../../http/userApis";
+import {useHistory} from "react-router-dom"
 import toast, { Toaster } from "react-hot-toast";
 import { useForm } from "react-hook-form";
 
 const UserPage = () => {
+  const history = useHistory();
   const data = useSelector((state) => state.auth.user);
   const queryClient = useQueryClient();
   const userMutaion = useMutation(Api.getUser, {
@@ -122,6 +124,11 @@ const UserPage = () => {
                 <div className="mt-2">
                   <Button txtColor="#D32F2F" size="sm" bgColor="#fff" bRadius="none">
                     Edit Profile
+                  </Button>
+                </div>
+                <div className="mt-2">
+                  <Button txtColor="#D32F2F" size="sm" bgColor="#fff" bRadius="none" onClick={(e)=>history.push('changePassword')}>
+                    Change Password
                   </Button>
                 </div>
               </div>

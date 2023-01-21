@@ -33,6 +33,7 @@ const ClassDataList = () => {
   const [row, setRow] = useState("");
   const history = useHistory();
   const toggle = () => setModal(!modal);
+  const [result, setResult] = useState('');
   const { errors, handleSubmit, register, reset, setValue } = useForm();
 
   const { data: class_list } = useQuery(['getClassSectionHouseStreamList', 'class'], Api.getClassSectionHouseStreamList);
@@ -45,6 +46,12 @@ const ClassDataList = () => {
       enabled: !!row,
     }
   )
+
+  const onSubmitFilter = ({ class_name }) => {
+    class_name ? setResult(class_name) : setResult('')
+  };
+
+
   useEffect(() => {
     if (class_details) {
       let { name } = class_details?.data[0]
@@ -108,6 +115,39 @@ const ClassDataList = () => {
 
   return (
     <Content>
+       <div>
+        <form onSubmit={handleSubmit(onSubmitFilter)}>
+          <Row className="mt-4">
+            <Col md="4">
+              <FormGroup className="form-group">
+                <div className="form-control-wrap">
+                  <label className="form-label" htmlFor="class_name">
+                    Section Name :
+                  </label>
+                  <select
+                    ref={register}
+                    {...register('class_name')}
+                    name="class_name"
+                    id="class_name"
+                    placeholder="Class Name"
+                    className="form-select form-select-lg form-control"
+                  >
+                    <option key="-1" value="">Section Name</option>
+                    {class_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.name}</option>)}
+                  </select>
+                  {errors.class_name && <span className="error">{errors.class_name.message}</span>}
+                </div>
+              </FormGroup>
+            </Col>
+            <Col className="d-flex align-items-end" md="4">
+              <Button color="primary" size="md" bgColor="#D32F2F" bRadius="none" width="30%">
+                Search
+              </Button>
+            </Col>
+          </Row>
+        </form>
+      </div>
+      <br />
       <Modal isOpen={modal} toggle={toggle} className="modal-dialog-centered modal-lg">
         <div className="modal-header">
           <h5 className="modal-title" id="exampleModalLabel">
@@ -159,7 +199,7 @@ const ClassDataList = () => {
           </div>
         </div>
         <BlockHead size="sm">
-          <BlockBetween>
+          <BlockBetween className="move-right">
             <BlockHeadContent>
               <ul className="nk-block-tools g-3">
                 <li>
@@ -173,10 +213,6 @@ const ClassDataList = () => {
         </BlockHead>
       </div>
       <Card className="card-full">
-
-
-
-
         <div className="nk-tb-list mt-n2">
           <DataTableHead>
             <DataTableRow>
@@ -192,10 +228,10 @@ const ClassDataList = () => {
             </DataTableRow>
           </DataTableHead>
           {loading && <Spinner size="sm" color="danger" />}
-          {class_list?.data.map((item, idx) => (
+          {class_list?.data.filter((l) => !result || l.id === result).map((item, idx) => (
             <DataTableItem key={idx}>
               <DataTableRow size="md">
-                <span className="tb-lead">{idx}</span>
+                <span className="tb-lead">{idx+1}</span>
               </DataTableRow>
 
               <DataTableRow size="md">

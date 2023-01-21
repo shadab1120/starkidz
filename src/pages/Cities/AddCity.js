@@ -69,7 +69,7 @@ const AddCity = () => {
                             </label>
                             <div className="form-control-wrap">
                                 <select
-                                    ref={register}
+                                    ref={register({ required: "This field is required" })}
                                     {...register('region_name')}
                                     name="region_name"
                                     id="region_name"
@@ -79,9 +79,10 @@ const AddCity = () => {
                                         height: "38px",
                                     }}
 
-                                >
+                                ><option value="">Select Region</option>
                                     {region_list?.data?.map((list, i) => <option key={i} value={list.region_name}>{list.region_name}</option>)}
                                 </select>
+                                {errors.region_name && <span className="error" style={{ color: 'red' }}>{errors.region_name.message}</span>}
                             </div>
 
                         </Col>
@@ -94,7 +95,7 @@ const AddCity = () => {
                             </label>
                             <div className="form-control-wrap">
                                 <select
-                                    ref={register}
+                                    ref={register({ required: "This field is required" })}
                                     {...register('state_name')}
                                     name="state_name"
                                     id="state_name"
@@ -104,10 +105,11 @@ const AddCity = () => {
                                         height: "38px",
                                     }}
                                 >
+                                    <option value="" >Select State</option>
                                     {state_list?.data?.map((list, i) => <option key={i} value={list.state_name}>{list.state_name}</option>)}
                                 </select>
                             </div>
-
+                            {errors.state_name && <span className="error" style={{ color: 'red' }}>{errors.state_name.message}</span>}
                         </Col>
                     </Row>
                     <Row className="g-4">
@@ -131,7 +133,7 @@ const AddCity = () => {
                     <Row className="mt-4" md={8}>
                         <Col md={2}>
                             <Button color="primary" size="md" bgColor="#D32F2F" bRadius="none" width="50%">
-                                Submit
+                                {id?`Update` :`Save`}
                             </Button>
                         </Col>
                     </Row>

@@ -127,6 +127,20 @@ class FetchData {
   async forgotPassword(data) {
     return fetchApi.post(ApiUrls.auth.forgotPassword, data);
   }
+  async manageHelpDesk(data) {
+    return fetchApi.post(ApiUrls.helpDesk.manageHelpDesk, data);
+  }
+
+  async getSchoolCenter({ queryKey }) {
+    const [_, Id] = queryKey
+    return fetchApi.get(`${ApiUrls.school.getSchoolCenter}?id=${Id}`);
+  }
+  async getSchoolCenterList() {
+    return fetchApi.get(ApiUrls.school.getSchoolCenterList);
+  }
+  async manageSchoolCenter(data) {
+    return fetchApi.post(ApiUrls.school.manageSchoolCenter, data);
+  }
 }
 
 export default new FetchData();

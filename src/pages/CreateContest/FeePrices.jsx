@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useMutation, useQuery } from "react-query";
 import { useHistory, useParams } from "react-router-dom";
 import Api from "../../http/ContestApi";
+import mApi from "../../http/masterApis"
 import toast, { Toaster } from "react-hot-toast";
 
 const FeePrices = () => {
@@ -16,7 +17,7 @@ const FeePrices = () => {
   const { errors, handleSubmit, register, reset, setValue } = useForm();
   const contestDetails = useSelector((state) => state.contest);
   const mutation = useMutation(Api.manageContest);
-  const { data: prize_list } = useQuery(['getPrizeList'], Api.getPrizeList);
+  const { data: prize_list } = useQuery('getPrizeList', mApi.getPrizeList);
 
   const { data: contest_data } = useQuery(['getContest', id], Api.getContest);
   useEffect(() => {
@@ -31,11 +32,34 @@ const FeePrices = () => {
 
   const onSubmit = (data) => {
     const message = id ? `update` : `created`
-    const payload = {
-      ...contestDetails,
-      ...data,
-    };
-    mutation.mutate(payload, {
+    const formData = new FormData();
+
+    formData.append('about_contest', contestDetails?.about_contest);
+    formData.append('age_bracket', contestDetails?.age_bracket);
+    formData.append('contest_fee', contestDetails?.contest_fee);
+    formData.append('contest_manager', contestDetails?.contest_manager);
+    formData.append('contest_short_name', contestDetails?.contest_short_name);
+    formData.append('image', contestDetails?.contest_image);
+    formData.append('contest_start_date', contestDetails?.contest_start_date);
+    formData.append('contest_start_end_date', contestDetails?.contest_start_end_date);
+    formData.append('contest_theme', contestDetails?.contest_theme);
+    formData.append('contest_type', contestDetails?.contest_type);
+    formData.append('contest_type_2', contestDetails?.contest_type_2);
+    formData.append('district', contestDetails?.district);
+    formData.append('event', 'insert');
+    formData.append('judging_parameter', contestDetails?.judging_parameter);
+    formData.append('level_judging', contestDetails?.level_judging);
+    formData.append('prize', data?.prize);
+    formData.append('qa', contestDetails?.qa);
+    formData.append('qa_form', contestDetails?.qa_form);
+    formData.append('result_date', contestDetails?.result_date);
+    formData.append('select_judge_form', contestDetails?.select_judge_form);
+    formData.append('state', contestDetails?.state);
+    formData.append('terms_conditions', contestDetails?.terms_conditions);
+
+
+
+    mutation.mutate(formData, {
 
       onSuccess: (response) => {
         if (response?.data?.status === 'Failed') {
@@ -47,6 +71,7 @@ const FeePrices = () => {
       },
     });
   };
+
 
   return (
     <>
@@ -69,10 +94,7 @@ const FeePrices = () => {
                 id="prize"
                 placeholder="Prize Name"
                 className="form-select form-select-lg form-control"
-                style={{
-                  width: "100%",
-                  height: "80px",
-                }}
+
               >
                 {prize_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.prize_name}</option>)}
               </select>

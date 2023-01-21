@@ -15,12 +15,12 @@ const ImageContainer = ({ img }) => {
       }}
       href="#gallery"
     >
-      <img className="w-100 rounded" src={img} alt="" />
+      <img className="w-100 rounded" style={{height:'200px'}} src={img} alt="" />
       <Modal isOpen={open} toggle={toggle} size="xl">
         <button type="button" className="mfp-close" onClick={toggle}>
           ×
         </button>
-        <img className="w-100 rounded-top" style={{ height: "100%" }} src={img} alt="" />
+        <img className="w-100 rounded-top" style={{ height: "60%" }} src={img} alt="" />
       </Modal>
     </a>
   );

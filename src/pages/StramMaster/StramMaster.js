@@ -37,6 +37,7 @@ const StramMasterList = () => {
   const [row, setRow] = useState("");
   const history = useHistory();
   const toggle = () => setModal(!modal);
+  const [result, setResult] = useState('');
   const { errors, handleSubmit, register, reset, setValue } = useForm();
 
   const { data: stream_list } = useQuery(['getClassSectionHouseStreamList', 'stream'], Api.getClassSectionHouseStreamList);
@@ -49,6 +50,9 @@ const StramMasterList = () => {
       enabled: !!row,
     }
   )
+  const onSubmitFilter = ({ stream_name }) => {
+    stream_name ? setResult(stream_name) : setResult('')
+  };
   useEffect(() => {
     if (stream_details) {
       let { name } = stream_details?.data[0]
@@ -108,6 +112,39 @@ const StramMasterList = () => {
   }
   return (
     <Content>
+      <div>
+        <form onSubmit={handleSubmit(onSubmitFilter)}>
+          <Row className="mt-4">
+            <Col md="4">
+              <FormGroup className="form-group">
+                <div className="form-control-wrap">
+                  <label className="form-label" htmlFor="stream_name">
+                  Stream Name :
+                  </label>
+                  <select
+                    ref={register}
+                    {...register('stream_name')}
+                    name="stream_name"
+                    id="stream_name"
+                    placeholder="Stream Name"
+                    className="form-select form-select-lg form-control"
+                  >
+                    <option key="-1" value="">Stream Name</option>
+                    {stream_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.name}</option>)}
+                  </select>
+                  {errors.stream_name && <span className="error">{errors.stream_name.message}</span>}
+                </div>
+              </FormGroup>
+            </Col>
+            <Col className="d-flex align-items-end" md="4">
+              <Button color="primary" size="md" bgColor="#D32F2F" bRadius="none" width="30%">
+                Search
+              </Button>
+            </Col>
+          </Row>
+        </form>
+      </div>
+      <br />
       <Modal isOpen={modal} toggle={toggle} className="modal-dialog-centered modal-lg">
         <div className="modal-header">
           <h5 className="modal-title" id="exampleModalLabel">
@@ -158,7 +195,7 @@ const StramMasterList = () => {
           </div>
         </div>
         <BlockHead size="sm">
-          <BlockBetween>
+          <BlockBetween className="move-right">
             <BlockHeadContent>
               <ul className="nk-block-tools g-3">
                 <li>
@@ -189,10 +226,10 @@ const StramMasterList = () => {
           </DataTableHead>
 
           {loading && <Spinner size="sm" color="danger" />}
-          {stream_list?.data.map((item, idx) => (
+          {stream_list?.data.filter((l) => !result || l.id === result).map((item, idx) => (
             <DataTableItem key={idx}>
               <DataTableRow size="md">
-                <span className="tb-lead">{idx}</span>
+                <span className="tb-lead">{idx+1}</span>
               </DataTableRow>
 
               <DataTableRow size="md">

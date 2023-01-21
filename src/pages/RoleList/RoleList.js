@@ -114,7 +114,7 @@ const DataList = () => {
         </div>
         <ModalBody>
           {row ? <form onSubmit={handleSubmit(onUpdate)}>
-           <Row>
+            <Row>
               <Col md="6">
                 <FormGroup>
                   <label className="form-control-label" htmlFor="role_name">
@@ -174,8 +174,8 @@ const DataList = () => {
 
             {/* submit btn */}
             <Button type="submit" color="danger" className="mt-3">
-              Submit
-             </Button>
+              {row ? `Update` : `Save`}
+            </Button>
           </form> :
             <form onSubmit={handleSubmit(onSubmit)}>
               <Row>
@@ -263,7 +263,7 @@ const DataList = () => {
           </div>
         </div>
         <BlockHead size="sm">
-          <BlockBetween>
+          <BlockBetween className="move-right">
             <BlockHeadContent>
               <ul className="nk-block-tools g-3">
                 <li>
@@ -289,9 +289,9 @@ const DataList = () => {
               <span>Role Order</span>
             </DataTableRow>
 
-            <DataTableRow>
+            {/* <DataTableRow>
               <span className="d-none d-sm-inline">Status</span>
-            </DataTableRow>
+            </DataTableRow> */}
             <DataTableRow>
               <span className="d-none d-sm-inline">Action</span>
             </DataTableRow>
@@ -310,14 +310,14 @@ const DataList = () => {
               <DataTableRow>
                 <span className="tb-sub tb-amount">{item.role_order}</span>
               </DataTableRow>
-              <DataTableRow>
+              {/* <DataTableRow>
                 <span
                   className={`badge badge-dot badge-dot-xs badge-${item.is_active === "1" ? "success" : item.is_active === "0" ? "warning" : "danger"
                     }`}
                 >
                   {item.status}
                 </span>
-              </DataTableRow>
+              </DataTableRow> */}
               <DataTableRow className="">
                 <FiEdit color="green" onClick={(e) => handleEdit(item)} />
                 <FiTrash2 className="ml-2" color="#d32f2f" onClick={(e) => handleDelete(item)} />
