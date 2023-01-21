@@ -265,6 +265,10 @@ const Pages = () => {
         <Route exact path={`${process.env.PUBLIC_URL}/school_center`} component={SchoolCenter}></Route>
         <Route exact path={[`${process.env.PUBLIC_URL}/judge_entries`, `${process.env.PUBLIC_URL}/judge_entries/:Id`]} component={JudegeEntries}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/monitor-contest`} component={MonitorContest}></Route>
+        <Route exact path={`${process.env.PUBLIC_URL}/verify-age`} component={VerifyAge}></Route>
+        <Route exact path={`${process.env.PUBLIC_URL}/verify-contest`} component={VerifyContestant}></Route>
+        <Route exact path={`${process.env.PUBLIC_URL}/ask_for_more_work`} component={AskForMoreWork}></Route>
+        <Route exact path={`${process.env.PUBLIC_URL}/manage-contestant`} component={ManageContestant}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/view-contest`} component={ViewContest}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/close-contest`} component={CloseContest}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/result-preparation-and-announcement`} component={ResultAnnouncement}></Route>
