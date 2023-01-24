@@ -1,7 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import axios from "axios";
 import ApiUrls from "./constant";
-
+console.log('process.env.REACT_APP_NODE_ENV',process.env.REACT_APP_NODE_ENV)
+console.log('process.env.REACT_APP_API_URL',process.env.REACT_APP_API_URL)
 export const fetchApi = axios.create({
   // baseURL: "/api",
   baseURL: process.env.REACT_APP_NODE_ENV === "production" ? process.env.REACT_APP_API_URL : "/api",

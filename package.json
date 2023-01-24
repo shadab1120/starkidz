@@ -72,7 +72,7 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "PORT=3099 react-scripts start",
+    "start": "set REACT_APP_STAGE=production&&PORT=3099 react-scripts start",
     "build": "rimraf build && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
