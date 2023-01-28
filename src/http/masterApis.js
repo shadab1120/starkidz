@@ -1,6 +1,7 @@
 import { fetchApi } from "./api";
 import Apis from "./constant";
 
+
 class FetchData {
     async getUsers(params) {
         return fetchApi.post(Apis.master.users.getUsers, params);
@@ -173,6 +174,9 @@ class FetchData {
         return fetchApi.get(Apis.clientAdmin.get_contest, params);
     }
 
+    async getSchoolCenterList() {
+        return fetchApi.get(Apis.school.getSchoolCenterList);
+      }
 }
 
 export default new FetchData();

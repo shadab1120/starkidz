@@ -130,7 +130,8 @@ const Login = () => {
               <FormGroup>
                 <div className="form-label-group">
                   <label className="form-label" htmlFor="default-01">
-                    Email or Username
+                    {/* Email or Username */}
+                    Username
                   </label>
                 </div>
                 <div className="form-control-wrap">
@@ -139,7 +140,7 @@ const Login = () => {
                     id="default-01"
                     name="name"
                     ref={register({ required: "Please Enter username" })}
-                    placeholder="Enter your email address or username"
+                    placeholder="Enter your username"
                     className="form-control-lg form-control"
                   />
                   {errors.name && <span className="invalid">{errors.name.message}</span>}

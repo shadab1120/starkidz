@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 
 const ChangePassword = () => {
   const [passState, setPassState] = useState(false);
+  const [oldPassState, setOldPassState] = useState(false);
   const [cPassState, setCPassState] = useState(false);
   const user = JSON.parse(localStorage.getItem("user"))?.data;
   const { errors, handleSubmit, register, reset } = useForm();
@@ -58,6 +59,38 @@ const ChangePassword = () => {
               </BlockContent>
             </BlockHead>
             <form onSubmit={handleSubmit(handleUpdatePassword)}>
+              <FormGroup>
+                <div className="form-label-group">
+                  <label className="form-label" htmlFor="default-01">
+                    Old Password
+                  </label>
+                </div>
+                <div className="form-control-wrap">
+                  <a
+                    href="#oldPassword"
+                    onClick={(ev) => {
+                      ev.preventDefault();
+                      setOldPassState(!oldPassState);
+                    }}
+                    className={`form-icon lg form-icon-right passcode-switch ${oldPassState ? "is-hidden" : "is-shown"}`}
+                  >
+                    <Icon name="eye" className="passcode-icon icon-show"></Icon>
+
+                    <Icon name="eye-off" className="passcode-icon icon-hide"></Icon>
+                  </a>
+
+                  <input
+                    ref={register({ required: "Please Enter old password" })}
+                    {...register('old_password')}
+                    type={oldPassState ? "text" : "password"}
+                    id="old_password"
+                    name="old_password"
+                    placeholder="Enter your old password"
+                    className={`form-control-lg form-control ${oldPassState ? "is-hidden" : "is-shown"}`}
+                  />
+                  {errors.old_password && <span className="invalid">{errors.old_password.message}</span>}
+                </div>
+              </FormGroup>
               <FormGroup>
                 <div className="form-label-group">
                   <label className="form-label" htmlFor="default-01">

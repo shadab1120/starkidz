@@ -36,13 +36,14 @@ const PrizeList = () => {
   const [result, setResult] = useState('');
   const [cityId, setCityId] = useState('');
   const [selectedState, setSelectedState] = useState("");
+  const [selectedSchool, setSelectedSchool] = useState("");
 
   const { errors, handleSubmit, register, reset, setValue } = useForm();
 
   const { data } = useQuery(['getPrizeList'], Api.getPrizeList);
   const { data: state_list } = useQuery('getStateList', Api.getStateList);
   const { data: city_list } = useQuery('getCityList', Api.getCityList);
-
+  const { data:school_list, isLoading } = useQuery("getSchoolCenterList", Api.getSchoolCenterList);
   const manageMutation = useMutation(Api.managePrize)
 
   const { data: prize_list } = useQuery(
@@ -214,6 +215,27 @@ const PrizeList = () => {
               </Col>
             </Row>
             <Row>
+            <Col md="6">
+                <FormGroup className="form-group">
+                  <div className="form-control-wrap">
+                    <label className="form-label" htmlFor="state">
+                      School Name :
+                    </label>
+                    <select
+                      ref={register({ required: "This field is required" })}
+                      name="school_name"
+                      id="school_name"
+                      placeholder="School Name"
+                      className="form-select form-select-lg form-control"
+                      onChange={(ev) => setSelectedSchool(ev.target[ev.target.selectedIndex].text)}
+                    >
+                      <option value="">School Name</option>
+                      {school_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.school_centre_name}</option>)}
+                    </select>
+                    {errors.school_name && <span className="error">{errors.school_name.message}</span>}
+                  </div>
+                </FormGroup>
+              </Col>
               <Col md="6">
                 <FormGroup>
                   <label className="form-control-label" htmlFor="prize_name">
