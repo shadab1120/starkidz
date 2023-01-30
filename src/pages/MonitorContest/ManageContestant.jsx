@@ -1,11 +1,12 @@
 import React from "react";
 import Content from "../../layout/content/Content";
-import { Icon,DataTableHead, DataTableRow, DataTableItem, UserAvatar } from "../../components/Component";
-import { recentOrderData } from "./data";
+import { Icon, DataTableHead, DataTableRow, DataTableItem, UserAvatar } from "../../components/Component";
+import Api from "../../http/masterApis"
+import { useQuery } from "react-query";
 import "./downloads.css";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import {
-	Card,
+  Card,
   DropdownMenu,
   DropdownToggle,
   UncontrolledDropdown,
@@ -18,6 +19,7 @@ import {
 } from "reactstrap";
 
 const ManageContestant = () => {
+  const { data, isLoading } = useQuery('getContestList', Api.getClientContestList);
   return (
     <Content>
       <Card className="card-full">
@@ -33,7 +35,7 @@ const ManageContestant = () => {
             <DataTableRow>
               <span>S. No.</span>
             </DataTableRow>
-			 <DataTableRow size="sm">
+            <DataTableRow size="sm">
               <span>ID</span>
             </DataTableRow>
             <DataTableRow size="sm">
@@ -45,30 +47,30 @@ const ManageContestant = () => {
             <DataTableRow>
               <span>Age</span>
             </DataTableRow>
-		   <DataTableRow>
+            <DataTableRow>
               <span>District</span>
             </DataTableRow>
-          <DataTableRow>
+            <DataTableRow>
               <span>Email</span>
             </DataTableRow>
-			<DataTableRow>
+            <DataTableRow>
               <span className="d-none d-sm-inline">Phone</span>
             </DataTableRow>
-			 <DataTableRow>
+            <DataTableRow>
               <span>State</span>
             </DataTableRow>
-			 <DataTableRow>
+            <DataTableRow>
               <span>Registration Date</span>
             </DataTableRow>
-			 <DataTableRow>
+            <DataTableRow>
               <span>Staus</span>
             </DataTableRow>
-		
-			  <DataTableRow>
+
+            <DataTableRow>
               <span className="d-none d-sm-inline">Action</span>
             </DataTableRow>
           </DataTableHead>
-          {recentOrderData.map((item, idx) => (
+          {data?.data?.map((item, idx) => (
             <DataTableItem key={idx}>
               <DataTableRow>
                 <span className="tb-lead">
@@ -77,73 +79,72 @@ const ManageContestant = () => {
                   </a>
                 </span>
               </DataTableRow>
-			    <DataTableRow>
+              <DataTableRow>
                 <span className="tb-lead">
                   <a href="#order" onClick={(ev) => ev.preventDefault()}>
                     {item.order}
                   </a>
                 </span>
               </DataTableRow>
-			
-			  <DataTableRow size="md">
-                   <div className="user-name">
-                    <span className="tb-lead">{item.name}</span>
-                  </div>
+
+              <DataTableRow size="md">
+                <div className="user-name">
+                  <span className="tb-lead">{item.name}</span>
+                </div>
               </DataTableRow>
               <DataTableRow size="sm">
                 <div className="user-card">
                   {item.date}
                 </div>
               </DataTableRow>
-              
-			                <DataTableRow>
+
+              <DataTableRow>
                 <span className="tb-sub tb-amount">
-                15
-                </span>
-              </DataTableRow>
-			                <DataTableRow>
-                <span className="tb-sub tb-amount">
-                                 Jaipur
+                  15
                 </span>
               </DataTableRow>
               <DataTableRow>
                 <span className="tb-sub tb-amount">
-                 ravi@gmail.com
+                  Jaipur
                 </span>
               </DataTableRow>
               <DataTableRow>
                 <span className="tb-sub tb-amount">
-                              8209240091
+                  ravi@gmail.com
                 </span>
               </DataTableRow>
-              
-			  <DataTableRow>
+              <DataTableRow>
                 <span className="tb-sub tb-amount">
-                 Rajsthan
+                  8209240091
                 </span>
               </DataTableRow>
-              
-			  <DataTableRow>
+
+              <DataTableRow>
                 <span className="tb-sub tb-amount">
-                   {item.date}
+                 {item.location}
                 </span>
               </DataTableRow>
-              
-			  
-			  <DataTableRow>
+
+              <DataTableRow>
+                <span className="tb-sub tb-amount">
+                  {item.date}
+                </span>
+              </DataTableRow>
+
+
+              <DataTableRow>
                 <span
-                  className={`badge badge-dot badge-dot-xs badge-${
-                    item.status === "Paid" ? "success" : item.status === "Due" ? "warning" : "danger"
-                  }`}
+                  className={`badge badge-dot badge-dot-xs badge-${item.status === "Paid" ? "success" : item.status === "Due" ? "warning" : "danger"
+                    }`}
                 >
                   {item.status}
                 </span>
               </DataTableRow>
-			  <DataTableRow className="">
-			    <FiEdit color="green" />
-                      <FiTrash2 className="ml-2" color="#d32f2f" />
-			           
-                      </DataTableRow>
+              <DataTableRow className="">
+                <FiEdit color="green" />
+                <FiTrash2 className="ml-2" color="#d32f2f" />
+
+              </DataTableRow>
             </DataTableItem>
           ))}
         </div>
