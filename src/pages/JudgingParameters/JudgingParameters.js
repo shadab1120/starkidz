@@ -179,7 +179,7 @@ const JudgingParameters = () => {
       <Modal isOpen={modal} toggle={toggle} className="modal-dialog-centered modal-lg">
         <div className="modal-header">
           <h5 className="modal-title" id="exampleModalLabel">
-            {row ? `Update` : `Add`} Prize
+            {row ? `Update` : `Add`} Judging Parameter
           </h5>
           <button aria-label="Close" className="close" data-dismiss="modal" type="button" onClick={(e) => { toggle(); setRow(""); }}>
             <span aria-hidden={true}>×</span>

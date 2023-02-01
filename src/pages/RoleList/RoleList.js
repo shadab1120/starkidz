@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Content from "../../layout/content/Content";
 import {
   Button,
@@ -25,19 +25,20 @@ const DataList = () => {
   const [row, setRow] = useState("");
   const history = useHistory();
   const toggle = () => setModal(!modal);
-  const { errors, handleSubmit, register, reset } = useForm();
+  const { errors, handleSubmit, register, reset,setValue } = useForm();
   const { data: role_list } = useQuery('getRole', Api.getRole);
-
-  const { data: user_list } = useQuery(
-    ['getUser', row],
-    Api.getUsers,
-    {
-      enabled: !!row,
-    }
-  )
 
   const mutation = useMutation(Api.manageRole);
   const updateMutation = useMutation(Api.updateRole)
+
+  useEffect(() => {
+    setLoading(false)
+    if (role_list) {
+      let { role_name, role_short_name } = role_list?.data?.filter((r)=>r.id===row?.id)[0]||[];
+      setValue('role_name', role_name);
+      setValue('role_short_name', role_short_name);
+    }
+  }, [role_list,setValue])
 
   const onSubmit = (data) => {
     setLoading(true)
@@ -94,7 +95,7 @@ const DataList = () => {
         }
         toast.success("Role updated successfully");
         toggle();
-        history.push("/backend/frontend/roles");
+        history.push(`${process.env.PUBLIC_URL}/roles`);
         reset();
       }
     });
@@ -106,7 +107,7 @@ const DataList = () => {
       <Modal isOpen={modal} toggle={toggle} className="modal-dialog-centered modal-lg">
         <div className="modal-header">
           <h5 className="modal-title" id="exampleModalLabel">
-            {row ? `Update` : `Add`} Role
+            {row?.id ? `Update` : `Add`} Role
           </h5>
           <button aria-label="Close" className="close" data-dismiss="modal" type="button" onClick={toggle}>
             <span aria-hidden={true}>×</span>
@@ -115,41 +116,24 @@ const DataList = () => {
         <ModalBody>
           {row ? <form onSubmit={handleSubmit(onUpdate)}>
             <Row>
-              <Col md="6">
-                <FormGroup>
-                  <label className="form-control-label" htmlFor="role_name">
-                    User Name
-                  </label>
-                  <select className="form-control"
-                    ref={register}
-                    {...register('user_id')}
-                    name="user_id"
-                    id="user_id">
-                    {user_list?.data?.map((item, idx) => <option key={idx} value={item.id}>{item.name}</option>)}
-                  </select>
-                  {errors.user_id && <span className="error" style={{ color: 'red' }}>{errors.user_id.message}</span>}
-                </FormGroup>
-
-              </Col>
-              <Col md="6">
+                  <Col md="6">
                 <FormGroup>
                   <label className="form-control-label" htmlFor="role_name">
                     Role Name
                   </label>
-                  <select className="form-control"
-                    ref={register}
-                    {...register('role_name')}
+                  <input
+                    type="text"
+                    id="role_name"
                     name="role_name"
-                    id="role_name">
-                    {role_list?.data?.map((item, idx) => <option key={idx} value={item.name}>{item.role_name}</option>)}
-                  </select>
+                    className="form-control"
+                    placeholder="Role Name"
+                    ref={register({ required: "This field is required" })}
+                  />
                   {errors.role_name && <span className="error" style={{ color: 'red' }}>{errors.role_name.message}</span>}
                 </FormGroup>
 
 
               </Col>
-            </Row>
-            <Row>
               <Col md="6">
                 <FormGroup>
                   <label className="form-control-label" htmlFor="role_short_name">
@@ -167,11 +151,7 @@ const DataList = () => {
                 </FormGroup>
 
               </Col>
-              <Col md="6">
-
-              </Col>
             </Row>
-
             {/* submit btn */}
             <Button type="submit" color="danger" className="mt-3">
               {row ? `Update` : `Save`}
@@ -279,19 +259,18 @@ const DataList = () => {
       <Card className="card-full">
         <div className="nk-tb-list mt-n2">
           <DataTableHead>
+          <DataTableRow>
+              <span>SNo.</span>
+            </DataTableRow>
             <DataTableRow>
               <span>Role Name</span>
             </DataTableRow>
             <DataTableRow size="sm">
               <span>Role short name</span>
             </DataTableRow>
-            <DataTableRow size="md">
-              <span>Role Order</span>
-            </DataTableRow>
-
-            {/* <DataTableRow>
+            <DataTableRow>
               <span className="d-none d-sm-inline">Status</span>
-            </DataTableRow> */}
+            </DataTableRow>
             <DataTableRow>
               <span className="d-none d-sm-inline">Action</span>
             </DataTableRow>
@@ -300,6 +279,9 @@ const DataList = () => {
 
           {role_list?.data?.map((item, idx) => (
             <DataTableItem key={idx}>
+               <DataTableRow size="md">
+                <span className="tb-lead">{idx+1}</span>
+              </DataTableRow>
               <DataTableRow size="md">
                 <span className="tb-lead">{item.role_name}</span>
               </DataTableRow>
@@ -308,16 +290,13 @@ const DataList = () => {
                 <span className="tb-sub tb-amount">{item.role_short_name}</span>
               </DataTableRow>
               <DataTableRow>
-                <span className="tb-sub tb-amount">{item.role_order}</span>
-              </DataTableRow>
-              {/* <DataTableRow>
                 <span
                   className={`badge badge-dot badge-dot-xs badge-${item.is_active === "1" ? "success" : item.is_active === "0" ? "warning" : "danger"
                     }`}
                 >
-                  {item.status}
+                  {item.is_active ==="1" ?'Active':'Inactive'}
                 </span>
-              </DataTableRow> */}
+              </DataTableRow>
               <DataTableRow className="">
                 <FiEdit color="green" onClick={(e) => handleEdit(item)} />
                 <FiTrash2 className="ml-2" color="#d32f2f" onClick={(e) => handleDelete(item)} />

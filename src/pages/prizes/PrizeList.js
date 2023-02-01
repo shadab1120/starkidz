@@ -58,9 +58,9 @@ const PrizeList = () => {
     if (prize_list) {
       let { prize_name, state, city } = prize_list?.data[0]
       setValue('prize_name', prize_name);
-      setValue('city', city);
-      setCityId(city)
-      setValue('state', state);
+      // setValue('city', city);
+      // setCityId(city)
+      // setValue('state', state);
     }
   }, [prize_list, setValue])
 
@@ -168,7 +168,7 @@ const PrizeList = () => {
         </div>
         <ModalBody>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Row>
+            {/* <Row>
               <Col md="6">
                 <FormGroup className="form-group">
                   <div className="form-control-wrap">
@@ -213,9 +213,9 @@ const PrizeList = () => {
                   </div>
                 </FormGroup>
               </Col>
-            </Row>
+            </Row> */}
             <Row>
-            <Col md="6">
+            {/* <Col md="6">
                 <FormGroup className="form-group">
                   <div className="form-control-wrap">
                     <label className="form-label" htmlFor="state">
@@ -235,7 +235,7 @@ const PrizeList = () => {
                     {errors.school_name && <span className="error">{errors.school_name.message}</span>}
                   </div>
                 </FormGroup>
-              </Col>
+              </Col> */}
               <Col md="6">
                 <FormGroup>
                   <label className="form-control-label" htmlFor="prize_name">
