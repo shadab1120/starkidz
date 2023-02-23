@@ -70,7 +70,7 @@ const AddStates = () => {
                                     }}
                                 >
                                     <option value="">Select Region</option>
-                                    {region_list?.data?.map((list, i) => <option key={i} value={list.region_name}>{list.region_name}</option>)}
+                                    {region_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.region_name}</option>)}
                                 </select>
                             </div>
                             {errors.region_name && <span className="error" style={{ color: 'red' }}>{errors.region_name.message}</span>}

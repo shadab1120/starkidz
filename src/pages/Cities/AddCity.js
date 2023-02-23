@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Content from "../../layout/content/Content";
 import {
     Button,
@@ -22,6 +22,8 @@ const AddCity = () => {
     const { data: city } = useQuery(['getCity', id], Api.getCity);
     const { data: region_list } = useQuery('getRegionList', Api.getRegionList);
     const { data: state_list } = useQuery('getStateList', Api.getStateList);
+    const { data: district_list } = useQuery(['getDistrictList'], Api.getDistrictList);
+    const [selectedState, setSelectedState] = useState({ "regionId": "", "stateId": "", "districtId": "" })
 
     const mutation = useMutation(Api.manageCity);
     const onSubmit = (data) => {
@@ -51,9 +53,14 @@ const AddCity = () => {
 
     useEffect(() => {
         if (city && id) {
+            console.log(city?.data[0])
             setValue('region_name', city?.data[0]?.region_name)
             setValue('state_name', city?.data[0]?.state_name)
+            setValue('district', city?.data[0]?.district)
             setValue('city_name', city?.data[0]?.city_name)
+            setSelectedState({
+                "regionId": city?.data[0]?.region_name, "stateId": city?.data[0]?.state_name, "districtId": city?.data[0]?.district
+            })
         }
     }, [setValue, city, id]);
 
@@ -78,9 +85,9 @@ const AddCity = () => {
                                         width: "100%",
                                         height: "38px",
                                     }}
-
+                                    onChange={(ev) => setSelectedState({ ...selectedState, "regionId": ev.target.value })}
                                 ><option value="">Select Region</option>
-                                    {region_list?.data?.map((list, i) => <option key={i} value={list.region_name}>{list.region_name}</option>)}
+                                    {region_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.region_name}</option>)}
                                 </select>
                                 {errors.region_name && <span className="error" style={{ color: 'red' }}>{errors.region_name.message}</span>}
                             </div>
@@ -104,12 +111,38 @@ const AddCity = () => {
                                         width: "100%",
                                         height: "38px",
                                     }}
+                                    onChange={(ev) => setSelectedState({ ...selectedState, "stateId": ev.target.value })}
                                 >
                                     <option value="" >Select State</option>
-                                    {state_list?.data?.map((list, i) => <option key={i} value={list.state_name}>{list.state_name}</option>)}
+                                    {state_list?.data?.filter((v) => v.region_name === selectedState?.regionId).map((list, i) => <option key={i} value={list.id}>{list.state_name}</option>)}
                                 </select>
                             </div>
                             {errors.state_name && <span className="error" style={{ color: 'red' }}>{errors.state_name.message}</span>}
+                        </Col>
+                    </Row>
+                    <Row className="g-4">
+                        <Col md={8}>
+                            <label className="form-label" htmlFor="district_name">
+                                District Name :
+                            </label>
+                            <div className="form-control-wrap">
+                                <select
+                                    ref={register({ required: "This field is required" })}
+                                    {...register('district')}
+                                    name="district"
+                                    id="district"
+                                    className="form-select form-select-lg form-control"
+                                    style={{
+                                        width: "100%",
+                                        height: "38px",
+                                    }}
+                                    onChange={(ev) => setSelectedState({ ...selectedState, "districtId": ev.target.value })}
+                                >
+                                    <option value="" >Select State</option>
+                                    {district_list?.data?.filter((v) => v.state_name === selectedState?.stateId)?.map((list, i) => <option key={i} value={list.id}>{list.district_name}</option>)}
+                                </select>
+                            </div>
+                            {errors.district && <span className="error" style={{ color: 'red' }}>{errors.district.message}</span>}
                         </Col>
                     </Row>
                     <Row className="g-4">
@@ -133,7 +166,7 @@ const AddCity = () => {
                     <Row className="mt-4" md={8}>
                         <Col md={2}>
                             <Button color="primary" size="md" bgColor="#D32F2F" bRadius="none" width="50%">
-                                {id?`Update` :`Save`}
+                                {id ? `Update` : `Save`}
                             </Button>
                         </Col>
                     </Row>

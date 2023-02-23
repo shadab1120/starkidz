@@ -31,12 +31,13 @@ const ManageCity = () => {
   const { errors, handleSubmit, register, } = useForm();
 
   const { data: state_list, } = useQuery('getStateList', Api.getStateList);
-  const { data, isLoading } = useQuery('getCityList', Api.getCityList);
+  const { data, isLoading } = useQuery('getDistrictList', Api.getDistrictList);
+  const { data: city_list } = useQuery('getCityList', Api.getCityList);
   const manageMutation = useMutation(Api.manageCity);
 
 
-  const onSubmitFilter = ({ city_name }) => {
-    city_name ? setResult(city_name) : setResult('')
+  const onSubmitFilter = ({ district_name }) => {
+    district_name ? setResult(district_name) : setResult('')
   };
 
   const handleDelete = (row) => {
@@ -71,7 +72,7 @@ const ManageCity = () => {
       </>
     );
   }
-
+ 
   return (
     <Content>
       <div>
@@ -93,7 +94,7 @@ const ManageCity = () => {
                     onChange={(ev) => setSelectedState(ev.target.value)}
                   >
                     <option key="-1" value="">State Name</option>
-                    {state_list?.data?.map((list, i) => <option key={i} value={list.state_name}>{list.state_name}</option>)}
+                    {state_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.state_name}</option>)}
                   </select>
                   {errors.state_name && <span className="error">{errors.state_name.message}</span>}
                 </div>
@@ -102,21 +103,21 @@ const ManageCity = () => {
             <Col md="4">
               <FormGroup className="form-group">
                 <div className="form-control-wrap">
-                  <label className="form-label" htmlFor="city_name">
-                    City Name :
+                  <label className="form-label" htmlFor="district_name">
+                    District Name :
                   </label>
                   <select
                     ref={register}
-                    {...register('city_name')}
-                    name="city_name"
-                    id="city_name"
-                    placeholder="City Name"
+                    {...register('district_name')}
+                    name="district_name"
+                    id="district_name"
+                    placeholder="District Name"
                     className="form-select form-select-lg form-control"
                   >
-                    <option key="-1" value="">City Name</option>
-                    {data?.data?.filter((l) => l.state_name === selectedState).map((list, i) => <option key={i} value={list.city_name}>{list.city_name}</option>)}
+                    <option key="-1" value="">District Name</option>
+                    {data?.data?.filter((l) => l.state_name === selectedState).map((list, i) => <option key={i} value={list.id}>{list.district_name}</option>)}
                   </select>
-                  {errors.city_name && <span className="error">{errors.city_name.message}</span>}
+                  {errors.district_name && <span className="error">{errors.district_name.message}</span>}
                 </div>
               </FormGroup>
             </Col>
@@ -153,9 +154,9 @@ const ManageCity = () => {
       <Card className="card-full">
         <div className="nk-tb-list mt-n2">
           <DataTableHead>
-            <DataTableRow>
+            {/* <DataTableRow>
               <span>State Name</span>
-            </DataTableRow>
+            </DataTableRow> */}
             <DataTableRow size="sm">
               <span>City Name</span>
             </DataTableRow>
@@ -167,11 +168,11 @@ const ManageCity = () => {
             </DataTableRow>
           </DataTableHead>
           {loading && <Spinner size="sm" color="danger" />}
-          {data?.data?.filter((l) => !result || l.city_name === result).map((item, idx) => (
+          {city_list?.data?.filter((l) => !result || l.district === result).map((item, idx) => (
             <DataTableItem key={idx}>
-              <DataTableRow size="md">
+              {/* <DataTableRow size="md">
                 <span className="tb-lead"> {item.state_name}</span>
-              </DataTableRow>
+              </DataTableRow> */}
 
               <DataTableRow size="md">
                 <span className="tb-lead"> {item.city_name}</span>

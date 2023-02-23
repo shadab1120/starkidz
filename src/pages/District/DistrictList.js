@@ -177,7 +177,7 @@ const DistrictList = () => {
                     }}
                   >
                     <option value="">Select District</option>
-                    {state_list?.data?.map((list, i) => <option key={i} value={list.state_name}>{list.state_name}</option>)}
+                    {state_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.state_name}</option>)}
                   </select>
                   {errors.state_name && <span className="error" style={{ color: 'red' }}>{errors.state_name.message}</span>}
 

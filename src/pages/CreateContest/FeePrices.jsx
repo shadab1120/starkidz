@@ -21,13 +21,13 @@ const FeePrices = () => {
 
   const { data: contest_data } = useQuery(['getContest', id], Api.getContest);
   useEffect(() => {
-    if (contest_data) {
+    if (contest_data && id) {
       const contestDetails = contest_data[0] || []
       const { contest_fee, prize } = contestDetails
       setValue('contest_fee', contest_fee);
       setValue('prize', prize);
     }
-  }, [contest_data])
+  }, [id])
 
 
   const onSubmit = (data) => {

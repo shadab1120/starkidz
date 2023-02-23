@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { Row, Col, FormGroup, Button, Form } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -20,10 +20,12 @@ const DurationLocation = ({ handleStepChange }) => {
   const { data: city_list } = useQuery('getCityList', mApi.getCityList);
   const { data: district_list } = useQuery('getDistrictList', mApi.getDistrictList);
   const { data: contest_data } = useQuery(['getContest', id], Api.getContest);
-
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
 
   useEffect(() => {
-    if (contest_data) {
+    if (contest_data && id) {
       const contestDetails = contest_data?.data[0] || []
       const { contest_start_end_date, contest_start_date, result_date, contest_manager, state, district } = contestDetails
       setValue('contest_start_end_date', moment(contest_start_end_date).format(DATE_FORMAT));
@@ -33,7 +35,7 @@ const DurationLocation = ({ handleStepChange }) => {
       setValue('state', state || -1);
       setValue('district', district || -1);
     }
-  }, [contest_data])
+  }, [id])
 
 
 
@@ -45,6 +47,7 @@ const DurationLocation = ({ handleStepChange }) => {
     dispatch(setContestDetails(payload));
     handleStepChange("next");
   };
+
   return (
     <>
       <Row>
@@ -113,11 +116,11 @@ const DurationLocation = ({ handleStepChange }) => {
                 name="contest_manager"
                 ref={register({ required: "This field is required" })}
               >
-              {[
-                { id: '0', name: 'One' },
-                { id: '1', name: 'Two' },
-                { id: '2', name: 'Three' }
-              ].map((list, i) => <option key={i} value={list.id}>{list.name}</option>)}
+                {[
+                  { id: '0', name: 'One' },
+                  { id: '1', name: 'Two' },
+                  { id: '2', name: 'Three' }
+                ].map((list, i) => <option key={i} value={list.id}>{list.name}</option>)}
               </select>
               {errors.contest_manager && <span className="error">{errors.contest_manager.message}</span>}
             </FormGroup>
@@ -137,6 +140,7 @@ const DurationLocation = ({ handleStepChange }) => {
                   width: "100%",
                   height: "38px",
                 }}
+                onChange={(ev) => setSelectedState(ev.target.value)}
               >
                 <option key="-1" value="-1">Select State</option>
                 {state_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.state_name}</option>)}
@@ -153,9 +157,12 @@ const DurationLocation = ({ handleStepChange }) => {
               id="district"
               name="district"
               ref={register({ required: "This field is required" })}
+              onChange={(ev) => setSelectedDistrict(ev.target.value)}
             >
-              <option key="-1" value="-1">Select District</option>
-              {district_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.district_name}</option>)}
+
+              <option key="-2" value="-2">Select District</option>
+              <option key="-1" value="-1">All</option>
+              {district_list?.data?.filter((d) => d.state_name === selectedState).map((list, i) => <option key={i} value={list.id}>{list.district_name}</option>)}
             </select>
             {errors.district && <span className="error">{errors.district.message}</span>}
           </Col>
@@ -167,10 +174,12 @@ const DurationLocation = ({ handleStepChange }) => {
               className="form-select form-select-lg form-control"
               id="city"
               name="city"
+              multiple={true}
               ref={register({ required: "This field is required" })}
+              onChange={(ev) => setSelectedCity(ev.target.value)}
             >
               <option key="-1" value="-1">Select City</option>
-              {city_list?.data?.map((list, i) => <option key={i} value={list.id}>{list.city_name}</option>)}
+              {city_list?.data?.filter((l) => l. district === selectedDistrict).map((list, i) => <option key={i} value={list.id}>{list.city_name}</option>)}
             </select>
             {errors.city && <span className="error">{errors.city.message}</span>}
           </Col>
