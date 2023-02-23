@@ -332,12 +332,13 @@ const ContestDetails = ({ handleStepChange }) => {
                     gap: "10px",
                   }}
                 >
+                 <Button className="btn-primary" type="submit" onClick={() => handleStepChange("prev")}>
+                    Back
+                  </Button>
                   <Button className="btn-primary" type="submit">
                     Next
                   </Button>
-                  <Button className="btn-primary" type="submit" onClick={() => handleStepChange("prev")}>
-                    Back
-                  </Button>
+                  
                 </div>
               </Col>
             </Row>

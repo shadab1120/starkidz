@@ -201,11 +201,11 @@ const Judging = ({ handleStepChange }) => {
         <Row className="mt-4">
           <Col xxl="12" md="12" sm="12">
             <div className="d-flex justify-content-between">
+               <Button className="btn-primary" onClick={() => handleStepChange("prev")}>
+                Back
+              </Button>
               <Button className="btn-primary" type="submit">
                 Next
-              </Button>
-              <Button className="btn-primary" onClick={() => handleStepChange("prev")}>
-                Back
               </Button>
             </div>
           </Col>
