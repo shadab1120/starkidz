@@ -3,6 +3,11 @@ import { Switch, Route, withRouter } from "react-router-dom";
 import { RedirectAs404 } from "./utils/Utils";
 import PrivateRoute from "./route/PrivateRoute";
 
+import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+
+import "primeicons/primeicons.css";
+
 import Layout from "./layout/Index";
 
 import Error404Classic from "./pages/error/404-classic";

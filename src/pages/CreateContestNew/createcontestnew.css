@@ -1,0 +1,77 @@
+.content__card {
+  display: flex;
+  flex-direction: column;
+  max-width: 80%;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+}
+
+.content__card .row {
+  margin: 0;
+}
+
+.copyBox {
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.copy_svg {
+  margin-top: -10px;
+}
+
+#copyselect {
+  width: 584px;
+  height: 41px;
+  color: #bcbcbc;
+  border-radius: 10px;
+}
+
+#copyselect:focus {
+  color: #d32f2f;
+}
+
+.input-box {
+  padding: 1rem 1rem;
+  border-radius: 10px;
+  background-color: #f6f6f6;
+}
+
+label {
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.footerBtn {
+  padding: 10px 20px;
+  font-size: 24px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid #707070;
+}
+
+.custom-option {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  background-color: #f6f6f6;
+  cursor: pointer;
+}
+
+.p-multiselect-item {
+  justify-content: center;
+  border-radius: 10px !important;
+}
+
+.p-multiselect-item span {
+  font-size: 18px;
+}
+
+.p-checkbox {
+  position: absolute;
+  right: 10px;
+}

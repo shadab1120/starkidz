@@ -146,8 +146,6 @@ import CloseContest from "../pages/CloseContest/CloseContest";
 import ResultAnnouncement from "../pages/ResultAnnouncement/ResultAnnouncement";
 import LeaveManagement from "../pages/LeaveManagement/LeaveManagement";
 
-
-
 import RoleList from "../pages/RoleList/RoleList";
 import DistrictList from "../pages/District/DistrictList";
 import PrizeList from "../pages/prizes/PrizeList";
@@ -168,8 +166,6 @@ import RegistrationsReport from "../pages/ContentTypes/RegistrationsReport";
 import ContentEntries from "../pages/ContentTypes/ContentEntries";
 import LoginReports from "../pages/ContentTypes/LoginReports";
 
-
-
 import UserList from "../pages/UserList/UserList";
 import AddUser from "../pages/UserList/AddUser";
 import ChildrenEnrollment from "../pages/ChildrenEnrollment/ChildrenEnrollment";
@@ -178,7 +174,7 @@ import SectionMaster from "../pages/SectionMaster/SectionMaster";
 import HouseMaster from "../pages/HouseMaster/HouseMaster";
 import StramMaster from "../pages/StramMaster/StramMaster";
 import ChangePassword from "../pages/auth/changePassword";
-
+import CreateContestNew from "../pages/CreateContestNew";
 
 const Pages = () => {
   useLayoutEffect(() => {
@@ -189,7 +185,12 @@ const Pages = () => {
     <Suspense fallback={<div />}>
       <Switch>
         {/* contest */}
-        <Route exact path={[`${process.env.PUBLIC_URL}/create-contest`, `${process.env.PUBLIC_URL}/create-contest/:id`]} component={CreateContest}></Route>
+        <Route
+          exact
+          path={[`${process.env.PUBLIC_URL}/create-contest`, `${process.env.PUBLIC_URL}/create-contest/:id`]}
+          component={CreateContest}
+        ></Route>
+        <Route exact path={[`${process.env.PUBLIC_URL}/create-contest-new`]} component={CreateContestNew}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/participate`} component={Participate}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/downloads`} component={Downloads}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/old-contests`} component={OldContest}></Route>
@@ -206,18 +207,45 @@ const Pages = () => {
         <Route exact path={`${process.env.PUBLIC_URL}/house_master`} component={HouseMaster}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/stream_master`} component={StramMaster}></Route>
 
-
-        <Route exact path={[`${process.env.PUBLIC_URL}/contest_categories`, `${process.env.PUBLIC_URL}/contest_categories/:id`]} component={CatestCategories}></Route>
-        <Route exact path={[`${process.env.PUBLIC_URL}/judging_parameters`, `${process.env.PUBLIC_URL}/judging_parameters/:id`]} component={JudgingParameters}></Route>
+        <Route
+          exact
+          path={[`${process.env.PUBLIC_URL}/contest_categories`, `${process.env.PUBLIC_URL}/contest_categories/:id`]}
+          component={CatestCategories}
+        ></Route>
+        <Route
+          exact
+          path={[`${process.env.PUBLIC_URL}/judging_parameters`, `${process.env.PUBLIC_URL}/judging_parameters/:id`]}
+          component={JudgingParameters}
+        ></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/regions`} component={Regions}></Route>
-        <Route exact path={[`${process.env.PUBLIC_URL}/add-region`, `${process.env.PUBLIC_URL}/add-region/:id`]} component={AddRegion}></Route>
+        <Route
+          exact
+          path={[`${process.env.PUBLIC_URL}/add-region`, `${process.env.PUBLIC_URL}/add-region/:id`]}
+          component={AddRegion}
+        ></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/states`} component={States}></Route>
-        <Route exact path={[`${process.env.PUBLIC_URL}/add-state`, `${process.env.PUBLIC_URL}/add-state/:id`]} component={AddState}></Route>
+        <Route
+          exact
+          path={[`${process.env.PUBLIC_URL}/add-state`, `${process.env.PUBLIC_URL}/add-state/:id`]}
+          component={AddState}
+        ></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/cities`} component={Cities}></Route>
-        <Route exact path={[`${process.env.PUBLIC_URL}/add-city`, `${process.env.PUBLIC_URL}/add-city/:id`]} component={AddCity}></Route>
+        <Route
+          exact
+          path={[`${process.env.PUBLIC_URL}/add-city`, `${process.env.PUBLIC_URL}/add-city/:id`]}
+          component={AddCity}
+        ></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/brackets`} component={Brackets}></Route>
-        <Route exact path={[`${process.env.PUBLIC_URL}/add-age-bracket`, `${process.env.PUBLIC_URL}/add-age-bracket/:id`]} component={AddAgeBracket}></Route>
-        <Route exact path={[`${process.env.PUBLIC_URL}/content_types`, `${process.env.PUBLIC_URL}/content_types/:id`]} component={ContentTypes}></Route>
+        <Route
+          exact
+          path={[`${process.env.PUBLIC_URL}/add-age-bracket`, `${process.env.PUBLIC_URL}/add-age-bracket/:id`]}
+          component={AddAgeBracket}
+        ></Route>
+        <Route
+          exact
+          path={[`${process.env.PUBLIC_URL}/content_types`, `${process.env.PUBLIC_URL}/content_types/:id`]}
+          component={ContentTypes}
+        ></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/registration_report`} component={RegistrationsReport}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/contest_entries`} component={ContentEntries}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/login_reports`} component={LoginReports}></Route>
@@ -255,7 +283,11 @@ const Pages = () => {
 
         {/* pages */}
         <Route exact path={`${process.env.PUBLIC_URL}/userPage`} component={UserPage}></Route>
-        <Route exact path={[`${process.env.PUBLIC_URL}/starbucks`, `${process.env.PUBLIC_URL}/starbucks/:id`]} component={StarBucks}></Route>
+        <Route
+          exact
+          path={[`${process.env.PUBLIC_URL}/starbucks`, `${process.env.PUBLIC_URL}/starbucks/:id`]}
+          component={StarBucks}
+        ></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/help`} component={help}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/buy_starbucks`} component={BuyStarBucks}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/more_buy_starbucks`} component={MoreBuyStarBucks}></Route>
@@ -263,7 +295,11 @@ const Pages = () => {
         <Route exact path={`${process.env.PUBLIC_URL}/judging`} component={Judging}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/rejection_reason`} component={RejectionList}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/school_center`} component={SchoolCenter}></Route>
-        <Route exact path={[`${process.env.PUBLIC_URL}/judge_entries`, `${process.env.PUBLIC_URL}/judge_entries/:Id`]} component={JudegeEntries}></Route>
+        <Route
+          exact
+          path={[`${process.env.PUBLIC_URL}/judge_entries`, `${process.env.PUBLIC_URL}/judge_entries/:Id`]}
+          component={JudegeEntries}
+        ></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/monitor-contest`} component={MonitorContest}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/verify-age`} component={VerifyAge}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/verify-contest`} component={VerifyContestant}></Route>
@@ -271,7 +307,11 @@ const Pages = () => {
         <Route exact path={`${process.env.PUBLIC_URL}/manage-contestant`} component={ManageContestant}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/view-contest`} component={ViewContest}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/close-contest`} component={CloseContest}></Route>
-        <Route exact path={`${process.env.PUBLIC_URL}/result-preparation-and-announcement`} component={ResultAnnouncement}></Route>
+        <Route
+          exact
+          path={`${process.env.PUBLIC_URL}/result-preparation-and-announcement`}
+          component={ResultAnnouncement}
+        ></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/leave-management`} component={LeaveManagement}></Route>
 
         {/*Pre-built Pages*/}
