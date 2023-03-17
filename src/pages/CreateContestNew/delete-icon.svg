@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20.222" height="22.5" viewBox="0 0 20.222 22.5">
+  <g id="delete-icon" transform="translate(-3 -2)">
+    <path id="Path_4437" data-name="Path 4437" d="M10,12v5.694" transform="translate(0.833 1.25)" fill="none" stroke="#d32f2f" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <path id="Path_4438" data-name="Path 4438" d="M14,12v5.694" transform="translate(1.389 1.25)" fill="none" stroke="#d32f2f" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <path id="Path_4439" data-name="Path 4439" d="M4,7H22.222" transform="translate(0 0.556)" fill="none" stroke="#d32f2f" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <path id="Path_4440" data-name="Path 4440" d="M6,10v9.111a3.417,3.417,0,0,0,3.417,3.417H16.25a3.417,3.417,0,0,0,3.417-3.417V10" transform="translate(0.278 0.972)" fill="none" stroke="#d32f2f" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <path id="Path_4441" data-name="Path 4441" d="M9,5.278A2.278,2.278,0,0,1,11.278,3h2.278a2.278,2.278,0,0,1,2.278,2.278V7.556H9Z" transform="translate(0.694)" fill="none" stroke="#d32f2f" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+  </g>
+</svg>

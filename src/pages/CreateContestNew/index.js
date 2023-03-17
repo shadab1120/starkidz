@@ -11,6 +11,7 @@ import Judging from "./Judging";
 import FeePrices from "./FeePrices";
 import MultiStepProgressBar from "../../components/MultiStepProgressBar/MultiStepProgressBar";
 import ContestDetailsNew from "./ContestDetailsNew";
+import ContestTheme from "./ContestTheme";
 
 const totalSteps = 4;
 
@@ -40,7 +41,10 @@ const CreateContestNew = () => {
   return (
     <React.Fragment>
       <Content>
-        <div className="content__card">{step === 1 && <ContestDetailsNew handleStepChange={handleStepChange} />}</div>
+        <div className="content__card">
+          {step === 1 && <ContestDetailsNew handleStepChange={handleStepChange} />}
+          {step === 2 && <ContestTheme handleStepChange={handleStepChange} />}
+        </div>
         {/* <MultiStepProgressBar currentStep={step} /> */}
 
         {/* {step === 1 && <ContestDetails handleStepChange={handleStepChange} />}

@@ -225,7 +225,7 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "flex-start",
-                      alignItems: "center",
+                      alignItems: "flex-start",
                     }}
                   >
                     <img
@@ -361,30 +361,33 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                           name="entries"
                           control={control}
                           rules={{ required: "This is required" }}
-                          render={({ field }) => (
-                            <MultiSelect
-                              name="entries"
-                              options={[
-                                {
-                                  value: "images",
-                                  label: "Images",
-                                },
-                                {
-                                  value: "videos",
-                                  label: "Videos",
-                                },
-                              ]}
-                              style={{
-                                width: "100%",
-                                borderRadius: "10px",
-                                height: "40px",
-                                backgroundColor: "#F6F6F6",
-                              }}
-                              optionLabel="label"
-                              placeholder="select the multiple type of entries"
-                              maxSelectedLabels={3}
-                            />
-                          )}
+                          render={({ field }) => {
+                            console.log(field);
+                            return (
+                              <MultiSelect
+                                name="entries"
+                                options={[
+                                  {
+                                    value: "images",
+                                    label: "Images",
+                                  },
+                                  {
+                                    value: "videos",
+                                    label: "Videos",
+                                  },
+                                ]}
+                                style={{
+                                  width: "100%",
+                                  borderRadius: "10px",
+                                  height: "40px",
+                                  backgroundColor: "#F6F6F6",
+                                }}
+                                optionLabel="label"
+                                placeholder="select the multiple type of entries"
+                                maxSelectedLabels={3}
+                              />
+                            );
+                          }}
                         />
                       </div>
                     </FormGroup>
@@ -442,6 +445,9 @@ const ContestDetailsNew = ({ handleStepChange }) => {
               backgroundColor: "#D32F2F",
             }}
             className="footerBtn"
+            onClick={() => {
+              handleStepChange("next");
+            }}
           >
             Next
             <svg
