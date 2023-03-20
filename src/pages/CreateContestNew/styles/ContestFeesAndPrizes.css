@@ -1,0 +1,20 @@
+.input-fees {
+  background-color: #f6f6f6;
+  outline: none;
+  border: none;
+}
+
+.input-fees:focus {
+  background-color: #f6f6f6;
+  outline: none;
+  border: none;
+}
+
+.input-fees::-webkit-input-placeholder {
+  color: #b3b3b3;
+}
+
+/* change checkbox border-color */
+input[type="checkbox"] {
+  border-color: #b3b3b3;
+}

@@ -5,19 +5,17 @@ import { useSelector } from "react-redux";
 import { useMutation } from "react-query";
 import Api from "../../http/userApis";
 
-import ContestDetails from "./ContestDetails";
-import DurationLocation from "./DurationLocation";
-import Judging from "./Judging";
-import FeePrices from "./FeePrices";
-import MultiStepProgressBar from "../../components/MultiStepProgressBar/MultiStepProgressBar";
 import ContestDetailsNew from "./ContestDetailsNew";
 import ContestTheme from "./ContestTheme";
+import DurationLocation from "./DurationLocation";
+import JudgingNew from "./JudgingNew";
+import ContestFeesAndPrizes from "./ContestFeesAndPrizes";
+import Terms from "./Terms";
+import About from "./About";
 
 const totalSteps = 4;
 
 const CreateContestNew = () => {
-  const { data } = useSelector((state) => state.auth.user);
-  const mutation = useMutation(Api.updateUser);
   const [step, setStep] = useState(1);
 
   // step change handle
@@ -42,8 +40,13 @@ const CreateContestNew = () => {
     <React.Fragment>
       <Content>
         <div className="content__card">
-          {step === 1 && <ContestDetailsNew handleStepChange={handleStepChange} />}
+          {/* {step === 1 && <ContestDetailsNew handleStepChange={handleStepChange} />}
           {step === 2 && <ContestTheme handleStepChange={handleStepChange} />}
+          {step === 3 && <DurationLocation handleStepChange={handleStepChange} />} */}
+          {/* {step === 4 && <JudgingNew handleStepChange={handleStepChange} /> } */}
+          {/* {step === 4 <ContestFeesAndPrizes handleStepChange={handleStepChange} /> } */}
+          {/* <Terms handleStepChange={handleStepChange} /> */}
+          <About handleStepChange={handleStepChange} />
         </div>
         {/* <MultiStepProgressBar currentStep={step} /> */}
 

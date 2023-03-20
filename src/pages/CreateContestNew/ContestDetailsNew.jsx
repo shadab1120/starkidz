@@ -5,10 +5,10 @@ import { useForm, Controller } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useQuery } from "react-query";
+import { MultiSelect } from "primereact/multiselect";
 import { setContestDetails } from "../../store/CreateContestSlice";
 import Api from "../../http/ContestApi";
 import mApi from "../../http/masterApis";
-import { MultiSelect } from "primereact/multiselect";
 
 const customStyles = {
   control: (base, state) => ({
@@ -144,7 +144,7 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                 transform="translate(549 216)"
                 fill="#fff"
                 stroke="#707070"
-                stroke-width="1"
+                strokeWidth="1"
               >
                 <rect width="29" height="35" rx="9" stroke="none" />
                 <rect x="0.5" y="0.5" width="28" height="34" rx="8.5" fill="none" />
@@ -155,7 +155,7 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                 transform="translate(556 224)"
                 fill="#fff"
                 stroke="#707070"
-                stroke-width="1"
+                strokeWidth="1"
               >
                 <rect width="29" height="35" rx="9" stroke="none" />
                 <rect x="0.5" y="0.5" width="28" height="34" rx="8.5" fill="none" />
@@ -303,59 +303,6 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                   <Col md={12}>
                     <FormGroup>
                       <Label>Type of entry</Label>
-                      {/* <Select
-                        isMulti
-                        options={[
-                          {
-                            value: "images",
-                            label: "Images",
-                          },
-                          {
-                            value: "videos",
-                            label: "Videos",
-                          },
-                          {
-                            value: "documents",
-                            label: "Documents",
-                          },
-                        ]}
-                        className="basic-single"
-                        styles={{
-                          control: (base, state) => ({
-                            ...base,
-                            width: "100%",
-                            borderRadius: "10px",
-                            height: "40px",
-                            minHeight: "40px",
-                            padding: "0 10px",
-                            textAllign: "center",
-                            backgroundColor: "#F6F6F6",
-                          }),
-                          dropdownIndicator: (base, state) => ({
-                            ...base,
-                            color: "#D32F2F",
-                          }),
-                          option: (base, state) => ({
-                            ...base,
-                            color: "#D32F2F",
-                            allignItems: "center",
-                            display: "flex",
-                            justifyContent: "center",
-                            fontWeight: "bold",
-                          }),
-                        }}
-                        components={{ Option: MyOption }}
-                        placeholder="select the multiple type of entries"
-                      ></Select> */}
-                      {/* <MultiSelect
-                        value={selectedCities}
-                        onChange={(e) => setSelectedCities(e.value)}
-                        options={cities}
-                        optionLabel="name"
-                        placeholder="Select Cities"
-                        maxSelectedLabels={3}
-                        className="w-full md:w-20rem"
-                      /> */}
                       <div>
                         <Controller
                           name="entries"
@@ -433,9 +380,9 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                 transform="translate(-3 -3)"
                 fill="none"
                 stroke="#fff"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
               />
             </svg>
             Save Draft

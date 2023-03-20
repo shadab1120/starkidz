@@ -1,0 +1,11 @@
+input[type="checkbox"] {
+  accent-color: #d32f2f;
+  width: 20px;
+  height: 20px;
+}
+
+.districtlist_section {
+  background-color: #f6f6f6;
+  padding: 10px;
+  border-radius: 10px;
+}

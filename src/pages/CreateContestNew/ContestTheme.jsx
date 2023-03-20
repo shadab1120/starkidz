@@ -283,6 +283,9 @@ const ContestTheme = ({ handleStepChange }) => {
             style={{
               backgroundColor: "#D32F2F",
             }}
+            onClick={() => {
+              handleStepChange("next");
+            }}
             className="footerBtn"
           >
             Next

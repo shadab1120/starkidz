@@ -1,0 +1,41 @@
+.total-score {
+  background-color: #f6f6f6;
+  border-radius: 5px;
+}
+
+.table-parameter {
+  background-color: #ffe3e3;
+  border-radius: 5px;
+}
+.red-accent {
+  color: #ff0e0e;
+}
+
+.grey-accent {
+  color: #707070;
+}
+
+.judge-parameter > thead > tr > th {
+  color: #707070;
+  font-size: 18px;
+  font-weight: 400;
+  text-align: center;
+}
+.judge-parameter > thead > tr > th:first-child {
+  text-align: left;
+}
+
+.vertical-align-middle {
+  vertical-align: middle !important;
+}
+
+.border-radius-10 {
+  border-radius: 10px;
+}
+
+.edit-icon {
+  position: absolute;
+  top: 2px;
+  right: 5px;
+  cursor: pointer;
+}
