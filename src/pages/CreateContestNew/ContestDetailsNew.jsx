@@ -1,14 +1,9 @@
-import { useEffect, useState, Fragment } from "react";
-import { Row, Col, FormGroup, Button, Label, Input, Form } from "reactstrap";
+import { Row, Col, FormGroup, Button, Label, Input } from "reactstrap";
 import Select from "react-select";
-import { useForm, Controller } from "react-hook-form";
-import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { useQuery } from "react-query";
+import { Controller, useForm } from "react-hook-form";
 import { MultiSelect } from "primereact/multiselect";
-import { setContestDetails } from "../../store/CreateContestSlice";
-import Api from "../../http/ContestApi";
-import mApi from "../../http/masterApis";
+
+import "./styles/ContestDetailsNew.css";
 
 const customStyles = {
   control: (base, state) => ({
@@ -33,23 +28,19 @@ const customStyles = {
     fontWeight: "bold",
     borderBottom: "1px solid #DBD7D7",
     border: "70%",
-
-    // change background color if the option is active
     backgroundColor: state.isFocused ? "#DBD7D7" : "#fff",
+  }),
+  menu: (base, state) => ({
+    ...base,
+    width: "80%",
   }),
 };
 
 const ContestDetailsNew = ({ handleStepChange }) => {
-  const params = useParams();
-  const dispatch = useDispatch();
-  const { id } = params;
-  const [newContest, setNewContest] = useState(true);
-  const { control, errors, handleSubmit, register, setValue } = useForm();
-  const { data: contest_data, error, isLoading } = useQuery(["getContest", id], Api.getContest);
-  const { data: age_bracket_list } = useQuery("getAgeBracketsList", mApi.getAgeBracketsList);
-  const { data: contest_category } = useQuery("getContestTypeList", mApi.getContestTypeList);
-  const [level, setLevel] = useState([]);
-  const [ageGroup, setAgeGroup] = useState([]);
+  const defaultValues = {
+    entries: null,
+  };
+  const { control, setValue } = useForm({ defaultValues });
   const prizeLevel = [
     { label: "Country Level", id: 1, type: "Prize for Country", name: "country_level" },
     { label: "State Level", id: 2, type: "Prize for State", name: "state_level" },
@@ -57,75 +48,6 @@ const ContestDetailsNew = ({ handleStepChange }) => {
     { label: "City Level", id: 4, type: "Prize for City", name: "city_level" },
     { label: "School Level", id: 5, type: "Prize for School", name: "school_level" },
   ];
-
-  useEffect(() => {
-    if (id && contest_data) {
-      const contestDetails = contest_data?.data[0] || [];
-      const {
-        age_bracket,
-        contest_name,
-        contest_short_name,
-        contest_theme,
-        contest_type_2,
-        contest_type,
-        copy_from,
-        about_contest,
-      } = contestDetails;
-      setValue("contest_type", contest_type);
-      setValue("contest_name", contest_name);
-      setValue("contest_short_name", contest_short_name);
-      setValue("contest_type", contest_type);
-      setValue("contest_type_2", contest_type_2);
-      setValue("contest_theme", contest_theme);
-      setValue("age_bracket", age_bracket);
-      setValue("about_contest", about_contest);
-      setValue("copy_from", copy_from);
-    }
-  }, [id]);
-
-  const onSubmit = (data) => {
-    const event = id ? `update` : `insert`;
-    const payload = {
-      contest_type: newContest ? "New_Contest" : "existing",
-      ...data,
-      event: event,
-      contest_image: data.contest_image?.[0],
-    };
-    // image to base64
-    // const reader = new FileReader();
-    // reader.readAsDataURL(data.contest_image?.[0]);
-    // reader.onloadend = () => {
-    //   payload.contest_image = reader.result;
-    dispatch(setContestDetails(payload));
-    handleStepChange("next");
-    //};
-  };
-
-  const handleAgeGroup = (e) => {
-    setAgeGroup(new Set([...ageGroup, e.target.value]));
-  };
-  const handleAddLevel = (id) => {
-    setLevel(new Set([...level, id]));
-  };
-
-  const MyOption = (props) => {
-    const { innerProps, innerRef } = props;
-    return (
-      <span ref={innerRef} {...innerProps} className="custom-option">
-        <p>{props.data.label}</p>
-        <input
-          type="checkbox"
-          id="customCheck1"
-          style={{
-            position: "absolute",
-            right: "10px",
-            top: "10px",
-          }}
-          checked={props.isSelected}
-        />
-      </span>
-    );
-  };
 
   const options = [
     { value: "chocolate", label: "Contest short Name 1 --   Date of creation --  Contest Type" },
@@ -308,11 +230,11 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                           name="entries"
                           control={control}
                           rules={{ required: "This is required" }}
-                          render={({ field }) => {
-                            console.log(field);
+                          render={(props) => {
                             return (
                               <MultiSelect
                                 name="entries"
+                                display="chip"
                                 options={[
                                   {
                                     value: "images",
@@ -332,6 +254,10 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                                 optionLabel="label"
                                 placeholder="select the multiple type of entries"
                                 maxSelectedLabels={3}
+                                value={props.value}
+                                onChange={(e) => {
+                                  props.onChange(e.value);
+                                }}
                               />
                             );
                           }}

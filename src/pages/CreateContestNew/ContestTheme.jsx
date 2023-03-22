@@ -44,16 +44,6 @@ const customStyles = {
 };
 
 const ContestTheme = ({ handleStepChange }) => {
-  const params = useParams();
-  const dispatch = useDispatch();
-  const { id } = params;
-  const [newContest, setNewContest] = useState(true);
-  const { control, errors, handleSubmit, register, setValue } = useForm();
-  const { data: contest_data, error, isLoading } = useQuery(["getContest", id], Api.getContest);
-  const { data: age_bracket_list } = useQuery("getAgeBracketsList", mApi.getAgeBracketsList);
-  const { data: contest_category } = useQuery("getContestTypeList", mApi.getContestTypeList);
-  const [level, setLevel] = useState([]);
-  const [ageGroup, setAgeGroup] = useState([]);
   const prizeLevel = [
     { label: "Country Level", id: 1, type: "Prize for Country", name: "country_level" },
     { label: "State Level", id: 2, type: "Prize for State", name: "state_level" },
@@ -61,56 +51,6 @@ const ContestTheme = ({ handleStepChange }) => {
     { label: "City Level", id: 4, type: "Prize for City", name: "city_level" },
     { label: "School Level", id: 5, type: "Prize for School", name: "school_level" },
   ];
-
-  useEffect(() => {
-    if (id && contest_data) {
-      const contestDetails = contest_data?.data[0] || [];
-      const {
-        age_bracket,
-        contest_name,
-        contest_short_name,
-        contest_theme,
-        contest_type_2,
-        contest_type,
-        copy_from,
-        about_contest,
-      } = contestDetails;
-      setValue("contest_type", contest_type);
-      setValue("contest_name", contest_name);
-      setValue("contest_short_name", contest_short_name);
-      setValue("contest_type", contest_type);
-      setValue("contest_type_2", contest_type_2);
-      setValue("contest_theme", contest_theme);
-      setValue("age_bracket", age_bracket);
-      setValue("about_contest", about_contest);
-      setValue("copy_from", copy_from);
-    }
-  }, [id]);
-
-  const onSubmit = (data) => {
-    const event = id ? `update` : `insert`;
-    const payload = {
-      contest_type: newContest ? "New_Contest" : "existing",
-      ...data,
-      event: event,
-      contest_image: data.contest_image?.[0],
-    };
-    // image to base64
-    // const reader = new FileReader();
-    // reader.readAsDataURL(data.contest_image?.[0]);
-    // reader.onloadend = () => {
-    //   payload.contest_image = reader.result;
-    dispatch(setContestDetails(payload));
-    handleStepChange("next");
-    //};
-  };
-
-  const handleAgeGroup = (e) => {
-    setAgeGroup(new Set([...ageGroup, e.target.value]));
-  };
-  const handleAddLevel = (id) => {
-    setLevel(new Set([...level, id]));
-  };
 
   const options = [
     { value: "chocolate", label: "Contest short Name 1 --   Date of creation --  Contest Type" },
@@ -166,7 +106,7 @@ const ContestTheme = ({ handleStepChange }) => {
       {Array(3)
         .fill(0)
         .map((item, index) => (
-          <>
+          <Fragment key={index}>
             <Row
               style={{
                 width: "100%",
@@ -181,7 +121,7 @@ const ContestTheme = ({ handleStepChange }) => {
                 {Array(3)
                   .fill(0)
                   .map((item, index) => (
-                    <Col md={4} lg={4} className="d-flex flex-column">
+                    <Col md={4} lg={4} className="d-flex flex-column" key={index}>
                       <div
                         className="d-flex align-center"
                         style={{
@@ -214,7 +154,7 @@ const ContestTheme = ({ handleStepChange }) => {
                 opacity: "0.2",
               }}
             />
-          </>
+          </Fragment>
         ))}
       <Row className="mb-4 ">
         <Col md={12} className="d-flex justify-content-center">
@@ -272,9 +212,9 @@ const ContestTheme = ({ handleStepChange }) => {
                 transform="translate(-3 -3)"
                 fill="none"
                 stroke="#fff"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
               />
             </svg>
             Save Draft

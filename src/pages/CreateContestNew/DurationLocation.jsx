@@ -3,8 +3,15 @@ import { Row, Col, Container, FormGroup, Label, Input, Button } from "reactstrap
 import Select from "react-select";
 import "./styles/DurationLocation.css";
 import { RiArrowLeftSLine } from "react-icons/ri";
+import { Controller, useForm } from "react-hook-form";
+import { MultiSelect } from "primereact/multiselect";
 
 const DurationLocation = ({ handleStepChange }) => {
+  const defaultValues = {
+    states: null,
+    district: null,
+  };
+  const { control } = useForm({ defaultValues });
   const options = [
     { value: "chocolate", label: "Contest short Name 1 --   Date of creation --  Contest Type" },
     { value: "strawberry", label: "Contest short Name 1 --   Date of creation --  Contest Type" },
@@ -49,7 +56,7 @@ const DurationLocation = ({ handleStepChange }) => {
                   outline: "1px solid #FF3333",
                   borderRadius: "25px",
                   paddingBottom: "3em",
-                  paddingTop: "1em",
+                  paddingTop: "1.7em",
                 }}
               >
                 <span
@@ -100,36 +107,45 @@ const DurationLocation = ({ handleStepChange }) => {
               </div>
               <FormGroup className="mt-3">
                 <Label>Select State</Label>
-                <Select
-                  options={options}
-                  className="basic-single"
-                  isMulti
-                  styles={{
-                    control: (base, state) => ({
-                      ...base,
-                      width: "100%",
-                      borderRadius: "10px",
-                      height: "40px",
-                      minHeight: "40px",
-                      padding: "0 10px",
-                      textAllign: "center",
-                      backgroundColor: "#F6F6F6",
-                    }),
-                    dropdownIndicator: (base, state) => ({
-                      ...base,
-                      color: "#D32F2F",
-                    }),
-                    option: (base, state) => ({
-                      ...base,
-                      color: "#D32F2F",
-                      allignItems: "center",
-                      display: "flex",
-                      justifyContent: "center",
-                      fontWeight: "bold",
-                    }),
-                  }}
-                  placeholder="Select State"
-                ></Select>
+                <div>
+                  <Controller
+                    name="states"
+                    control={control}
+                    rules={{ required: "This is required" }}
+                    render={(props) => {
+                      return (
+                        <MultiSelect
+                          name="states"
+                          display="chip"
+                          id="duration-location-select"
+                          options={[
+                            {
+                              value: "images",
+                              label: "Images",
+                            },
+                            {
+                              value: "videos",
+                              label: "Videos",
+                            },
+                          ]}
+                          style={{
+                            width: "100%",
+                            borderRadius: "10px",
+                            height: "40px",
+                            backgroundColor: "#F6F6F6",
+                          }}
+                          optionLabel="label"
+                          placeholder="select the multiple type of states"
+                          maxSelectedLabels={3}
+                          value={props.value}
+                          onChange={(e) => {
+                            props.onChange(e.value);
+                          }}
+                        />
+                      );
+                    }}
+                  />
+                </div>
               </FormGroup>
             </Col>
             <Col md={7} className="d-flex flex-column">
@@ -181,36 +197,44 @@ const DurationLocation = ({ handleStepChange }) => {
               </FormGroup>
               <FormGroup className="">
                 <Label>Select District</Label>
-                <Select
-                  options={options}
-                  className="basic-single"
-                  isMulti
-                  styles={{
-                    control: (base, state) => ({
-                      ...base,
-                      width: "100%",
-                      borderRadius: "10px",
-                      height: "40px",
-                      minHeight: "40px",
-                      padding: "0 10px",
-                      textAllign: "center",
-                      backgroundColor: "#F6F6F6",
-                    }),
-                    dropdownIndicator: (base, state) => ({
-                      ...base,
-                      color: "#D32F2F",
-                    }),
-                    option: (base, state) => ({
-                      ...base,
-                      color: "#D32F2F",
-                      allignItems: "center",
-                      display: "flex",
-                      justifyContent: "center",
-                      fontWeight: "bold",
-                    }),
-                  }}
-                  placeholder="Select State"
-                ></Select>
+                <div>
+                  <Controller
+                    name="district"
+                    control={control}
+                    rules={{ required: "This is required" }}
+                    render={(props) => {
+                      return (
+                        <MultiSelect
+                          name="district"
+                          display="chip"
+                          options={[
+                            {
+                              value: "images",
+                              label: "Images",
+                            },
+                            {
+                              value: "videos",
+                              label: "Videos",
+                            },
+                          ]}
+                          style={{
+                            width: "100%",
+                            borderRadius: "10px",
+                            height: "40px",
+                            backgroundColor: "#F6F6F6",
+                          }}
+                          optionLabel="label"
+                          placeholder="select the multiple type of district"
+                          maxSelectedLabels={3}
+                          value={props.value}
+                          onChange={(e) => {
+                            props.onChange(e.value);
+                          }}
+                        />
+                      );
+                    }}
+                  />
+                </div>
               </FormGroup>
             </Col>
           </Row>
@@ -218,7 +242,7 @@ const DurationLocation = ({ handleStepChange }) => {
 
         {Array.from({ length: 2 }).map((item, index) => {
           return (
-            <Row className="mt-3 districtlist_section">
+            <Row className="mt-3 districtlist_section" key={index}>
               <Col md={12} className="d-flex justify-content-between">
                 <div>
                   <span>Assam</span>
@@ -230,7 +254,7 @@ const DurationLocation = ({ handleStepChange }) => {
                         transform="translate(309 500)"
                         fill="#d32f2f"
                         stroke="#707070"
-                        stroke-width="1"
+                        strokeWidth="1"
                       >
                         <ellipse cx="11.5" cy="11" rx="11.5" ry="11" stroke="none" />
                         <ellipse cx="11.5" cy="11" rx="11" ry="10.5" fill="none" />
@@ -243,7 +267,7 @@ const DurationLocation = ({ handleStepChange }) => {
                         transform="translate(315.5 506.5)"
                         fill="none"
                         stroke="#fff"
-                        stroke-width="1"
+                        strokeWidth="1"
                       />
                       <line
                         id="Line_21"
@@ -253,7 +277,7 @@ const DurationLocation = ({ handleStepChange }) => {
                         transform="translate(315.5 506.5)"
                         fill="none"
                         stroke="#fff"
-                        stroke-width="1"
+                        strokeWidth="1"
                       />
                     </g>
                   </svg>
@@ -288,6 +312,7 @@ const DurationLocation = ({ handleStepChange }) => {
                       style={{
                         gap: ".6rem",
                       }}
+                      key={index}
                     >
                       <Button
                         style={{
@@ -353,9 +378,9 @@ const DurationLocation = ({ handleStepChange }) => {
                 transform="translate(-3 -3)"
                 fill="none"
                 stroke="#fff"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
               />
             </svg>
             Save Draft

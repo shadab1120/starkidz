@@ -8,6 +8,8 @@ import Checked from "../../assets/icons/checked.svg";
 import Trophy from "../../assets/icons/gold-winner-trophy-icon.svg";
 
 import "./styles/ContestFeesAndPrizes.css";
+import { Controller, useForm } from "react-hook-form";
+import { MultiSelect } from "primereact/multiselect";
 
 const customStyles = {
   control: (base, state) => ({
@@ -48,6 +50,11 @@ const options = [
 ];
 
 const ContestFeesAndPrizes = ({ handleStepChange }) => {
+  const { control } = useForm({
+    defaultValues: {
+      prizes: null,
+    },
+  });
   return (
     <>
       <Row
@@ -128,12 +135,44 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
           <img src={Trophy} alt="" />
           <div className="w-75">
             <h5 className="font-weight-normal mx-2">Select Prizes</h5>
-            <Select
-              options={options}
-              className="basic-single"
-              styles={customStyles}
-              placeholder="Select type of prizes"
-            ></Select>
+            <div>
+              <Controller
+                name="prizes"
+                control={control}
+                rules={{ required: "This is required" }}
+                render={(props) => {
+                  return (
+                    <MultiSelect
+                      name="prizes"
+                      display="chip"
+                      options={[
+                        {
+                          value: "images",
+                          label: "Images",
+                        },
+                        {
+                          value: "videos",
+                          label: "Videos",
+                        },
+                      ]}
+                      style={{
+                        width: "40%",
+                        borderRadius: "10px",
+                        height: "40px",
+                        backgroundColor: "#F6F6F6",
+                      }}
+                      optionLabel="label"
+                      placeholder="Select prizes"
+                      maxSelectedLabels={3}
+                      value={props.value}
+                      onChange={(e) => {
+                        props.onChange(e.value);
+                      }}
+                    />
+                  );
+                }}
+              />
+            </div>
           </div>
         </Col>
         <Col md={12} className="d-flex mt-4 pl-5">

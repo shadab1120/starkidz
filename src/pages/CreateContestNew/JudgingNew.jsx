@@ -5,8 +5,10 @@ import { RiArrowLeftSLine } from "react-icons/ri";
 import EditIcon from "../../assets/icons/exclude-icon.svg";
 import DeleteIcon from "./delete-icon.svg";
 import { Table } from "reactstrap";
+import { MultiSelect } from "primereact/multiselect";
 
 import "./styles/JudgingNew.css";
+import { Controller, useForm } from "react-hook-form";
 
 const customStyles = {
   control: (base, state) => ({
@@ -102,6 +104,12 @@ const options = [
 ];
 
 const JudgingNew = ({ handleStepChange }) => {
+  const { control } = useForm({
+    defaultValues: {
+      qafrom: null,
+      qa: null,
+    },
+  });
   return (
     <>
       <Row
@@ -384,32 +392,128 @@ const JudgingNew = ({ handleStepChange }) => {
       <Row>
         <Col md={6}>
           <p className="f-18 grey-accent m-0">Select Quality Analytics From</p>
-          <Select
-            options={options}
-            className="basic-single"
-            styles={customSelectStyles}
-            placeholder="Select QA"
-          ></Select>
+          <div>
+            <Controller
+              name="qafrom"
+              control={control}
+              rules={{ required: "This is required" }}
+              render={(props) => {
+                return (
+                  <MultiSelect
+                    name="qafrom"
+                    display="chip"
+                    options={[
+                      {
+                        value: "images",
+                        label: "Images",
+                      },
+                      {
+                        value: "videos",
+                        label: "Videos",
+                      },
+                    ]}
+                    style={{
+                      width: "80%",
+                      borderRadius: "10px",
+                      height: "40px",
+                      backgroundColor: "#F6F6F6",
+                    }}
+                    optionLabel="label"
+                    placeholder="Select QAfrom"
+                    maxSelectedLabels={3}
+                    value={props.value}
+                    onChange={(e) => {
+                      props.onChange(e.value);
+                    }}
+                  />
+                );
+              }}
+            />
+          </div>
         </Col>
         <Col md={6}>
           <p className="f-18 grey-accent m-0">Choose Quality Analytics</p>
-          <Select
-            options={options}
-            className="basic-single"
-            styles={customSelectStyles}
-            placeholder="Select QA"
-          ></Select>
+          <div>
+            <Controller
+              name="qa"
+              control={control}
+              rules={{ required: "This is required" }}
+              render={(props) => {
+                return (
+                  <MultiSelect
+                    name="qa"
+                    display="chip"
+                    options={[
+                      {
+                        value: "images",
+                        label: "Images",
+                      },
+                      {
+                        value: "videos",
+                        label: "Videos",
+                      },
+                    ]}
+                    style={{
+                      width: "80%",
+                      borderRadius: "10px",
+                      height: "40px",
+                      backgroundColor: "#F6F6F6",
+                    }}
+                    optionLabel="label"
+                    placeholder="Select QA"
+                    maxSelectedLabels={3}
+                    value={props.value}
+                    onChange={(e) => {
+                      props.onChange(e.value);
+                    }}
+                  />
+                );
+              }}
+            />
+          </div>
         </Col>
       </Row>
       <Row className="mt-2">
         <Col md={6}>
           <p className="f-18 grey-accent m-0">Select Judges From</p>
-          <Select
-            options={options}
-            className="basic-single"
-            styles={customSelectStyles}
-            placeholder="Select QA"
-          ></Select>
+          <div>
+            <Controller
+              name="judgefrom"
+              control={control}
+              rules={{ required: "This is required" }}
+              render={(props) => {
+                return (
+                  <MultiSelect
+                    name="judgefrom"
+                    display="chip"
+                    options={[
+                      {
+                        value: "images",
+                        label: "Images",
+                      },
+                      {
+                        value: "videos",
+                        label: "Videos",
+                      },
+                    ]}
+                    style={{
+                      width: "80%",
+                      borderRadius: "10px",
+                      height: "40px",
+                      backgroundColor: "#F6F6F6",
+                    }}
+                    optionLabel="label"
+                    placeholder="Select judge"
+                    maxSelectedLabels={3}
+                    value={props.value}
+                    onChange={(e) => {
+                      props.onChange(e.value);
+                    }}
+                  />
+                );
+              }}
+            />
+          </div>
         </Col>
       </Row>
       {/* Button */}

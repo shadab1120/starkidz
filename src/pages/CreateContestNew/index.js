@@ -13,7 +13,7 @@ import ContestFeesAndPrizes from "./ContestFeesAndPrizes";
 import Terms from "./Terms";
 import About from "./About";
 
-const totalSteps = 4;
+const totalSteps = 7;
 
 const CreateContestNew = () => {
   const [step, setStep] = useState(1);
@@ -40,20 +40,14 @@ const CreateContestNew = () => {
     <React.Fragment>
       <Content>
         <div className="content__card">
-          {/* {step === 1 && <ContestDetailsNew handleStepChange={handleStepChange} />}
+          {step === 1 && <ContestDetailsNew handleStepChange={handleStepChange} />}
           {step === 2 && <ContestTheme handleStepChange={handleStepChange} />}
-          {step === 3 && <DurationLocation handleStepChange={handleStepChange} />} */}
-          {/* {step === 4 && <JudgingNew handleStepChange={handleStepChange} /> } */}
-          {/* {step === 4 <ContestFeesAndPrizes handleStepChange={handleStepChange} /> } */}
-          {/* <Terms handleStepChange={handleStepChange} /> */}
-          <About handleStepChange={handleStepChange} />
+          {step === 3 && <DurationLocation handleStepChange={handleStepChange} />}
+          {step === 4 && <JudgingNew handleStepChange={handleStepChange} />}
+          {step === 5 && <ContestFeesAndPrizes handleStepChange={handleStepChange} />}
+          {step === 6 && <About handleStepChange={handleStepChange} />}
+          {step === 7 && <Terms handleStepChange={handleStepChange} />}
         </div>
-        {/* <MultiStepProgressBar currentStep={step} /> */}
-
-        {/* {step === 1 && <ContestDetails handleStepChange={handleStepChange} />}
-          {step === 2 && <DurationLocation handleStepChange={handleStepChange} />}
-          {step === 3 && <Judging handleStepChange={handleStepChange} />}
-          {step === 4 && <FeePrices handleStepChange={handleStepChange} />} */}
       </Content>
     </React.Fragment>
   );
