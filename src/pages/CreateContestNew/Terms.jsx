@@ -1,10 +1,11 @@
 import React from "react";
-import { Row, Button, FormGroup, Label, Input } from "reactstrap";
+import { Row, FormGroup, Label } from "reactstrap";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import Rocket from "../../assets/icons/rocket.svg";
 
 import "./styles/JudgingNew.css";
-
+import { Button, Form, Select, Input } from 'antd';
+const { TextArea } = Input;
 const customStyles = {
   control: (base, state) => ({
     ...base,
@@ -44,107 +45,128 @@ const options = [
 ];
 
 const Terms = ({ handleStepChange }) => {
+  const [form] = Form.useForm();
+
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
+  };
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
+  const onFinish = async (data) => {
+    const event = id ? `update` : `insert`
+    const payload = {
+      ...data,
+      event: event
+    };
+  };
+
+
+
   return (
     <>
-      <Row
-        style={{
-          width: "100%",
-          padding: "1rem 2rem 0 2rem",
-        }}
-      >
-        <h1
+      <Form
+        form={form}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off">
+        <Row
           style={{
-            color: "#D32F2F",
-            fontSize: "2rem",
+            width: "100%",
+            padding: "1rem 2rem 0 2rem",
           }}
         >
-          Terms &#38; Conditions
-        </h1>
-      </Row>
-      <hr
-        style={{
-          width: "100%",
-          color: "#707070",
-          opacity: "0.2",
-        }}
-      />
-      <Row className="py-2 px-4">
-        <h4 className="f-18 grey-accent">Write T&C</h4>
-        <Input
-          type="textarea"
-          name="text"
-          id="exampleText"
+          <h1
+            style={{
+              color: "#D32F2F",
+              fontSize: "2rem",
+            }}
+          >
+            Terms &#38; Conditions
+          </h1>
+        </Row>
+        <hr
           style={{
-            backgroundColor: "#f6f6f6",
+            width: "100%",
+            color: "#707070",
+            opacity: "0.2",
           }}
-          rows="20"
-          placeholder="Text Editor for T&C"
         />
-      </Row>
-
-      {/* Button */}
-      <Row className="mb-4 mt-5 d-flex px-4 justify-content-between">
-        <div>
-          <Button
-            style={{
-              backgroundColor: "#FF8383",
-            }}
-            className="footerBtn"
-            onClick={() => handleStepChange("prev")}
-          >
-            <RiArrowLeftSLine size={20} color="#fff" />
-            Back
-          </Button>
-        </div>
-        <div
-          className="d-flex"
-          style={{
-            gap: "1rem",
-          }}
-        >
-          <Button
-            className="footerBtn"
-            style={{
-              backgroundColor: "#918A8A",
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
+        <Row className="py-2 px-4">
+          <h4 className="f-18 grey-accent">Write T&C</h4>
+          <Form.Item >
+            <TextArea rows={20}
               style={{
-                marginRight: "5px",
+                backgroundColor: "#f6f6f6",
+              }}
+              placeholder="Text Editor for T&C" />
+          </Form.Item>
+        </Row>
+
+        {/* Button */}
+        <Row className="mb-4 mt-5 d-flex px-4 justify-content-between">
+          <div>
+            <Button
+              style={{
+                backgroundColor: "#FF8383",
+              }}
+              className="footerBtn"
+              onClick={() => handleStepChange("prev")}
+            >
+              <RiArrowLeftSLine size={20} color="#fff" />
+              Back
+            </Button>
+          </div>
+          <div
+            className="d-flex"
+            style={{
+              gap: "1rem",
+            }}
+          >
+            <Button
+              className="footerBtn"
+              style={{
+                backgroundColor: "#918A8A",
               }}
             >
-              <path
-                id="save_icon"
-                data-name="save icon"
-                d="M8,20H6a2,2,0,0,1-2-2V6A2,2,0,0,1,6,4H9M8,20V14a1,1,0,0,1,1-1h6a1,1,0,0,1,1,1v6M8,20h8m0,0h2a2,2,0,0,0,2-2V8.828a2,2,0,0,0-.586-1.414L16.586,4.586A2,2,0,0,0,15.172,4H15m0,0V7a1,1,0,0,1-1,1H10A1,1,0,0,1,9,7V4m6,0H9"
-                transform="translate(-3 -3)"
-                fill="none"
-                stroke="#fff"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-              />
-            </svg>
-            Save Draft
-          </Button>
-          <Button
-            style={{
-              backgroundColor: "#D32F2F",
-            }}
-            onClick={() => {
-              handleStepChange("next");
-            }}
-            className="footerBtn"
-          >
-            <img src={Rocket} height="22" alt="" className="mr-2" />
-            Launch Contest
-          </Button>
-        </div>
-      </Row>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                style={{
+                  marginRight: "5px",
+                }}
+              >
+                <path
+                  id="save_icon"
+                  data-name="save icon"
+                  d="M8,20H6a2,2,0,0,1-2-2V6A2,2,0,0,1,6,4H9M8,20V14a1,1,0,0,1,1-1h6a1,1,0,0,1,1,1v6M8,20h8m0,0h2a2,2,0,0,0,2-2V8.828a2,2,0,0,0-.586-1.414L16.586,4.586A2,2,0,0,0,15.172,4H15m0,0V7a1,1,0,0,1-1,1H10A1,1,0,0,1,9,7V4m6,0H9"
+                  transform="translate(-3 -3)"
+                  fill="none"
+                  stroke="#fff"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                />
+              </svg>
+              Save Draft
+            </Button>
+            <Button
+              style={{
+                backgroundColor: "#D32F2F",
+              }}
+              onClick={() => {
+                handleStepChange("next");
+              }}
+              className="footerBtn"
+            >
+              <img src={Rocket} height="22" alt="" className="mr-2" />
+              Launch Contest
+            </Button>
+          </div>
+        </Row>
+      </Form>
     </>
   );
 };

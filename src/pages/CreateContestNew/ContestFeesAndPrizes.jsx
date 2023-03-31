@@ -1,15 +1,15 @@
 import React from "react";
-import Select from "react-select";
-import { Row, Button, Card, Col } from "reactstrap";
+import { Row, Card, Col } from "reactstrap";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import CopyIcon from "../../assets/icons/copy.svg";
 import PlusIcon from "../../assets/icons/plus.svg";
 import Checked from "../../assets/icons/checked.svg";
+import { Button, Form, Select, Input } from 'antd';
+
 import Trophy from "../../assets/icons/gold-winner-trophy-icon.svg";
 
 import "./styles/ContestFeesAndPrizes.css";
-import { Controller, useForm } from "react-hook-form";
-import { MultiSelect } from "primereact/multiselect";
+
 
 const customStyles = {
   control: (base, state) => ({
@@ -50,264 +50,277 @@ const options = [
 ];
 
 const ContestFeesAndPrizes = ({ handleStepChange }) => {
-  const { control } = useForm({
-    defaultValues: {
-      prizes: null,
-    },
-  });
+
+  const [form] = Form.useForm();
+
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
+  };
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
+  const onFinish = async (data) => {
+    const event = id ? `update` : `insert`
+    const payload = {
+      ...data,
+      event: event
+    };
+  };
+
+
   return (
     <>
-      <Row
-        style={{
-          width: "100%",
-          padding: "1rem 2rem 0 2rem",
-        }}
-      >
-        <h1 className="primary-red text-lg f-18">Contest Fees &#38; Prizes</h1>
-      </Row>
-      <hr
-        style={{
-          width: "100%",
-          color: "#707070",
-          opacity: "0.2",
-        }}
-      />
-      <Row className="d-flex px-2 flex-column">
-        <h5 className="font-weight-normal">Contest Fees</h5>
+      <Form
+        form={form}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off">
         <Row
-          className="d-flex pl-5"
           style={{
-            gap: "1rem",
+            width: "100%",
+            padding: "1rem 2rem 0 2rem",
           }}
         >
-          {Array(4)
-            .fill(0)
-            .map((item, index) => (
-              <Card
-                key={index}
-                className="mt-0"
-                style={{
-                  width: "18rem",
-                }}
-              >
-                <div
-                  className="d-flex align-center flex-column"
+          <h1 className="primary-red text-lg f-18">Contest Fees &#38; Prizes</h1>
+        </Row>
+        <hr
+          style={{
+            width: "100%",
+            color: "#707070",
+            opacity: "0.2",
+          }}
+        />
+        <Row className="d-flex px-2 flex-column">
+          <h5 className="font-weight-normal">Contest Fees</h5>
+          <Row
+            className="d-flex pl-5"
+            style={{
+              gap: "1rem",
+            }}
+          >
+            {Array(4)
+              .fill(0)
+              .map((item, index) => (
+                <Card
+                  key={index}
+                  className="mt-0"
                   style={{
-                    gap: "0.6rem",
+                    width: "18rem",
                   }}
                 >
-                  <div className="w-100 d-flex">
-                    <Button
-                      style={{
-                        backgroundColor: "#D32F2F",
-                        borderRadius: "21px",
-                        border: "none",
-                        padding: "0.5rem 2rem",
-                        width: "90%",
-                        fontStyle: "italic",
-                      }}
-                    >
-                      Total Marks for 4-6
-                    </Button>
-                    <div className="mx-1 text-center">
-                      <span className="f-9 text-nowrap">copy to all</span>
-                      <img src={CopyIcon} alt="" />
+                  <div
+                    className="d-flex align-center flex-column"
+                    style={{
+                      gap: "0.6rem",
+                    }}
+                  >
+                    <div className="w-100 d-flex">
+                      <Button
+                        style={{
+                          backgroundColor: "#D32F2F",
+                          borderRadius: "21px",
+                          border: "none",
+                          padding: "0.5rem 2rem",
+                          width: "90%",
+                          fontStyle: "italic",
+                        }}
+                      >
+                        Total Marks for 4-6
+                      </Button>
+                      <div className="mx-1 text-center">
+                        <span className="f-9 text-nowrap">copy to all</span>
+                        <img src={CopyIcon} alt="" />
+                      </div>
+                    </div>
+
+                    <div className="mt-2 text-center w-100 total-score py-1">
+                      <Form.Item
+                        className="form-control input-fees "
+                        name="contest_name"
+                        rules={[
+                          {
+                            required: true,
+                            message: 'This field is required',
+                          },
+                        ]}
+                      >
+                        <Input placeholder="Enter Fees" />
+                      </Form.Item>
                     </div>
                   </div>
-
-                  <div className="mt-2 text-center w-100 total-score py-1">
-                    <input className="form-control input-fees " type="text" placeholder="Enter Fees" />
-                  </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              ))}
+          </Row>
         </Row>
-      </Row>
-      <hr
-        style={{
-          width: "100%",
-          color: "#707070",
-          opacity: "0.2",
-        }}
-      />
-      <Row className="d-flex px-2 mb-5">
-        <Col md={12} className="d-flex">
-          <img src={Trophy} alt="" />
-          <div className="w-75">
-            <h5 className="font-weight-normal mx-2">Select Prizes</h5>
-            <div>
-              <Controller
-                name="prizes"
-                control={control}
-                rules={{ required: "This is required" }}
-                render={(props) => {
-                  return (
-                    <MultiSelect
-                      name="prizes"
-                      display="chip"
-                      options={[
-                        {
-                          value: "images",
-                          label: "Images",
-                        },
-                        {
-                          value: "videos",
-                          label: "Videos",
-                        },
-                      ]}
-                      style={{
-                        width: "40%",
-                        borderRadius: "10px",
-                        height: "40px",
-                        backgroundColor: "#F6F6F6",
-                      }}
-                      optionLabel="label"
-                      placeholder="Select prizes"
-                      maxSelectedLabels={3}
-                      value={props.value}
-                      onChange={(e) => {
-                        props.onChange(e.value);
-                      }}
-                    />
-                  );
-                }}
-              />
+        <hr
+          style={{
+            width: "100%",
+            color: "#707070",
+            opacity: "0.2",
+          }}
+        />
+        <Row className="d-flex px-2 mb-5">
+          <Col md={12} className="d-flex">
+            <img src={Trophy} alt="" />
+            <div className="w-75">
+              <h5 className="font-weight-normal mx-2">Select Prizes</h5>
+              <div>
+                <Form.Item
+                  name="prize"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'This field is required',
+                    },
+                  ]}
+                >
+                  <Select
+                    //defaultValue="lucy"
+                    placeholder="Prize"
+                    className="basic-single"
+                    styles={customStyles}
+                    mode="multiple"
+                    onChange={handleChange}
+                    options={options}
+                  />
+                </Form.Item>
+              </div>
             </div>
-          </div>
-        </Col>
-        <Col md={12} className="d-flex mt-4 pl-5">
-          {Array(4)
-            .fill(["Country level", "State level", "City level", "School level"])
-            .map((item, index) => (
-              <Card
-                key={index}
-                className="mt-0"
-                style={{
-                  width: "18rem",
-                }}
-              >
-                <div
-                  className="d-flex align-center flex-column"
+          </Col>
+          <Col md={12} className="d-flex mt-4 pl-5">
+            {Array(4)
+              .fill(["Country level", "State level", "City level", "School level"])
+              .map((item, index) => (
+                <Card
+                  key={index}
+                  className="mt-0"
                   style={{
-                    gap: "0.6rem",
+                    width: "18rem",
                   }}
                 >
-                  <div className="w-100 d-flex">
-                    <Button
-                      style={{
-                        backgroundColor: "#D32F2F",
-                        borderRadius: "21px",
-                        border: "none",
-                        padding: "0.5rem 2rem",
-                        width: "90%",
-                        fontStyle: "italic",
-                      }}
-                    >
-                      <img src={PlusIcon} alt="" className="mx-2" />
-                      {item[index]}
-                    </Button>
+                  <div
+                    className="d-flex align-center flex-column"
+                    style={{
+                      gap: "0.6rem",
+                    }}
+                  >
+                    <div className="w-100 d-flex">
+                      <Button
+                        style={{
+                          backgroundColor: "#D32F2F",
+                          borderRadius: "21px",
+                          border: "none",
+                          padding: "0.5rem 2rem",
+                          width: "90%",
+                          fontStyle: "italic",
+                        }}
+                      >
+                        <img src={PlusIcon} alt="" className="mx-2" />
+                        {item[index]}
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </Card>
-            ))}
-        </Col>
-      </Row>
-      <hr
-        style={{
-          width: "100%",
-          color: "#707070",
-          opacity: "0.2",
-        }}
-      />
-
-      {/* Button */}
-      <Row className="mb-4 mt-5 d-flex px-4 justify-content-between">
-        <div>
-          <Button
-            style={{
-              backgroundColor: "#FF8383",
-            }}
-            className="footerBtn"
-            onClick={() => handleStepChange("prev")}
-          >
-            <RiArrowLeftSLine size={20} color="#fff" />
-            Back
-          </Button>
-        </div>
-        <div
-          className="d-flex"
+                </Card>
+              ))}
+          </Col>
+        </Row>
+        <hr
           style={{
-            gap: "1rem",
+            width: "100%",
+            color: "#707070",
+            opacity: "0.2",
           }}
-        >
-          <Button
-            className="footerBtn"
+        />
+
+        {/* Button */}
+        <Row className="mb-4 mt-5 d-flex px-4 justify-content-between">
+          <div>
+            <Button
+              style={{
+                backgroundColor: "#FF8383",
+              }}
+              className="footerBtn"
+              onClick={() => handleStepChange("prev")}
+            >
+              <RiArrowLeftSLine size={20} color="#fff" />
+              Back
+            </Button>
+          </div>
+          <div
+            className="d-flex"
             style={{
-              backgroundColor: "#918A8A",
+              gap: "1rem",
             }}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
+            <Button
+              className="footerBtn"
               style={{
-                marginRight: "5px",
+                backgroundColor: "#918A8A",
               }}
             >
-              <path
-                id="save_icon"
-                data-name="save icon"
-                d="M8,20H6a2,2,0,0,1-2-2V6A2,2,0,0,1,6,4H9M8,20V14a1,1,0,0,1,1-1h6a1,1,0,0,1,1,1v6M8,20h8m0,0h2a2,2,0,0,0,2-2V8.828a2,2,0,0,0-.586-1.414L16.586,4.586A2,2,0,0,0,15.172,4H15m0,0V7a1,1,0,0,1-1,1H10A1,1,0,0,1,9,7V4m6,0H9"
-                transform="translate(-3 -3)"
-                fill="none"
-                stroke="#fff"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-              />
-            </svg>
-            Save Draft
-          </Button>
-          <Button
-            style={{
-              backgroundColor: "#D32F2F",
-            }}
-            onClick={() => {
-              handleStepChange("next");
-            }}
-            className="footerBtn"
-          >
-            Next
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16.36"
-              height="28.485"
-              viewBox="0 0 16.36 28.485"
-              style={{
-                marginLeft: "5px",
-                height: "15px",
-              }}
-            >
-              <g
-                id="Iconly_Light-outline_Arrow_-_Up_2"
-                data-name="Iconly Light-outline Arrow - Up 2"
-                transform="matrix(-0.017, -1, 1, -0.017, 0.492, 21.485)"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                style={{
+                  marginRight: "5px",
+                }}
               >
-                <g id="Arrow_-_Up_2-6" data-name="Arrow - Up 2-6" transform="translate(21.214 15.748) rotate(180)">
-                  <path
-                    id="Arrow_-_Up_2-7"
-                    data-name="Arrow - Up 2-7"
-                    d="M27.788,15.436a1.429,1.429,0,0,1-1.89.143l-.162-.143L14.107,3.574,2.478,15.436a1.429,1.429,0,0,1-1.89.143l-.162-.143a1.5,1.5,0,0,1-.141-1.927l.141-.166L13.081.434a1.43,1.43,0,0,1,1.89-.143l.162.143L27.788,13.343A1.5,1.5,0,0,1,27.788,15.436Z"
-                    transform="translate(0)"
-                    fill="#fff"
-                  />
+                <path
+                  id="save_icon"
+                  data-name="save icon"
+                  d="M8,20H6a2,2,0,0,1-2-2V6A2,2,0,0,1,6,4H9M8,20V14a1,1,0,0,1,1-1h6a1,1,0,0,1,1,1v6M8,20h8m0,0h2a2,2,0,0,0,2-2V8.828a2,2,0,0,0-.586-1.414L16.586,4.586A2,2,0,0,0,15.172,4H15m0,0V7a1,1,0,0,1-1,1H10A1,1,0,0,1,9,7V4m6,0H9"
+                  transform="translate(-3 -3)"
+                  fill="none"
+                  stroke="#fff"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                />
+              </svg>
+              Save Draft
+            </Button>
+            <Button
+              style={{
+                backgroundColor: "#D32F2F",
+              }}
+              onClick={() => {
+                handleStepChange("next");
+              }}
+              className="footerBtn"
+            >
+              Next
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16.36"
+                height="28.485"
+                viewBox="0 0 16.36 28.485"
+                style={{
+                  marginLeft: "5px",
+                  height: "15px",
+                }}
+              >
+                <g
+                  id="Iconly_Light-outline_Arrow_-_Up_2"
+                  data-name="Iconly Light-outline Arrow - Up 2"
+                  transform="matrix(-0.017, -1, 1, -0.017, 0.492, 21.485)"
+                >
+                  <g id="Arrow_-_Up_2-6" data-name="Arrow - Up 2-6" transform="translate(21.214 15.748) rotate(180)">
+                    <path
+                      id="Arrow_-_Up_2-7"
+                      data-name="Arrow - Up 2-7"
+                      d="M27.788,15.436a1.429,1.429,0,0,1-1.89.143l-.162-.143L14.107,3.574,2.478,15.436a1.429,1.429,0,0,1-1.89.143l-.162-.143a1.5,1.5,0,0,1-.141-1.927l.141-.166L13.081.434a1.43,1.43,0,0,1,1.89-.143l.162.143L27.788,13.343A1.5,1.5,0,0,1,27.788,15.436Z"
+                      transform="translate(0)"
+                      fill="#fff"
+                    />
+                  </g>
                 </g>
-              </g>
-            </svg>
-          </Button>
-        </div>
-      </Row>
+              </svg>
+            </Button>
+          </div>
+        </Row>
+      </Form>
     </>
   );
 };
