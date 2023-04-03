@@ -4,12 +4,11 @@ import { RiArrowLeftSLine } from "react-icons/ri";
 import CopyIcon from "../../assets/icons/copy.svg";
 import PlusIcon from "../../assets/icons/plus.svg";
 import Checked from "../../assets/icons/checked.svg";
-import { Button, Form, Select, Input } from 'antd';
+import { Button, Form, Select, Input } from "antd";
 
 import Trophy from "../../assets/icons/gold-winner-trophy-icon.svg";
 
 import "./styles/ContestFeesAndPrizes.css";
-
 
 const customStyles = {
   control: (base, state) => ({
@@ -50,31 +49,25 @@ const options = [
 ];
 
 const ContestFeesAndPrizes = ({ handleStepChange }) => {
-
   const [form] = Form.useForm();
 
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
   const onFinish = async (data) => {
-    const event = id ? `update` : `insert`
-    const payload = {
-      ...data,
-      event: event
-    };
+    // const event = id ? `update` : `insert`
+    // const payload = {
+    //   ...data,
+    //   event: event
+    // };
   };
-
 
   return (
     <>
-      <Form
-        form={form}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off">
+      <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete="off">
         <Row
           style={{
             width: "100%",
@@ -140,7 +133,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                         rules={[
                           {
                             required: true,
-                            message: 'This field is required',
+                            message: "This field is required",
                           },
                         ]}
                       >
@@ -170,7 +163,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                   rules={[
                     {
                       required: true,
-                      message: 'This field is required',
+                      message: "This field is required",
                     },
                   ]}
                 >
@@ -210,10 +203,11 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                           backgroundColor: "#D32F2F",
                           borderRadius: "21px",
                           border: "none",
-                          padding: "0.5rem 2rem",
+                          padding: "1.2rem 2rem",
                           width: "90%",
                           fontStyle: "italic",
                         }}
+                        className="d-flex align-items-center justify-content-center"
                       >
                         <img src={PlusIcon} alt="" className="mx-2" />
                         {item[index]}
@@ -238,8 +232,10 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
             <Button
               style={{
                 backgroundColor: "#FF8383",
+                fontSize: "30px",
+                height: "50px",
               }}
-              className="footerBtn"
+              className="d-flex align-items-center justify-content-center"
               onClick={() => handleStepChange("prev")}
             >
               <RiArrowLeftSLine size={20} color="#fff" />
@@ -253,9 +249,12 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
             }}
           >
             <Button
-              className="footerBtn"
+              htmlType="submit"
+              className="d-flex align-items-center justify-content-center"
               style={{
                 backgroundColor: "#918A8A",
+                fontSize: "30px",
+                height: "50px",
               }}
             >
               <svg
@@ -282,13 +281,16 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
               Save Draft
             </Button>
             <Button
+              htmlType="submit"
               style={{
                 backgroundColor: "#D32F2F",
+                fontSize: "30px",
+                height: "50px",
               }}
+              className="d-flex align-items-center justify-content-center"
               onClick={() => {
                 handleStepChange("next");
               }}
-              className="footerBtn"
             >
               Next
               <svg

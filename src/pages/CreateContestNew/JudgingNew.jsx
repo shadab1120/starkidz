@@ -4,10 +4,9 @@ import { RiArrowLeftSLine } from "react-icons/ri";
 import EditIcon from "../../assets/icons/exclude-icon.svg";
 import DeleteIcon from "./delete-icon.svg";
 import { Table } from "reactstrap";
-import { Button, Form, Select } from 'antd';
+import { Button, Form, Select } from "antd";
 
 import "./styles/JudgingNew.css";
-
 
 const customStyles = {
   control: (base, state) => ({
@@ -109,24 +108,19 @@ const JudgingNew = ({ handleStepChange }) => {
     console.log(`selected ${value}`);
   };
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
   const onFinish = async (data) => {
-    const event = id ? `update` : `insert`
-    const payload = {
-      ...data,
-      event: event
-    };
+    // const event = id ? `update` : `insert`
+    // const payload = {
+    //   ...data,
+    //   event: event
+    // };
   };
-
 
   return (
     <>
-      <Form
-        form={form}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off">
+      <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete="off">
         <Row
           style={{
             width: "100%",
@@ -204,16 +198,15 @@ const JudgingNew = ({ handleStepChange }) => {
               rules={[
                 {
                   required: true,
-                  message: 'This field is required',
+                  message: "This field is required",
                 },
               ]}
+              className="w-50"
             >
               <Select
-                //defaultValue="lucy"
                 placeholder="Judging Parameters"
                 className="basic-single"
                 styles={customStyles}
-
                 onChange={handleChange}
                 options={options}
               />
@@ -249,12 +242,7 @@ const JudgingNew = ({ handleStepChange }) => {
                     1
                   </th>
                   <td>
-                    <Select
-                      options={options}
-                      className="basic-single"
-                      styles={customTableStyles}
-                      placeholder="choose parameter 1"
-                    ></Select>
+                    <Select className="w-100" options={options} placeholder="choose parameter 1"></Select>
                   </td>
                   <td className="text-center">
                     <div className=" d-flex justify-content-center align-items-center">
@@ -294,16 +282,15 @@ const JudgingNew = ({ handleStepChange }) => {
                       rules={[
                         {
                           required: true,
-                          message: 'This field is required',
+                          message: "This field is required",
                         },
                       ]}
+                      className="mb-0"
                     >
                       <Select
                         //defaultValue="lucy"
                         placeholder="choose parameter 2"
-                        className="basic-single"
                         styles={customTableStyles}
-
                         onChange={handleChange}
                         options={options}
                       />
@@ -348,16 +335,16 @@ const JudgingNew = ({ handleStepChange }) => {
                       rules={[
                         {
                           required: true,
-                          message: 'This field is required',
+                          message: "This field is required",
                         },
                       ]}
+                      className="mb-0"
                     >
                       <Select
                         //defaultValue="lucy"
                         placeholder="choose parameter 3"
                         className="basic-single"
                         styles={customTableStyles}
-
                         onChange={handleChange}
                         options={options}
                       />
@@ -394,7 +381,7 @@ const JudgingNew = ({ handleStepChange }) => {
                 </tr>
                 <tr>
                   <th scope="row" className="f-14 vertical-align-middle">
-                    3
+                    4
                   </th>
                   <td>
                     <Form.Item
@@ -402,16 +389,16 @@ const JudgingNew = ({ handleStepChange }) => {
                       rules={[
                         {
                           required: true,
-                          message: 'This field is required',
+                          message: "This field is required",
                         },
                       ]}
+                      className="mb-0"
                     >
                       <Select
                         //defaultValue="lucy"
                         placeholder="choose parameter 3"
                         className="basic-single"
                         styles={customTableStyles}
-
                         onChange={handleChange}
                         options={options}
                       />
@@ -466,7 +453,7 @@ const JudgingNew = ({ handleStepChange }) => {
                 rules={[
                   {
                     required: true,
-                    message: 'This field is required',
+                    message: "This field is required",
                   },
                 ]}
               >
@@ -490,7 +477,7 @@ const JudgingNew = ({ handleStepChange }) => {
                 rules={[
                   {
                     required: true,
-                    message: 'This field is required',
+                    message: "This field is required",
                   },
                 ]}
               >
@@ -516,7 +503,7 @@ const JudgingNew = ({ handleStepChange }) => {
                 rules={[
                   {
                     required: true,
-                    message: 'This field is required',
+                    message: "This field is required",
                   },
                 ]}
               >
@@ -539,8 +526,10 @@ const JudgingNew = ({ handleStepChange }) => {
             <Button
               style={{
                 backgroundColor: "#FF8383",
+                fontSize: "30px",
+                height: "50px",
               }}
-              className="footerBtn"
+              className="d-flex align-items-center justify-content-center"
               onClick={() => handleStepChange("prev")}
             >
               <RiArrowLeftSLine size={20} color="#fff" />
@@ -554,9 +543,12 @@ const JudgingNew = ({ handleStepChange }) => {
             }}
           >
             <Button
-              className="footerBtn"
+              htmlType="submit"
+              className="d-flex align-items-center justify-content-center"
               style={{
                 backgroundColor: "#918A8A",
+                fontSize: "30px",
+                height: "50px",
               }}
             >
               <svg
@@ -583,13 +575,16 @@ const JudgingNew = ({ handleStepChange }) => {
               Save Draft
             </Button>
             <Button
+              htmlType="submit"
               style={{
                 backgroundColor: "#D32F2F",
+                fontSize: "30px",
+                height: "50px",
               }}
+              className="d-flex align-items-center justify-content-center"
               onClick={() => {
                 handleStepChange("next");
               }}
-              className="footerBtn"
             >
               Next
               <svg

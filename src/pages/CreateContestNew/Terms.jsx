@@ -4,7 +4,7 @@ import { RiArrowLeftSLine } from "react-icons/ri";
 import Rocket from "../../assets/icons/rocket.svg";
 
 import "./styles/JudgingNew.css";
-import { Button, Form, Select, Input } from 'antd';
+import { Button, Form, Select, Input } from "antd";
 const { TextArea } = Input;
 const customStyles = {
   control: (base, state) => ({
@@ -51,25 +51,19 @@ const Terms = ({ handleStepChange }) => {
     console.log(`selected ${value}`);
   };
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
   const onFinish = async (data) => {
-    const event = id ? `update` : `insert`
-    const payload = {
-      ...data,
-      event: event
-    };
+    // const event = id ? `update` : `insert`
+    // const payload = {
+    //   ...data,
+    //   event: event
+    // };
   };
-
-
 
   return (
     <>
-      <Form
-        form={form}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off">
+      <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete="off">
         <Row
           style={{
             width: "100%",
@@ -92,14 +86,16 @@ const Terms = ({ handleStepChange }) => {
             opacity: "0.2",
           }}
         />
-        <Row className="py-2 px-4">
+        <Row className="py-2 px-4 d-flex flex-column">
           <h4 className="f-18 grey-accent">Write T&C</h4>
-          <Form.Item >
-            <TextArea rows={20}
+          <Form.Item>
+            <TextArea
+              rows={20}
               style={{
                 backgroundColor: "#f6f6f6",
               }}
-              placeholder="Text Editor for T&C" />
+              placeholder="Text Editor for T&C"
+            />
           </Form.Item>
         </Row>
 
@@ -109,12 +105,19 @@ const Terms = ({ handleStepChange }) => {
             <Button
               style={{
                 backgroundColor: "#FF8383",
+                height: "50px",
               }}
-              className="footerBtn"
+              className="d-flex align-items-center justify-content-center"
               onClick={() => handleStepChange("prev")}
             >
               <RiArrowLeftSLine size={20} color="#fff" />
-              Back
+              <span
+                style={{
+                  fontSize: "1.2rem",
+                }}
+              >
+                Back
+              </span>
             </Button>
           </div>
           <div
@@ -124,9 +127,10 @@ const Terms = ({ handleStepChange }) => {
             }}
           >
             <Button
-              className="footerBtn"
+              className="d-flex align-items-center justify-content-center"
               style={{
                 backgroundColor: "#918A8A",
+                height: "50px",
               }}
             >
               <svg
@@ -150,19 +154,32 @@ const Terms = ({ handleStepChange }) => {
                   strokeWidth="2"
                 />
               </svg>
-              Save Draft
+              <span
+                style={{
+                  fontSize: "1.2rem",
+                }}
+              >
+                Save Draft
+              </span>
             </Button>
             <Button
               style={{
                 backgroundColor: "#D32F2F",
+                height: "50px",
               }}
               onClick={() => {
                 handleStepChange("next");
               }}
-              className="footerBtn"
+              className="d-flex align-items-center justify-content-center"
             >
               <img src={Rocket} height="22" alt="" className="mr-2" />
-              Launch Contest
+              <span
+                style={{
+                  fontSize: "1.2rem",
+                }}
+              >
+                Launch Contest
+              </span>
             </Button>
           </div>
         </Row>

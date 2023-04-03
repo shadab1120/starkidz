@@ -29,3 +29,18 @@ li.p-multiselect-item {
   background-color: #d32f2f !important;
   color: #fff !important;
 }
+
+/*  */
+
+.ant-select-arrow {
+  color: #d32f2f !important;
+}
+
+.ant-select-selector {
+  height: 40px !important;
+}
+
+.ant-select-item-option-content {
+  text-align: center;
+  color: #d32f2f !important;
+}

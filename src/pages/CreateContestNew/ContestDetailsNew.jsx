@@ -3,8 +3,14 @@ import { Row, Col, FormGroup, Label } from "reactstrap";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useQuery } from "react-query";
-import { UploadOutlined } from '@ant-design/icons';
-import { Input, Button, Form, Select, Upload } from 'antd';
+import {
+  CheckCircleFilled,
+  CheckSquareOutlined,
+  CloseSquareOutlined,
+  DownOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
+import { Input, Button, Form, Select, Upload, Checkbox } from "antd";
 import { setContestDetails } from "../../store/CreateContestSlice";
 import Api from "../../http/ContestApi";
 import mApi from "../../http/masterApis";
@@ -41,19 +47,27 @@ const customStyles = {
   }),
 };
 
-const ContestDetailsNew = ({ handleStepChange }) => {
+const customeSelect = () => {
+  return (
+    <>
+      <Select.Option value="1">1</Select.Option>
+      <Select.Option value="2">2</Select.Option>
+    </>
+  );
+};
 
+const ContestDetailsNew = ({ handleStepChange }) => {
   const params = useParams();
   const dispatch = useDispatch();
-  const [imageData, setImageData] = useState({})
+  const [imageData, setImageData] = useState({});
 
   const [form] = Form.useForm();
 
   const { id } = params;
 
-  const { data: contest_list } = useQuery('getContestList', Api.getContestList);
-  const { data: age_bracket_list } = useQuery('getAgeBracketsList', mApi.getAgeBracketsList);
-  const { data: contest_category_type } = useQuery('getContestTypeList', mApi.getContestTypeList);
+  const { data: contest_list } = useQuery("getContestList", Api.getContestList);
+  const { data: age_bracket_list } = useQuery("getAgeBracketsList", mApi.getAgeBracketsList);
+  const { data: contest_category_type } = useQuery("getContestTypeList", mApi.getContestTypeList);
 
   // const prizeLevel = [
   //   { label: "Country Level", id: 1, type: "Prize for Country", name: "country_level" },
@@ -63,65 +77,55 @@ const ContestDetailsNew = ({ handleStepChange }) => {
   //   { label: "School Level", id: 5, type: "Prize for School", name: "school_level" },
   // ];
 
-
   const options = contest_list?.data?.map((c) => {
-    return { value: c.id, label: c.about_contest?.substr(0, 50) }
-  })
+    return { value: c.id, label: c.about_contest?.substr(0, 50) };
+  });
   const ageOptionsList = age_bracket_list?.data?.map((c) => {
-    return { value: c.id, label: `${c.age_from} - ${c.age_to}` }
-  })
+    return { value: c.id, label: `${c.age_from} - ${c.age_to}` };
+  });
 
   const contest_category_options = contest_category_type?.data?.map((c) => {
-    return { value: c.id, label: c.contest_type_name?.substr(0, 50) }
-  })
+    return { value: c.id, label: c.contest_type_name?.substr(0, 50) };
+  });
 
   const props = {
-
     onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log('uploading', info?.file?.originFileObj, '====', info.file, info.fileList);
-        setImageData(info?.file?.originFileObj)
+      if (info.file.status !== "uploading") {
+        console.log("uploading", info?.file?.originFileObj, "====", info.file, info.fileList);
+        setImageData(info?.file?.originFileObj);
       }
-      if (info.file.status === 'done') {
-        console.log('done', info.file, info.fileList);
+      if (info.file.status === "done") {
+        console.log("done", info.file, info.fileList);
         //message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        console.log('error', info.file, info.fileList);
+      } else if (info.file.status === "error") {
+        console.log("error", info.file, info.fileList);
         //message.error(`${info.file.name} file upload failed.`);
       }
     },
   };
 
-
-
-
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
   const onFinish = async (data) => {
-    const event = id ? `update` : `insert`
+    const event = id ? `update` : `insert`;
     const payload = {
       ...data,
       event: event,
-      contest_image: imageData
+      contest_image: imageData,
     };
 
-    console.log('payload', payload)
+    console.log("payload", payload);
     dispatch(setContestDetails(payload));
     handleStepChange("next");
   };
 
-
   return (
     <>
-      <Form
-        form={form}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off">
+      <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete="off" id="contestdetails">
         <Row>
           <Col md={12} className="d-flex copyBox">
             <svg xmlns="http://www.w3.org/2000/svg" width="36" height="43" viewBox="0 0 36 43">
@@ -166,30 +170,47 @@ const ContestDetailsNew = ({ handleStepChange }) => {
               </h4>
               <Form.Item
                 name="contest_type"
+                style={{
+                  width: "50%",
+                  height: "40px",
+                  marginBottom: "0px",
+                }}
                 rules={[
                   {
                     required: true,
-                    message: 'This field is required',
+                    message: "This field is required",
                   },
                 ]}
               >
                 <Select
-                  //defaultValue="lucy"
                   placeholder="Contest Type"
-                  className="basic-single"
-                  style={{
-                    width: '100%',
-                  }}
                   rules={[
                     {
                       required: true,
-                      message: 'This field is required',
+                      message: "This field is required",
                     },
                   ]}
-                  styles={customStyles}
                   onChange={handleChange}
-                  options={options}
-                />
+                >
+                  {[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "Yiminghe",
+                      label: "yiminghe",
+                    },
+                  ]?.map((option) => (
+                    <Select.Option key={option.value} value={option.value}>
+                      <span className="type_option">{option.label}</span>
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
             </div>
           </Col>
@@ -203,42 +224,37 @@ const ContestDetailsNew = ({ handleStepChange }) => {
         </Row>
         <Row style={{ marginBottom: "20px" }}>
           <Col md={12}>
-
             <Row>
               <Col md={7}>
                 <FormGroup>
                   <Label>Create New Contest</Label>
                   <Form.Item
-                    className="input-box"
                     name="contest_name"
                     rules={[
                       {
                         required: true,
-                        message: 'This field is required',
+                        message: "This field is required",
                       },
                     ]}
                   >
-                    <Input placeholder="Enter Contest Name" />
+                    <Input placeholder="Enter Contest Name" className="p-2" />
                   </Form.Item>
-
                 </FormGroup>
               </Col>
               <Col md={5}>
                 <FormGroup>
                   <Label>Contest short name (character max limit 20)</Label>
                   <Form.Item
-                    className="input-box"
                     name="contest_short_name"
                     rules={[
                       {
                         required: true,
-                        message: 'This field is required',
+                        message: "This field is required",
                       },
                     ]}
                   >
-                    <Input placeholder="Contest short name" />
+                    <Input placeholder="Contest short name" className="p-2" />
                   </Form.Item>
-
                 </FormGroup>
               </Col>
             </Row>
@@ -281,7 +297,10 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                           border: "1px solid #707070",
                         }}
                         className="shadow"
-                        icon={<UploadOutlined />}>Click to Upload</Button>
+                        icon={<UploadOutlined />}
+                      >
+                        Click to Upload
+                      </Button>
                     </Upload>
 
                     {/* <Input
@@ -319,26 +338,47 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                         rules={[
                           {
                             required: true,
-                            message: 'This field is required',
+                            message: "This field is required",
                           },
                         ]}
                       >
-
                         <Select
                           placeholder="Age Brackets"
-                          //defaultValue="lucy"
                           className="basic-single"
-                          multiple={true}
+                          mode="multiple"
                           style={{
-                            width: '100%',
+                            width: "100%",
                           }}
-
                           styles={customStyles}
                           onChange={handleChange}
-                          options={ageOptionsList}
-                        />
+                          menuItemSelectedIcon={
+                            <CheckSquareOutlined
+                              style={{
+                                color: "#d32f2f",
+                              }}
+                            />
+                          }
+                        >
+                          {[
+                            {
+                              value: "jack",
+                              label: "Jack",
+                            },
+                            {
+                              value: "lucy",
+                              label: "Lucy",
+                            },
+                            {
+                              value: "Yiminghe",
+                              label: "yiminghe",
+                            },
+                          ]?.map((option) => (
+                            <Select.Option key={option.value} value={option.value}>
+                              <span className="type_option">{option.label}</span>
+                            </Select.Option>
+                          ))}
+                        </Select>
                       </Form.Item>
-
                     </FormGroup>
                   </Col>
                   <Col md={12}>
@@ -349,20 +389,47 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                         rules={[
                           {
                             required: true,
-                            message: 'This field is required',
+                            message: "This field is required",
                           },
                         ]}
                       >
                         <Select
-                          //defaultValue="lucy"
+                          mode="multiple"
                           placeholder="Contest Type"
                           className="basic-single"
                           style={{
-                            width: '100%',
+                            width: "100%",
                           }}
                           onChange={handleChange}
-                          options={contest_category_options}
-                        />
+                          menuItemSelectedIcon={
+                            <CheckSquareOutlined
+                              style={{
+                                color: "#d32f2f",
+                              }}
+                            />
+                          }
+                          removeIcon={<CloseSquareOutlined style={{ color: "#d32f2f" }} />}
+                          // options={contest_category_options}
+                        >
+                          {[
+                            {
+                              value: "jack",
+                              label: "Jack",
+                            },
+                            {
+                              value: "lucy",
+                              label: "Lucy",
+                            },
+                            {
+                              value: "Yiminghe",
+                              label: "yiminghe",
+                            },
+                          ]?.map((option) => (
+                            <Select.Option key={option.value} value={option.value}>
+                              <span className="type_option">{option.label}</span>
+                            </Select.Option>
+                          ))}
+                        </Select>
                       </Form.Item>
                       {/* <Select
                         options={contest_category_options}
@@ -435,10 +502,12 @@ const ContestDetailsNew = ({ handleStepChange }) => {
             }}
           >
             <Button
-              ype="primary" htmlType="submit"
-              className="footerBtn"
+              ype="primary"
+              htmlType="submit"
+              className="d-flex align-center justify-content-center"
               style={{
                 backgroundColor: "#918A8A",
+                height: "40px",
               }}
             >
               <svg
@@ -462,18 +531,20 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                   strokeWidth="2"
                 />
               </svg>
-              Save Draft
+              <span className="f-20">Save Draft</span>
             </Button>
-            <Button htmlType="submit"
+            <Button
+              htmlType="submit"
+              className="d-flex align-center justify-content-center"
               style={{
                 backgroundColor: "#D32F2F",
+                height: "40px",
               }}
-              className="footerBtn"
               onClick={() => {
                 handleStepChange("next");
               }}
             >
-              Next
+              <span className="f-20">Next</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16.36"

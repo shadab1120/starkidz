@@ -3,7 +3,7 @@ import { Row, Col, Container, FormGroup, Label } from "reactstrap";
 // import Select from "react-select";
 import "./styles/DurationLocation.css";
 import { RiArrowLeftSLine } from "react-icons/ri";
-import {  Button, Form, Select, DatePicker, Checkbox } from 'antd';
+import { Button, Form, Select, DatePicker, Checkbox } from "antd";
 // import { MultiSelect } from "primereact/multiselect";
 
 const DurationLocation = ({ handleStepChange }) => {
@@ -19,29 +19,23 @@ const DurationLocation = ({ handleStepChange }) => {
     { value: "vanilla", label: "Contest short Name 1 --   Date of creation --  Contest Type" },
   ];
 
-
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
   const onFinish = async (data) => {
-    const event = id ? `update` : `insert`
-    const payload = {
-      ...data,
-      event: event
-    };
+    // const event = id ? `update` : `insert`
+    // const payload = {
+    //   ...data,
+    //   event: event
+    // };
   };
 
   return (
     <>
-      <Form
-        form={form}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off">
-
+      <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete="off">
         <Row
           style={{
             width: "100%",
@@ -76,7 +70,7 @@ const DurationLocation = ({ handleStepChange }) => {
                 style={{
                   outline: "1px solid #FF3333",
                   borderRadius: "25px",
-                  paddingBottom: "3em",
+                  paddingBottom: "2em",
                   paddingTop: "1.7em",
                 }}
               >
@@ -101,21 +95,26 @@ const DurationLocation = ({ handleStepChange }) => {
                       Contest Start Date
                     </span>
                     <Form.Item
-                      className="form-control"
-                      name="date"
+                      name="start_date"
                       rules={[
                         {
                           required: true,
-                          message: 'This field is required',
+                          message: "This field is required",
                         },
                       ]}
                       style={{
                         backgroundColor: "#F6F6F6",
                         borderRadius: "10px",
-                        display: 'inline-block',
+                        display: "inline-block",
                       }}
                     >
-                      <DatePicker />
+                      <DatePicker
+                        style={{
+                          width: "100%",
+                          padding: "0.5em",
+                        }}
+                        placeholder="Select start Date"
+                      />
                     </Form.Item>
                   </div>
                   <div
@@ -139,21 +138,26 @@ const DurationLocation = ({ handleStepChange }) => {
                       Contest End Date
                     </span>
                     <Form.Item
-                      className="form-control"
-                      name="date"
+                      name="end_date"
                       rules={[
                         {
                           required: true,
-                          message: 'This field is required',
+                          message: "This field is required",
                         },
                       ]}
                       style={{
                         backgroundColor: "#F6F6F6",
                         borderRadius: "10px",
-                        display: 'inline-block',
+                        display: "inline-block",
                       }}
                     >
-                      <DatePicker />
+                      <DatePicker
+                        style={{
+                          width: "100%",
+                          padding: "0.5em",
+                        }}
+                        placeholder="Select End Date"
+                      />
                     </Form.Item>
                   </div>
                 </div>
@@ -166,7 +170,7 @@ const DurationLocation = ({ handleStepChange }) => {
                     rules={[
                       {
                         required: true,
-                        message: 'This field is required',
+                        message: "This field is required",
                       },
                     ]}
                   >
@@ -175,74 +179,71 @@ const DurationLocation = ({ handleStepChange }) => {
                       placeholder="State"
                       className="basic-single"
                       style={{
-                        width: '100%',
+                        width: "100%",
                       }}
                       rules={[
                         {
                           required: true,
-                          message: 'This field is required',
+                          message: "This field is required",
                         },
                       ]}
                       onChange={handleChange}
                       options={options}
                     />
                   </Form.Item>
-
                 </div>
               </FormGroup>
             </Col>
             <Col md={7} className="d-flex flex-column">
-              <FormGroup className="">
-                <Label>Result Out Date</Label>
+              <Label>Result Out Date</Label>
 
-                <Form.Item
-                  name="date"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'This field is required',
-                    },
-                  ]}
+              <Form.Item
+                name="date"
+                rules={[
+                  {
+                    required: true,
+                    message: "This field is required",
+                  },
+                ]}
+                style={{
+                  borderRadius: "10px",
+                  display: "inline-block",
+                }}
+              >
+                <DatePicker
                   style={{
-                    backgroundColor: "#F6F6F6",
-                    borderRadius: "10px",
-                    display: 'inline-block',
+                    width: "100%",
+                    padding: "1em",
                   }}
-                >
-                  <DatePicker />
-                </Form.Item>
-
-
-              </FormGroup>
-              <FormGroup className="">
-                <Label>Content Manager</Label>
-                <Form.Item
-                  name="content_manager"
+                />
+              </Form.Item>
+              <Label>Content Manager</Label>
+              <Form.Item
+                name="content_manager"
+                rules={[
+                  {
+                    required: true,
+                    message: "This field is required",
+                  },
+                ]}
+              >
+                <Select
+                  //defaultValue="lucy"
+                  placeholder="Content Manager"
+                  className="basic-single"
+                  style={{
+                    width: "100%",
+                  }}
                   rules={[
                     {
                       required: true,
-                      message: 'This field is required',
+                      message: "This field is required",
                     },
                   ]}
-                >
-                  <Select
-                    //defaultValue="lucy"
-                    placeholder="Content Manager"
-                    className="basic-single"
-                    style={{
-                      width: '100%',
-                    }}
-                    rules={[
-                      {
-                        required: true,
-                        message: 'This field is required',
-                      },
-                    ]}
-                    onChange={handleChange}
-                    options={options}
-                  />
-                </Form.Item>
-              </FormGroup>
+                  onChange={handleChange}
+                  options={options}
+                />
+              </Form.Item>
               <FormGroup className="">
                 <Label>Select District</Label>
                 <div>
@@ -251,7 +252,7 @@ const DurationLocation = ({ handleStepChange }) => {
                     rules={[
                       {
                         required: true,
-                        message: 'This field is required',
+                        message: "This field is required",
                       },
                     ]}
                   >
@@ -260,12 +261,12 @@ const DurationLocation = ({ handleStepChange }) => {
                       placeholder="District"
                       className="basic-single"
                       style={{
-                        width: '100%',
+                        width: "100%",
                       }}
                       rules={[
                         {
                           required: true,
-                          message: 'This field is required',
+                          message: "This field is required",
                         },
                       ]}
                       onChange={handleChange}
@@ -276,7 +277,6 @@ const DurationLocation = ({ handleStepChange }) => {
               </FormGroup>
             </Col>
           </Row>
-
 
           {Array.from({ length: 2 }).map((item, index) => {
             return (
@@ -365,8 +365,8 @@ const DurationLocation = ({ handleStepChange }) => {
                           }}
                         >
                           display result
-                          <Form.Item name={`remember_${item}_${index}`} className="mx-2" valuePropName="checked" noStyle>
-                            <Checkbox>Remember me</Checkbox>
+                          <Form.Item name={`remember_${index}`} className="mx-2" valuePropName="checked" noStyle>
+                            <Checkbox className="mx-2"></Checkbox>
                           </Form.Item>
                         </Button>
                       </div>
@@ -383,6 +383,8 @@ const DurationLocation = ({ handleStepChange }) => {
             <Button
               style={{
                 backgroundColor: "#FF8383",
+                fontSize: "30px",
+                height: "50px",
               }}
               className="footerBtn"
               onClick={() => handleStepChange("prev")}
@@ -402,6 +404,8 @@ const DurationLocation = ({ handleStepChange }) => {
               className="footerBtn"
               style={{
                 backgroundColor: "#918A8A",
+                fontSize: "30px",
+                height: "50px",
               }}
             >
               <svg
@@ -431,11 +435,12 @@ const DurationLocation = ({ handleStepChange }) => {
               htmlType="submit"
               style={{
                 backgroundColor: "#D32F2F",
+                fontSize: "30px",
+                height: "50px",
               }}
               onClick={() => {
                 handleStepChange("next");
               }}
-              className="footerBtn"
             >
               Next
               <svg
