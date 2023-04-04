@@ -176,6 +176,7 @@ const JudgingNew = ({ handleStepChange }) => {
                         width: "90%",
                         fontStyle: "italic",
                       }}
+                      className="d-flex align-items-center justify-content-center text-white"
                     >
                       Total Marks for 4-6
                     </Button>
@@ -529,7 +530,7 @@ const JudgingNew = ({ handleStepChange }) => {
                 fontSize: "30px",
                 height: "50px",
               }}
-              className="d-flex align-items-center justify-content-center"
+              className="d-flex align-items-center justify-content-center text-white"
               onClick={() => handleStepChange("prev")}
             >
               <RiArrowLeftSLine size={20} color="#fff" />
@@ -544,7 +545,7 @@ const JudgingNew = ({ handleStepChange }) => {
           >
             <Button
               htmlType="submit"
-              className="d-flex align-items-center justify-content-center"
+              className="d-flex align-items-center justify-content-center text-white"
               style={{
                 backgroundColor: "#918A8A",
                 fontSize: "30px",
@@ -581,7 +582,7 @@ const JudgingNew = ({ handleStepChange }) => {
                 fontSize: "30px",
                 height: "50px",
               }}
-              className="d-flex align-items-center justify-content-center"
+              className="d-flex align-items-center justify-content-center text-white"
               onClick={() => {
                 handleStepChange("next");
               }}

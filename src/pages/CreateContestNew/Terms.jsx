@@ -107,7 +107,7 @@ const Terms = ({ handleStepChange }) => {
                 backgroundColor: "#FF8383",
                 height: "50px",
               }}
-              className="d-flex align-items-center justify-content-center"
+              className="d-flex align-items-center justify-content-center text-white"
               onClick={() => handleStepChange("prev")}
             >
               <RiArrowLeftSLine size={20} color="#fff" />
@@ -127,7 +127,7 @@ const Terms = ({ handleStepChange }) => {
             }}
           >
             <Button
-              className="d-flex align-items-center justify-content-center"
+              className="d-flex align-items-center justify-content-center text-white"
               style={{
                 backgroundColor: "#918A8A",
                 height: "50px",
@@ -170,7 +170,7 @@ const Terms = ({ handleStepChange }) => {
               onClick={() => {
                 handleStepChange("next");
               }}
-              className="d-flex align-items-center justify-content-center"
+              className="d-flex align-items-center justify-content-center text-white"
             >
               <img src={Rocket} height="22" alt="" className="mr-2" />
               <span

@@ -385,8 +385,9 @@ const DurationLocation = ({ handleStepChange }) => {
                 backgroundColor: "#FF8383",
                 fontSize: "30px",
                 height: "50px",
+                color: "#fff",
               }}
-              className="footerBtn"
+              className="d-flex align-items-center justify-content-center px-3"
               onClick={() => handleStepChange("prev")}
             >
               <RiArrowLeftSLine size={20} color="#fff" />
@@ -401,11 +402,12 @@ const DurationLocation = ({ handleStepChange }) => {
           >
             <Button
               htmlType="submit"
-              className="footerBtn"
+              className="d-flex align-items-center justify-content-center px-3"
               style={{
                 backgroundColor: "#918A8A",
                 fontSize: "30px",
                 height: "50px",
+                color: "#fff",
               }}
             >
               <svg
@@ -433,10 +435,12 @@ const DurationLocation = ({ handleStepChange }) => {
             </Button>
             <Button
               htmlType="submit"
+              className="d-flex align-items-center justify-content-center px-3"
               style={{
                 backgroundColor: "#D32F2F",
                 fontSize: "30px",
                 height: "50px",
+                color: "#fff",
               }}
               onClick={() => {
                 handleStepChange("next");

@@ -94,13 +94,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
             {Array(4)
               .fill(0)
               .map((item, index) => (
-                <Card
-                  key={index}
-                  className="mt-0"
-                  style={{
-                    width: "18rem",
-                  }}
-                >
+                <Card key={index} className="mt-0">
                   <div
                     className="d-flex align-center flex-column"
                     style={{
@@ -117,6 +111,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                           width: "90%",
                           fontStyle: "italic",
                         }}
+                        className="text-white"
                       >
                         Total Marks for 4-6
                       </Button>
@@ -155,7 +150,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
         <Row className="d-flex px-2 mb-5">
           <Col md={12} className="d-flex">
             <img src={Trophy} alt="" />
-            <div className="w-75">
+            <div className="w-75 ml-2">
               <h5 className="font-weight-normal mx-2">Select Prizes</h5>
               <div>
                 <Form.Item
@@ -168,9 +163,8 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                   ]}
                 >
                   <Select
-                    //defaultValue="lucy"
                     placeholder="Prize"
-                    className="basic-single"
+                    className="w-75"
                     styles={customStyles}
                     mode="multiple"
                     onChange={handleChange}
@@ -207,10 +201,10 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                           width: "90%",
                           fontStyle: "italic",
                         }}
-                        className="d-flex align-items-center justify-content-center"
+                        className="d-flex align-items-center justify-content-center  text-white"
                       >
                         <img src={PlusIcon} alt="" className="mx-2" />
-                        {item[index]}
+                        <span className="mr-2"> {item[index]}</span>
                       </Button>
                     </div>
                   </div>
@@ -232,10 +226,10 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
             <Button
               style={{
                 backgroundColor: "#FF8383",
-                fontSize: "30px",
+                fontSize: "28px",
                 height: "50px",
               }}
-              className="d-flex align-items-center justify-content-center"
+              className="d-flex align-items-center justify-content-center text-white"
               onClick={() => handleStepChange("prev")}
             >
               <RiArrowLeftSLine size={20} color="#fff" />
@@ -250,10 +244,10 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
           >
             <Button
               htmlType="submit"
-              className="d-flex align-items-center justify-content-center"
+              className="d-flex align-items-center justify-content-center text-white"
               style={{
                 backgroundColor: "#918A8A",
-                fontSize: "30px",
+                fontSize: "28px",
                 height: "50px",
               }}
             >
@@ -284,10 +278,10 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
               htmlType="submit"
               style={{
                 backgroundColor: "#D32F2F",
-                fontSize: "30px",
+                fontSize: "28px",
                 height: "50px",
               }}
-              className="d-flex align-items-center justify-content-center"
+              className="d-flex align-items-center justify-content-center text-white"
               onClick={() => {
                 handleStepChange("next");
               }}
