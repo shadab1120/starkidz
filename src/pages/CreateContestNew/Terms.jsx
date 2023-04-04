@@ -105,7 +105,7 @@ const Terms = ({ handleStepChange }) => {
             <Button
               style={{
                 backgroundColor: "#FF8383",
-                height: "50px",
+                height: "40px",
               }}
               className="d-flex align-items-center justify-content-center text-white"
               onClick={() => handleStepChange("prev")}
@@ -130,7 +130,7 @@ const Terms = ({ handleStepChange }) => {
               className="d-flex align-items-center justify-content-center text-white"
               style={{
                 backgroundColor: "#918A8A",
-                height: "50px",
+                height: "40px",
               }}
             >
               <svg
@@ -165,7 +165,7 @@ const Terms = ({ handleStepChange }) => {
             <Button
               style={{
                 backgroundColor: "#D32F2F",
-                height: "50px",
+                height: "40px",
               }}
               onClick={() => {
                 handleStepChange("next");

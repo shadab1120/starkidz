@@ -504,7 +504,7 @@ const ContestDetailsNew = ({ handleStepChange }) => {
             <Button
               ype="primary"
               htmlType="submit"
-              className="d-flex align-center justify-content-center"
+              className="d-flex align-center justify-content-center text-white"
               style={{
                 backgroundColor: "#918A8A",
                 height: "40px",
@@ -535,7 +535,7 @@ const ContestDetailsNew = ({ handleStepChange }) => {
             </Button>
             <Button
               htmlType="submit"
-              className="d-flex align-center justify-content-center"
+              className="d-flex align-center justify-content-center text-white"
               style={{
                 backgroundColor: "#D32F2F",
                 height: "40px",

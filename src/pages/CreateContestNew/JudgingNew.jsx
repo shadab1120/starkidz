@@ -96,9 +96,9 @@ const customTableStyles = {
   }),
 };
 const options = [
-  { value: "chocolate", label: "Contest short Name 1 --   Date of creation --  Contest Type" },
-  { value: "strawberry", label: "Contest short Name 1 --   Date of creation --  Contest Type" },
-  { value: "vanilla", label: "Contest short Name 1 --   Date of creation --  Contest Type" },
+  { value: "chocolate", label: "Contest short Name 1 " },
+  { value: "strawberry", label: "Contest short Name 1 " },
+  { value: "vanilla", label: "Contest short Name 1" },
 ];
 
 const JudgingNew = ({ handleStepChange }) => {
@@ -462,10 +462,10 @@ const JudgingNew = ({ handleStepChange }) => {
                   //defaultValue="lucy"
                   placeholder="choose parameter 2"
                   className="basic-single"
-                  styles={customTableStyles}
                   mode="multiple"
                   onChange={handleChange}
                   options={options}
+                  maxTagCount={2}
                 />
               </Form.Item>
             </div>
@@ -489,6 +489,7 @@ const JudgingNew = ({ handleStepChange }) => {
                   styles={customTableStyles}
                   mode="multiple"
                   onChange={handleChange}
+                  maxTagCount={2}
                   options={options}
                 />
               </Form.Item>
@@ -516,6 +517,7 @@ const JudgingNew = ({ handleStepChange }) => {
                   mode="multiple"
                   onChange={handleChange}
                   options={options}
+                  maxTagCount={2}
                 />
               </Form.Item>
             </div>
@@ -528,7 +530,7 @@ const JudgingNew = ({ handleStepChange }) => {
               style={{
                 backgroundColor: "#FF8383",
                 fontSize: "30px",
-                height: "50px",
+                height: "40px",
               }}
               className="d-flex align-items-center justify-content-center text-white"
               onClick={() => handleStepChange("prev")}
@@ -549,7 +551,7 @@ const JudgingNew = ({ handleStepChange }) => {
               style={{
                 backgroundColor: "#918A8A",
                 fontSize: "30px",
-                height: "50px",
+                height: "40px",
               }}
             >
               <svg
@@ -580,7 +582,7 @@ const JudgingNew = ({ handleStepChange }) => {
               style={{
                 backgroundColor: "#D32F2F",
                 fontSize: "30px",
-                height: "50px",
+                height: "40px",
               }}
               className="d-flex align-items-center justify-content-center text-white"
               onClick={() => {

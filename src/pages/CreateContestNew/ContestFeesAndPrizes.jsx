@@ -227,7 +227,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
               style={{
                 backgroundColor: "#FF8383",
                 fontSize: "28px",
-                height: "50px",
+                height: "40px",
               }}
               className="d-flex align-items-center justify-content-center text-white"
               onClick={() => handleStepChange("prev")}
@@ -248,7 +248,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
               style={{
                 backgroundColor: "#918A8A",
                 fontSize: "28px",
-                height: "50px",
+                height: "40px",
               }}
             >
               <svg
@@ -279,7 +279,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
               style={{
                 backgroundColor: "#D32F2F",
                 fontSize: "28px",
-                height: "50px",
+                height: "40px",
               }}
               className="d-flex align-items-center justify-content-center text-white"
               onClick={() => {

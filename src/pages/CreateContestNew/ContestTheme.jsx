@@ -177,7 +177,7 @@ const ContestTheme = ({ handleStepChange }) => {
             style={{
               backgroundColor: "#FF8383",
             }}
-            className="footerBtn"
+            className="d-flex align-center justify-content-center text-white"
             onClick={() => handleStepChange("prev")}
           >
             <RiArrowLeftSLine size={20} color="#fff" />
@@ -191,9 +191,10 @@ const ContestTheme = ({ handleStepChange }) => {
           }}
         >
           <Button
-            className="footerBtn"
+            className="d-flex align-center justify-content-center text-white"
             style={{
               backgroundColor: "#918A8A",
+              height: "40px",
             }}
           >
             <svg
@@ -220,13 +221,14 @@ const ContestTheme = ({ handleStepChange }) => {
             Save Draft
           </Button>
           <Button
-            style={{
-              backgroundColor: "#D32F2F",
-            }}
             onClick={() => {
               handleStepChange("next");
             }}
-            className="footerBtn"
+            className="d-flex align-center justify-content-center text-white"
+            style={{
+              backgroundColor: "#D32F2F",
+              height: "40px",
+            }}
           >
             Next
             <svg

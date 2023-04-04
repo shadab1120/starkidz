@@ -346,7 +346,7 @@ const DurationLocation = ({ handleStepChange }) => {
                   {Array.from({ length: 5 }).map((item, index) => {
                     return (
                       <div
-                        className="d-flex align-center"
+                        className="d-flex align-items-center"
                         style={{
                           gap: ".6rem",
                         }}
@@ -354,11 +354,12 @@ const DurationLocation = ({ handleStepChange }) => {
                       >
                         <Button
                           htmlType="button"
+                          className="text-white "
                           style={{
                             backgroundColor: "#D32F2F",
                             borderRadius: "21px",
                             border: "none",
-                            padding: "0.5rem 1rem",
+                            // padding: "0.5rem 1rem",
                             width: "90%",
                             fontStyle: "italic",
                             whiteSpace: "nowrap",
@@ -384,10 +385,9 @@ const DurationLocation = ({ handleStepChange }) => {
               style={{
                 backgroundColor: "#FF8383",
                 fontSize: "30px",
-                height: "50px",
-                color: "#fff",
+                height: "40px",
               }}
-              className="d-flex align-items-center justify-content-center px-3"
+              className="d-flex align-center justify-content-center text-white"
               onClick={() => handleStepChange("prev")}
             >
               <RiArrowLeftSLine size={20} color="#fff" />
@@ -402,11 +402,11 @@ const DurationLocation = ({ handleStepChange }) => {
           >
             <Button
               htmlType="submit"
-              className="d-flex align-items-center justify-content-center px-3"
+              className="d-flex align-center justify-content-center text-white"
               style={{
                 backgroundColor: "#918A8A",
                 fontSize: "30px",
-                height: "50px",
+                height: "40px",
                 color: "#fff",
               }}
             >
@@ -435,11 +435,11 @@ const DurationLocation = ({ handleStepChange }) => {
             </Button>
             <Button
               htmlType="submit"
-              className="d-flex align-items-center justify-content-center px-3"
+              className="d-flex align-center justify-content-center text-white"
               style={{
                 backgroundColor: "#D32F2F",
                 fontSize: "30px",
-                height: "50px",
+                height: "40px",
                 color: "#fff",
               }}
               onClick={() => {
