@@ -18,7 +18,7 @@ const totalSteps = 7;
 const CreateContestNew = () => {
   const [step, setStep] = useState(1);
 
-  // step change handle
+  // step change handl2
   const handleStepChange = (type) => {
     // check last step
     if (step === totalSteps && type === "next") {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, FormGroup, Label } from "reactstrap";
+import { Row } from "reactstrap";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import Rocket from "../../assets/icons/rocket.svg";
 
@@ -37,12 +37,6 @@ const customStyles = {
     width: "40%",
   }),
 };
-
-const options = [
-  { value: "chocolate", label: "Contest short Name 1 --   Date of creation --  Contest Type" },
-  { value: "strawberry", label: "Contest short Name 1 --   Date of creation --  Contest Type" },
-  { value: "vanilla", label: "Contest short Name 1 --   Date of creation --  Contest Type" },
-];
 
 const Terms = ({ handleStepChange }) => {
   const [form] = Form.useForm();
@@ -88,13 +82,22 @@ const Terms = ({ handleStepChange }) => {
         />
         <Row className="py-2 px-4 d-flex flex-column">
           <h4 className="f-18 grey-accent">Write T&C</h4>
-          <Form.Item>
+          <Form.Item
+            name="terms_condition"
+            rules={[
+              {
+                required: true,
+                message: "This field is required",
+              },
+            ]}
+          >
             <TextArea
               rows={20}
               style={{
                 backgroundColor: "#f6f6f6",
               }}
               placeholder="Text Editor for T&C"
+              onChange={handleChange}
             />
           </Form.Item>
         </Row>
@@ -127,6 +130,8 @@ const Terms = ({ handleStepChange }) => {
             }}
           >
             <Button
+              type="primary"
+              htmlType="submit"
               className="d-flex align-items-center justify-content-center text-white"
               style={{
                 backgroundColor: "#918A8A",

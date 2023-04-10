@@ -4,10 +4,8 @@ import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useQuery } from "react-query";
 import {
-  CheckCircleFilled,
   CheckSquareOutlined,
   CloseSquareOutlined,
-  DownOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
 import { Input, Button, Form, Select, Upload, Checkbox } from "antd";
@@ -47,20 +45,11 @@ const customStyles = {
   }),
 };
 
-const customeSelect = () => {
-  return (
-    <>
-      <Select.Option value="1">1</Select.Option>
-      <Select.Option value="2">2</Select.Option>
-    </>
-  );
-};
-
 const ContestDetailsNew = ({ handleStepChange }) => {
   const params = useParams();
   const dispatch = useDispatch();
   const [imageData, setImageData] = useState({});
-
+  const [ageBracket, setAgeBracket] = useState(0);
   const [form] = Form.useForm();
 
   const { id } = params;
@@ -69,19 +58,12 @@ const ContestDetailsNew = ({ handleStepChange }) => {
   const { data: age_bracket_list } = useQuery("getAgeBracketsList", mApi.getAgeBracketsList);
   const { data: contest_category_type } = useQuery("getContestTypeList", mApi.getContestTypeList);
 
-  // const prizeLevel = [
-  //   { label: "Country Level", id: 1, type: "Prize for Country", name: "country_level" },
-  //   { label: "State Level", id: 2, type: "Prize for State", name: "state_level" },
-  //   { label: "District Level", id: 3, type: "Prize for District", name: "district_level" },
-  //   { label: "City Level", id: 4, type: "Prize for City", name: "city_level" },
-  //   { label: "School Level", id: 5, type: "Prize for School", name: "school_level" },
-  // ];
 
-  const options = contest_list?.data?.map((c) => {
+  const contests = contest_list?.data?.map((c) => {
     return { value: c.id, label: c.about_contest?.substr(0, 50) };
   });
   const ageOptionsList = age_bracket_list?.data?.map((c) => {
-    return { value: c.id, label: `${c.age_from} - ${c.age_to}` };
+    return { value: `${c.age_from} - ${c.age_to}`, label: `${c.age_from} - ${c.age_to}` };
   });
 
   const contest_category_options = contest_category_type?.data?.map((c) => {
@@ -192,20 +174,7 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                   ]}
                   onChange={handleChange}
                 >
-                  {[
-                    {
-                      value: "jack",
-                      label: "Jack",
-                    },
-                    {
-                      value: "lucy",
-                      label: "Lucy",
-                    },
-                    {
-                      value: "Yiminghe",
-                      label: "yiminghe",
-                    },
-                  ]?.map((option) => (
+                  {contests?.map((option) => (
                     <Select.Option key={option.value} value={option.value}>
                       <span className="type_option">{option.label}</span>
                     </Select.Option>
@@ -359,20 +328,7 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                             />
                           }
                         >
-                          {[
-                            {
-                              value: "jack",
-                              label: "Jack",
-                            },
-                            {
-                              value: "lucy",
-                              label: "Lucy",
-                            },
-                            {
-                              value: "Yiminghe",
-                              label: "yiminghe",
-                            },
-                          ]?.map((option) => (
+                          {ageOptionsList?.map((option) => (
                             <Select.Option key={option.value} value={option.value}>
                               <span className="type_option">{option.label}</span>
                             </Select.Option>
@@ -409,22 +365,8 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                             />
                           }
                           removeIcon={<CloseSquareOutlined style={{ color: "#d32f2f" }} />}
-                          // options={contest_category_options}
                         >
-                          {[
-                            {
-                              value: "jack",
-                              label: "Jack",
-                            },
-                            {
-                              value: "lucy",
-                              label: "Lucy",
-                            },
-                            {
-                              value: "Yiminghe",
-                              label: "yiminghe",
-                            },
-                          ]?.map((option) => (
+                          {contest_category_options?.map((option) => (
                             <Select.Option key={option.value} value={option.value}>
                               <span className="type_option">{option.label}</span>
                             </Select.Option>
@@ -502,7 +444,7 @@ const ContestDetailsNew = ({ handleStepChange }) => {
             }}
           >
             <Button
-              ype="primary"
+              type="primary"
               htmlType="submit"
               className="d-flex align-center justify-content-center text-white"
               style={{
@@ -540,9 +482,9 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                 backgroundColor: "#D32F2F",
                 height: "40px",
               }}
-              onClick={() => {
-                handleStepChange("next");
-              }}
+              // onClick={() => {
+              //   handleStepChange("next");
+              // }}
             >
               <span className="f-20">Next</span>
               <svg

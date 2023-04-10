@@ -191,6 +191,7 @@ const Pages = () => {
           component={CreateContestNew}
         ></Route>
         <Route exact path={[`${process.env.PUBLIC_URL}/create-contest-new`]} component={CreateContestNew}></Route>
+        <Route exact path={[`${process.env.PUBLIC_URL}/create-contest`]} component={CreateContest}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/participate`} component={Participate}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/downloads`} component={Downloads}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/old-contests`} component={OldContest}></Route>

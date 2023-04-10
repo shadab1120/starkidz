@@ -297,6 +297,11 @@ if (user?.role.search(/administrator/) === 0) {
         },
         {
           icon: StarBucks,
+          text: `Create Contest New`,
+          link: `${process.env.PUBLIC_URL}/create-contest-new`,
+        },
+        {
+          icon: StarBucks,
           text: `Monitor Contest`,
           link: `${process.env.PUBLIC_URL}/monitor-contest`,
         },

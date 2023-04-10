@@ -1,13 +1,15 @@
-import React from "react";
-import { Row, Card, Col } from "reactstrap";
+import React, { useState } from "react";
+import { Row, Card, Col, Table } from "reactstrap";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import EditIcon from "../../assets/icons/exclude-icon.svg";
 import DeleteIcon from "./delete-icon.svg";
-import { Table } from "reactstrap";
-import { Button, Form, Select } from "antd";
-
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
+import Rocket from "../../assets/icons/rocket.svg";
+import { Button, Form, Select, Input } from "antd";
+import Api from "../../http/masterApis"
 import "./styles/JudgingNew.css";
-
+import { useDispatch, useSelector } from "react-redux";
 const customStyles = {
   control: (base, state) => ({
     ...base,
@@ -95,14 +97,53 @@ const customTableStyles = {
     backgroundColor: state.isFocused ? "#DBD7D7" : "#fff",
   }),
 };
-const options = [
-  { value: "chocolate", label: "Contest short Name 1 " },
-  { value: "strawberry", label: "Contest short Name 1 " },
-  { value: "vanilla", label: "Contest short Name 1" },
-];
+
 
 const JudgingNew = ({ handleStepChange }) => {
+  const params = useParams();
   const [form] = Form.useForm();
+  const { id } = params;
+  const contestDetails = useSelector((state) => state.contest);
+  const { age_bracket } = contestDetails;
+  const [judgingParametersLabel, setJudgingParametersLabel] = useState('');
+  const [judgingParameters, setJudgingParameters] = useState(0);
+  const [judgingLabel, setJudgingLabel] = useState(0);
+
+  const { data: user_list } = useQuery('getUsers', Api.getUsers);
+  const [roleList, setRoleList] = useState([])
+  const { data: judge_params } = useQuery('getJudgingParametersList', Api.getJudgingParametersList);
+  const { data: role_list } = useQuery('getRole', Api.getRole);
+  const { data: selected_role } = useQuery(['getRoleByName', id], Api.getRoleByName);
+  const { data: multi_selected_role } = useQuery(['getMultiSelectUsers', roleList?.join()], Api.getMultiSelectUsers);
+  const { data: multi_selected_judge_role } = useQuery(['getMultiSelectUsers', 'judge'], Api.getMultiSelectUsers);
+
+  console.log('multi_selected_role', multi_selected_judge_role)
+
+  const judgingParametersOption = judge_params?.data?.map((c) => {
+    return { value: c.id, label: c.judging_para_name };
+  });
+
+  const userList = user_list?.data?.map((c) => {
+    return { value: c.id, label: c.name };
+  });
+  const roleListOption = role_list?.data?.map((c) => {
+    return { value: c.role, label: c.role_name };
+  });
+
+  const multiSelectedRole = multi_selected_role?.data?.map((c) => {
+    return { value: c.id, label: c.name };
+  });
+  const judgeLabel = [1, 2, 3].map((c) => {
+    return { value: c, label: c };
+  });
+
+  const judgeList = multi_selected_judge_role?.data?.map((c) => {
+    return { value: c.id, label: c.name };
+  });
+
+  const onChangeMultiSelect = (evt) => {
+    setRoleList([...evt])
+  }
 
   const handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -151,41 +192,39 @@ const JudgingNew = ({ handleStepChange }) => {
               gap: "1rem",
             }}
           >
-            {Array(3)
-              .fill(0)
-              .map((item, index) => (
-                <Card
-                  key={index}
-                  className="mt-0"
+            {age_bracket?.map((item, index) => (
+              <Card
+                key={index}
+                className="mt-0"
+                style={{
+                  width: "18rem",
+                }}
+              >
+                <div
+                  className="d-flex align-center flex-column"
                   style={{
-                    width: "18rem",
+                    gap: "0.6rem",
                   }}
                 >
-                  <div
-                    className="d-flex align-center flex-column"
+                  <Button
                     style={{
-                      gap: "0.6rem",
+                      backgroundColor: "#D32F2F",
+                      borderRadius: "21px",
+                      border: "none",
+                      padding: "0.5rem 2rem",
+                      width: "90%",
+                      fontStyle: "italic",
                     }}
+                    className="d-flex align-items-center justify-content-center text-white"
                   >
-                    <Button
-                      style={{
-                        backgroundColor: "#D32F2F",
-                        borderRadius: "21px",
-                        border: "none",
-                        padding: "0.5rem 2rem",
-                        width: "90%",
-                        fontStyle: "italic",
-                      }}
-                      className="d-flex align-items-center justify-content-center text-white"
-                    >
-                      Total Marks for 4-6
-                    </Button>
-                    <div className="mt-2 text-center w-100 total-score py-1">
-                      <span>100</span>
-                    </div>
+                    Total Marks for {item}
+                  </Button>
+                  <div className="mt-2 text-center w-100 total-score py-1">
+                    <span>100</span>
                   </div>
-                </Card>
-              ))}
+                </div>
+              </Card>
+            ))}
           </Row>
         </Row>
         <Row className="table-parameter p-2 mx-2 my-3">
@@ -208,8 +247,8 @@ const JudgingNew = ({ handleStepChange }) => {
                 placeholder="Judging Parameters"
                 className="basic-single"
                 styles={customStyles}
-                onChange={handleChange}
-                options={options}
+                onChange={(value, index) => { setJudgingParametersLabel(index?.label); setJudgingParameters(value) }}
+                options={judgingParametersOption}
               />
             </Form.Item>
           </div>
@@ -225,15 +264,11 @@ const JudgingNew = ({ handleStepChange }) => {
                 <tr>
                   <th>SL</th>
                   <th>Judging Paramerters</th>
-                  <th>
-                    weightage for <span className="red-accent">4-6</span>
-                  </th>
-                  <th>
-                    weightage for <span className="red-accent">7-8</span>
-                  </th>
-                  <th>
-                    weightage for <span className="red-accent">9-12 </span>
-                  </th>
+                  {age_bracket?.map((item, index) => (
+                    <th>
+                      Weightage for <span className="red-accent">{item}</span>
+                    </th>
+                  ))}
                   <th>Action</th>
                 </tr>
               </thead>
@@ -243,193 +278,40 @@ const JudgingNew = ({ handleStepChange }) => {
                     1
                   </th>
                   <td>
-                    <Select className="w-100" options={options} placeholder="choose parameter 1"></Select>
-                  </td>
-                  <td className="text-center">
-                    <div className=" d-flex justify-content-center align-items-center">
-                      <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
-                        <span>20</span>
-                        <img className="edit-icon" src={EditIcon} alt="" />
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <div className=" d-flex justify-content-center align-items-center">
-                      <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
-                        <span>20</span>
-                        <img className="edit-icon" src={EditIcon} alt="" />
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <div className=" d-flex justify-content-center align-items-center">
-                      <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
-                        <span>20</span>
-                        <img className="edit-icon" src={EditIcon} alt="" />
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <img src={DeleteIcon} alt="" />
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row" className="f-14 vertical-align-middle">
-                    2
-                  </th>
-                  <td>
+                    {/* <Select className="w-100" options={options} placeholder="choose parameter 1"></Select> */}
                     <Form.Item
-                      name="district"
+                      name="contest_name"
                       rules={[
                         {
                           required: true,
                           message: "This field is required",
                         },
                       ]}
-                      className="mb-0"
+
                     >
-                      <Select
-                        //defaultValue="lucy"
-                        placeholder="choose parameter 2"
-                        styles={customTableStyles}
-                        onChange={handleChange}
-                        options={options}
-                      />
+                      <Input placeholder="Enter Contest Name" className="p-2" />
                     </Form.Item>
                   </td>
-
-                  <td className="text-center">
-                    <div className=" d-flex justify-content-center align-items-center">
-                      <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
-                        <span>20</span>
-                        <img className="edit-icon" src={EditIcon} alt="" />
+                  {age_bracket?.map((item, index) => (
+                    <td className="text-center">
+                      <div className=" d-flex justify-content-center align-items-center">
+                        <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
+                          <Form.Item
+                            name="contest_name"
+                            rules={[
+                              {
+                                required: true,
+                                message: "This field is required",
+                              },
+                            ]}
+                          >
+                            <Input placeholder="Enter Contest Name" className="p-2" />
+                          </Form.Item>
+                          <img className="edit-icon" src={EditIcon} alt="" />
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <div className=" d-flex justify-content-center align-items-center">
-                      <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
-                        <span>20</span>
-                        <img className="edit-icon" src={EditIcon} alt="" />
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <div className=" d-flex justify-content-center align-items-center">
-                      <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
-                        <span>20</span>
-                        <img className="edit-icon" src={EditIcon} alt="" />
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <img src={DeleteIcon} alt="" />
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row" className="f-14 vertical-align-middle">
-                    3
-                  </th>
-                  <td>
-                    <Form.Item
-                      name="district"
-                      rules={[
-                        {
-                          required: true,
-                          message: "This field is required",
-                        },
-                      ]}
-                      className="mb-0"
-                    >
-                      <Select
-                        //defaultValue="lucy"
-                        placeholder="choose parameter 3"
-                        className="basic-single"
-                        styles={customTableStyles}
-                        onChange={handleChange}
-                        options={options}
-                      />
-                    </Form.Item>
-                  </td>
-
-                  <td className="text-center">
-                    <div className=" d-flex justify-content-center align-items-center">
-                      <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
-                        <span>20</span>
-                        <img className="edit-icon" src={EditIcon} alt="" />
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <div className=" d-flex justify-content-center align-items-center">
-                      <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
-                        <span>20</span>
-                        <img className="edit-icon" src={EditIcon} alt="" />
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <div className=" d-flex justify-content-center align-items-center">
-                      <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
-                        <span>20</span>
-                        <img className="edit-icon" src={EditIcon} alt="" />
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <img src={DeleteIcon} alt="" />
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row" className="f-14 vertical-align-middle">
-                    4
-                  </th>
-                  <td>
-                    <Form.Item
-                      name="district"
-                      rules={[
-                        {
-                          required: true,
-                          message: "This field is required",
-                        },
-                      ]}
-                      className="mb-0"
-                    >
-                      <Select
-                        //defaultValue="lucy"
-                        placeholder="choose parameter 3"
-                        className="basic-single"
-                        styles={customTableStyles}
-                        onChange={handleChange}
-                        options={options}
-                      />
-                    </Form.Item>
-                  </td>
-
-                  <td className="text-center">
-                    <div className=" d-flex justify-content-center align-items-center">
-                      <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
-                        <span>20</span>
-                        <img className="edit-icon" src={EditIcon} alt="" />
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <div className=" d-flex justify-content-center align-items-center">
-                      <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
-                        <span>20</span>
-                        <img className="edit-icon" src={EditIcon} alt="" />
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <div className=" d-flex justify-content-center align-items-center">
-                      <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
-                        <span>20</span>
-                        <img className="edit-icon" src={EditIcon} alt="" />
-                      </div>
-                    </div>
-                  </td>
+                    </td>
+                  ))}
                   <td className="text-center">
                     <img src={DeleteIcon} alt="" />
                   </td>
@@ -450,7 +332,7 @@ const JudgingNew = ({ handleStepChange }) => {
             <p className="f-18 grey-accent m-0">Select Quality Analytics From</p>
             <div>
               <Form.Item
-                name="district"
+                name="qa_form"
                 rules={[
                   {
                     required: true,
@@ -459,13 +341,12 @@ const JudgingNew = ({ handleStepChange }) => {
                 ]}
               >
                 <Select
-                  //defaultValue="lucy"
-                  placeholder="choose parameter 2"
+                  placeholder="Quality Analytics From"
                   className="basic-single"
                   mode="multiple"
-                  onChange={handleChange}
-                  options={options}
-                  maxTagCount={2}
+                  onChange={onChangeMultiSelect}
+                  options={roleListOption}
+                //maxTagCount={2}
                 />
               </Form.Item>
             </div>
@@ -474,7 +355,7 @@ const JudgingNew = ({ handleStepChange }) => {
             <p className="f-18 grey-accent m-0">Choose Quality Analytics</p>
             <div>
               <Form.Item
-                name="district"
+                name="qa"
                 rules={[
                   {
                     required: true,
@@ -483,14 +364,13 @@ const JudgingNew = ({ handleStepChange }) => {
                 ]}
               >
                 <Select
-                  //defaultValue="lucy"
-                  placeholder="choose parameter 2"
+                  placeholder="Quality Analytics"
                   className="basic-single"
                   styles={customTableStyles}
                   mode="multiple"
                   onChange={handleChange}
-                  maxTagCount={2}
-                  options={options}
+                  //maxTagCount={2}
+                  options={multiSelectedRole}
                 />
               </Form.Item>
             </div>
@@ -501,7 +381,7 @@ const JudgingNew = ({ handleStepChange }) => {
             <p className="f-18 grey-accent m-0">Select Judges From</p>
             <div>
               <Form.Item
-                name="district"
+                name="select_judge_form"
                 rules={[
                   {
                     required: true,
@@ -510,33 +390,118 @@ const JudgingNew = ({ handleStepChange }) => {
                 ]}
               >
                 <Select
-                  //defaultValue="lucy"
-                  placeholder="choose parameter 2"
+                  placeholder="Judges From"
                   className="basic-single"
                   styles={customTableStyles}
                   mode="multiple"
                   onChange={handleChange}
-                  options={options}
-                  maxTagCount={2}
+                  options={userList}
+                //  maxTagCount={2}
+                />
+              </Form.Item>
+            </div>
+          </Col>
+          <Col md={6}>
+            <p className="f-18 grey-accent m-0">Level of Judging</p>
+            <div>
+              <Form.Item
+                name="lable_judging"
+                rules={[
+                  {
+                    required: true,
+                    message: "This field is required",
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="Level of Judging"
+                  className="basic-single"
+                  styles={customTableStyles}
+                  onChange={(value) => setJudgingLabel(value)}
+                  options={judgeLabel}
+                //  maxTagCount={2}
                 />
               </Form.Item>
             </div>
           </Col>
         </Row>
+        {[...Array(judgingLabel).keys()].map((item, index) => (<Row className="mt-2">
+          <Col md={3}>
+            <p className="f-18 grey-accent m-0">Judges Level - {item + 1}</p>
+            <div className="mt-2 text-center w-100 total-score py-1">
+              <Form.Item
+                name="judge_name"
+                rules={[
+                  {
+                    required: true,
+                    message: "This field is required",
+                  },
+                ]}
+                className="w-50"
+              >
+                <Select
+                  placeholder="Judging Parameters"
+                  className="basic-single"
+                  styles={customStyles}
+                  onChange={handleChange}
+                  options={judgeList}
+                />
+              </Form.Item>
+            </div>
+          </Col>
+          <Col md={5}>
+            <p className="f-18 grey-accent m-0">Percentage of entries judged at level - {item + 1}</p>
+            <div className="mt-2 text-center w-100 total-score py-1">
+              <Form.Item
+                name="contest_name"
+                rules={[
+                  {
+                    required: true,
+                    message: "This field is required",
+                  },
+                ]}
+              >
+                <Input placeholder="Enter Contest Name" className="p-2" />
+              </Form.Item>
+            </div>
+          </Col>
+          <Col md={4}>
+            <p className="f-18 grey-accent m-0">Judging TAT [in days]</p>
+            <div className="mt-2 text-center w-100 total-score py-1">
+              <Form.Item
+                name="contest_name"
+                rules={[
+                  {
+                    required: true,
+                    message: "This field is required",
+                  },
+                ]}
+              >
+                <Input placeholder="Enter Contest Name" className="p-2" />
+              </Form.Item>
+            </div>
+          </Col>
+        </Row>
+        ))}
         {/* Button */}
         <Row className="mb-4 mt-5 d-flex px-4 justify-content-between">
           <div>
             <Button
               style={{
                 backgroundColor: "#FF8383",
-                fontSize: "30px",
                 height: "40px",
               }}
               className="d-flex align-items-center justify-content-center text-white"
               onClick={() => handleStepChange("prev")}
             >
               <RiArrowLeftSLine size={20} color="#fff" />
-              Back
+              <span
+                style={{
+                  fontSize: "1.2rem",
+                }}
+              >
+                Back
+              </span>
             </Button>
           </div>
           <div
@@ -546,11 +511,11 @@ const JudgingNew = ({ handleStepChange }) => {
             }}
           >
             <Button
+              type="primary"
               htmlType="submit"
               className="d-flex align-items-center justify-content-center text-white"
               style={{
                 backgroundColor: "#918A8A",
-                fontSize: "30px",
                 height: "40px",
               }}
             >
@@ -575,47 +540,32 @@ const JudgingNew = ({ handleStepChange }) => {
                   strokeWidth="2"
                 />
               </svg>
-              Save Draft
+              <span
+                style={{
+                  fontSize: "1.2rem",
+                }}
+              >
+                Save Draft
+              </span>
             </Button>
             <Button
-              htmlType="submit"
               style={{
                 backgroundColor: "#D32F2F",
-                fontSize: "30px",
                 height: "40px",
               }}
-              className="d-flex align-items-center justify-content-center text-white"
               onClick={() => {
                 handleStepChange("next");
               }}
+              className="d-flex align-items-center justify-content-center text-white"
             >
-              Next
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16.36"
-                height="28.485"
-                viewBox="0 0 16.36 28.485"
+              <img src={Rocket} height="22" alt="" className="mr-2" />
+              <span
                 style={{
-                  marginLeft: "5px",
-                  height: "15px",
+                  fontSize: "1.2rem",
                 }}
               >
-                <g
-                  id="Iconly_Light-outline_Arrow_-_Up_2"
-                  data-name="Iconly Light-outline Arrow - Up 2"
-                  transform="matrix(-0.017, -1, 1, -0.017, 0.492, 21.485)"
-                >
-                  <g id="Arrow_-_Up_2-6" data-name="Arrow - Up 2-6" transform="translate(21.214 15.748) rotate(180)">
-                    <path
-                      id="Arrow_-_Up_2-7"
-                      data-name="Arrow - Up 2-7"
-                      d="M27.788,15.436a1.429,1.429,0,0,1-1.89.143l-.162-.143L14.107,3.574,2.478,15.436a1.429,1.429,0,0,1-1.89.143l-.162-.143a1.5,1.5,0,0,1-.141-1.927l.141-.166L13.081.434a1.43,1.43,0,0,1,1.89-.143l.162.143L27.788,13.343A1.5,1.5,0,0,1,27.788,15.436Z"
-                      transform="translate(0)"
-                      fill="#fff"
-                    />
-                  </g>
-                </g>
-              </svg>
+                Next
+              </span>
             </Button>
           </div>
         </Row>

@@ -1,14 +1,16 @@
-import React from "react";
-import { Row, Card, Col } from "reactstrap";
+import React, { useState } from "react";
+import { Row, Card, Col, Table } from "reactstrap";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import CopyIcon from "../../assets/icons/copy.svg";
 import PlusIcon from "../../assets/icons/plus.svg";
 import Checked from "../../assets/icons/checked.svg";
+import Rocket from "../../assets/icons/rocket.svg";
 import { Button, Form, Select, Input } from "antd";
-
+import { useQuery } from "react-query";
 import Trophy from "../../assets/icons/gold-winner-trophy-icon.svg";
-
+import Api from "../../http/masterApis";
 import "./styles/ContestFeesAndPrizes.css";
+import { useDispatch, useSelector } from "react-redux";
 
 const customStyles = {
   control: (base, state) => ({
@@ -42,18 +44,45 @@ const customStyles = {
   }),
 };
 
-const options = [
-  { value: "chocolate", label: "Contest short Name 1 --   Date of creation --  Contest Type" },
-  { value: "strawberry", label: "Contest short Name 1 --   Date of creation --  Contest Type" },
-  { value: "vanilla", label: "Contest short Name 1 --   Date of creation --  Contest Type" },
-];
-
 const ContestFeesAndPrizes = ({ handleStepChange }) => {
+  const [prize, setPrize] = useState([]);
+  const contestDetails = useSelector((state) => state.contest);
+  const { age_bracket } = contestDetails;
+  const { data: prize_list } = useQuery('getPrizeList', Api.getPrizeList);
   const [form] = Form.useForm();
+  const [prizeLabel, setPrizeLabel] = useState([]);
+  const [counterCounty, setCounterCountry] = useState(0)
+  const [counterState, setCounterState] = useState(0)
+  const [counterCity, setCounterCity] = useState(0)
+  const [counterSchool, setCounterSchool] = useState(0)
 
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
+  const prizeOption = prize_list?.data?.map((c) => {
+    return { value: c.id, label: c.prize_name };
+  });
+
+  const handleClick = (type) => {
+    if (type === "Country level") {
+      if (counterCounty < 1) {
+        setCounterCountry(counterCounty + 1)
+      }
+
+    } else if (type === "State level") {
+      if (counterState < 1) {
+        setCounterState(counterState + 1)
+      }
+    } else if (type === "City level") {
+      if (counterCity < 1) {
+        setCounterCity(counterCity + 1)
+      }
+    } else if (type === "School level") {
+      if (counterSchool < 1) {
+        setCounterSchool(counterSchool + 1)
+      }
+    }
+
+  }
+  console.log('counterCounty', counterCounty, 'counterState', counterState, 'counterCity', counterCity, 'counterSchool', counterSchool)
+
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
@@ -91,53 +120,51 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
               gap: "1rem",
             }}
           >
-            {Array(4)
-              .fill(0)
-              .map((item, index) => (
-                <Card key={index} className="mt-0">
-                  <div
-                    className="d-flex align-center flex-column"
-                    style={{
-                      gap: "0.6rem",
-                    }}
-                  >
-                    <div className="w-100 d-flex">
-                      <Button
-                        style={{
-                          backgroundColor: "#D32F2F",
-                          borderRadius: "21px",
-                          border: "none",
-                          padding: "0.5rem 2rem",
-                          width: "90%",
-                          fontStyle: "italic",
-                        }}
-                        className="text-white"
-                      >
-                        Total Marks for 4-6
-                      </Button>
-                      <div className="mx-1 text-center">
-                        <span className="f-9 text-nowrap">copy to all</span>
-                        <img src={CopyIcon} alt="" />
-                      </div>
-                    </div>
-
-                    <div className="mt-2 text-center w-100 total-score py-1">
-                      <Form.Item
-                        className="form-control input-fees "
-                        name="contest_name"
-                        rules={[
-                          {
-                            required: true,
-                            message: "This field is required",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="Enter Fees" />
-                      </Form.Item>
+            {age_bracket?.map((item, index) => (
+              <Card key={index} className="mt-0">
+                <div
+                  className="d-flex align-center flex-column"
+                  style={{
+                    gap: "0.6rem",
+                  }}
+                >
+                  <div className="w-100 d-flex">
+                    <Button
+                      style={{
+                        backgroundColor: "#D32F2F",
+                        borderRadius: "21px",
+                        border: "none",
+                        padding: "0.5rem 2rem",
+                        width: "90%",
+                        fontStyle: "italic",
+                      }}
+                      className="text-white"
+                    >
+                      Fee for {item}
+                    </Button>
+                    <div className="mx-1 text-center">
+                      <span className="f-9 text-nowrap">copy to all</span>
+                      <img src={CopyIcon} alt="" />
                     </div>
                   </div>
-                </Card>
-              ))}
+
+                  <div className="mt-2 text-center w-100 total-score py-1">
+                    <Form.Item
+                      className="form-control input-fees "
+                      name="contest_name"
+                      rules={[
+                        {
+                          required: true,
+                          message: "This field is required",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Enter Fees" />
+                    </Form.Item>
+                  </div>
+                </div>
+              </Card>
+            ))}
           </Row>
         </Row>
         <hr
@@ -167,8 +194,8 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                     className="w-75"
                     styles={customStyles}
                     mode="multiple"
-                    onChange={handleChange}
-                    options={options}
+                    onChange={(value, index) => { setPrizeLabel(index); setPrize(value) }}
+                    options={prizeOption}
                   />
                 </Form.Item>
               </div>
@@ -201,6 +228,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                           width: "90%",
                           fontStyle: "italic",
                         }}
+                        onClick={(e) => handleClick(item[index])}
                         className="d-flex align-items-center justify-content-center  text-white"
                       >
                         <img src={PlusIcon} alt="" className="mx-2" />
@@ -212,6 +240,386 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
               ))}
           </Col>
         </Row>
+        {counterCounty > 0 &&
+          <Row className="table-parameter p-2 mx-2 my-3">
+            Prizes for Country
+            <div className="px-2 w-100">
+              <Form.Item
+                name="district"
+                rules={[
+                  {
+                    required: true,
+                    message: "This field is required",
+                  },
+                ]}
+                className="w-50"
+              >
+
+              </Form.Item>
+            </div>
+            <div
+              className="w-100"
+              style={{
+                height: "190px",
+                overflowY: "scroll",
+              }}
+            >
+              <Table borderless>
+                <thead>
+                  <tr>
+                    <th>Age / Prizes	</th>
+                    {prizeLabel.map((item) => {
+                      return <th className="vertical-align-middle" colSpan={prizeLabel.length}>
+                        <span>{item.label}</span>
+                      </th>
+                    })}
+                  </tr>
+                </thead>
+                <tbody>
+                  {age_bracket?.map((item) => (<tr>
+                    <th scope="row" className="f-14 vertical-align-middle">
+                      {item.replace("-", " to ")}
+                    </th>
+                    {
+                      prizeLabel?.map((label) => {
+                        return <>
+                          <td>
+                            <Form.Item
+                              name="contest_name"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "This field is required",
+                                },
+                              ]}
+
+                            >
+                              <Input placeholder="Name" className="p-2" />
+                            </Form.Item>
+                          </td>
+                          <td>
+                            <Form.Item
+                              name="contest_name"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "This field is required",
+                                },
+                              ]}
+
+                            >
+                              <Input placeholder="Qty" className="p-2" />
+                            </Form.Item>
+                          </td>
+                          <td>
+                            <Form.Item
+                              name="contest_name"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "This field is required",
+                                },
+                              ]}
+
+                            >
+                              <Input placeholder="Item" className="p-2" />
+                            </Form.Item>
+                          </td></>
+                      })
+                    }
+
+                  </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          </Row>
+        }
+        {counterState > 0 &&
+          <Row className="table-parameter p-2 mx-2 my-3">
+            Prizes for State
+            <div className="px-2 w-100">
+              <Form.Item
+                name="district"
+                rules={[
+                  {
+                    required: true,
+                    message: "This field is required",
+                  },
+                ]}
+                className="w-50"
+              >
+
+              </Form.Item>
+            </div>
+            <div
+              className="w-100"
+              style={{
+                height: "190px",
+                overflowY: "scroll",
+              }}
+            >
+              <Table borderless>
+                <thead>
+                  <tr>
+                    <th>Age / Prizes	</th>
+                    {prizeLabel.map((item) => {
+                      return <th className="vertical-align-middle" colSpan={prizeLabel.length}>
+                        <span>{item.label}</span>
+                      </th>
+                    })}
+                  </tr>
+                </thead>
+                <tbody>
+                  {age_bracket?.map((item) => (<tr>
+                    <th scope="row" className="f-14 vertical-align-middle">
+                      {item.replace("-", " to ")}
+                    </th>
+                    {
+                      prizeLabel?.map((label) => {
+                        return <>
+                          <td>
+                            <Form.Item
+                              name="contest_name"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "This field is required",
+                                },
+                              ]}
+
+                            >
+                              <Input placeholder="Name" className="p-2" />
+                            </Form.Item>
+                          </td>
+                          <td>
+                            <Form.Item
+                              name="contest_name"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "This field is required",
+                                },
+                              ]}
+
+                            >
+                              <Input placeholder="Qty" className="p-2" />
+                            </Form.Item>
+                          </td>
+                          <td>
+                            <Form.Item
+                              name="contest_name"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "This field is required",
+                                },
+                              ]}
+
+                            >
+                              <Input placeholder="Item" className="p-2" />
+                            </Form.Item>
+                          </td></>
+                      })
+                    }
+
+                  </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          </Row>
+        }
+        {counterCity > 0 &&
+          <Row className="table-parameter p-2 mx-2 my-3">
+            Prizes for City
+            <div className="px-2 w-100">
+              <Form.Item
+                name="district"
+                rules={[
+                  {
+                    required: true,
+                    message: "This field is required",
+                  },
+                ]}
+                className="w-50"
+              >
+
+              </Form.Item>
+            </div>
+            <div
+              className="w-100"
+              style={{
+                height: "190px",
+                overflowY: "scroll",
+              }}
+            >
+              <Table borderless>
+                <thead>
+                  <tr>
+                    <th>Age / Prizes	</th>
+                    {prizeLabel.map((item) => {
+                      return <th className="vertical-align-middle" colSpan={prizeLabel.length}>
+                        <span>{item.label}</span>
+                      </th>
+                    })}
+                  </tr>
+                </thead>
+                <tbody>
+                  {age_bracket?.map((item) => (<tr>
+                    <th scope="row" className="f-14 vertical-align-middle">
+                      {item.replace("-", " to ")}
+                    </th>
+                    {
+                      prizeLabel?.map((label) => {
+                        return <>
+                          <td>
+                            <Form.Item
+                              name="contest_name"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "This field is required",
+                                },
+                              ]}
+
+                            >
+                              <Input placeholder="Name" className="p-2" />
+                            </Form.Item>
+                          </td>
+                          <td>
+                            <Form.Item
+                              name="contest_name"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "This field is required",
+                                },
+                              ]}
+
+                            >
+                              <Input placeholder="Qty" className="p-2" />
+                            </Form.Item>
+                          </td>
+                          <td>
+                            <Form.Item
+                              name="contest_name"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "This field is required",
+                                },
+                              ]}
+
+                            >
+                              <Input placeholder="Item" className="p-2" />
+                            </Form.Item>
+                          </td></>
+                      })
+                    }
+
+                  </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          </Row>
+        }
+        {counterSchool > 0 &&
+          <Row className="table-parameter p-2 mx-2 my-3">
+            Prizes for School
+            <div className="px-2 w-100">
+              <Form.Item
+                name="district"
+                rules={[
+                  {
+                    required: true,
+                    message: "This field is required",
+                  },
+                ]}
+                className="w-50"
+              >
+
+              </Form.Item>
+            </div>
+            <div
+              className="w-100"
+              style={{
+                height: "190px",
+                overflowY: "scroll",
+              }}
+            >
+              <Table borderless>
+                <thead>
+                  <tr>
+                    <th>Age / Prizes	</th>
+                    {prizeLabel.map((item) => {
+                      return <th className="vertical-align-middle" colSpan={prizeLabel.length}>
+                        <span>{item.label}</span>
+                      </th>
+                    })}
+                  </tr>
+                </thead>
+                <tbody>
+                  {age_bracket?.map((item) => (<tr>
+                    <th scope="row" className="f-14 vertical-align-middle">
+                      {item.replace("-", " to ")}
+                    </th>
+                    {
+                      prizeLabel?.map((label) => {
+                        return <>
+                          <td>
+                            <Form.Item
+                              name="contest_name"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "This field is required",
+                                },
+                              ]}
+
+                            >
+                              <Input placeholder="Name" className="p-2" />
+                            </Form.Item>
+                          </td>
+                          <td>
+                            <Form.Item
+                              name="contest_name"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "This field is required",
+                                },
+                              ]}
+
+                            >
+                              <Input placeholder="Qty" className="p-2" />
+                            </Form.Item>
+                          </td>
+                          <td>
+                            <Form.Item
+                              name="contest_name"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "This field is required",
+                                },
+                              ]}
+
+                            >
+                              <Input placeholder="Item" className="p-2" />
+                            </Form.Item>
+                          </td></>
+                      })
+                    }
+
+                  </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          </Row>
+        }
         <hr
           style={{
             width: "100%",
@@ -226,14 +634,19 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
             <Button
               style={{
                 backgroundColor: "#FF8383",
-                fontSize: "28px",
                 height: "40px",
               }}
               className="d-flex align-items-center justify-content-center text-white"
               onClick={() => handleStepChange("prev")}
             >
               <RiArrowLeftSLine size={20} color="#fff" />
-              Back
+              <span
+                style={{
+                  fontSize: "1.2rem",
+                }}
+              >
+                Back
+              </span>
             </Button>
           </div>
           <div
@@ -243,11 +656,11 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
             }}
           >
             <Button
+              type="primary"
               htmlType="submit"
               className="d-flex align-items-center justify-content-center text-white"
               style={{
                 backgroundColor: "#918A8A",
-                fontSize: "28px",
                 height: "40px",
               }}
             >
@@ -272,47 +685,32 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                   strokeWidth="2"
                 />
               </svg>
-              Save Draft
+              <span
+                style={{
+                  fontSize: "1.2rem",
+                }}
+              >
+                Save Draft
+              </span>
             </Button>
             <Button
-              htmlType="submit"
               style={{
                 backgroundColor: "#D32F2F",
-                fontSize: "28px",
                 height: "40px",
               }}
-              className="d-flex align-items-center justify-content-center text-white"
               onClick={() => {
                 handleStepChange("next");
               }}
+              className="d-flex align-items-center justify-content-center text-white"
             >
-              Next
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16.36"
-                height="28.485"
-                viewBox="0 0 16.36 28.485"
+              <img src={Rocket} height="22" alt="" className="mr-2" />
+              <span
                 style={{
-                  marginLeft: "5px",
-                  height: "15px",
+                  fontSize: "1.2rem",
                 }}
               >
-                <g
-                  id="Iconly_Light-outline_Arrow_-_Up_2"
-                  data-name="Iconly Light-outline Arrow - Up 2"
-                  transform="matrix(-0.017, -1, 1, -0.017, 0.492, 21.485)"
-                >
-                  <g id="Arrow_-_Up_2-6" data-name="Arrow - Up 2-6" transform="translate(21.214 15.748) rotate(180)">
-                    <path
-                      id="Arrow_-_Up_2-7"
-                      data-name="Arrow - Up 2-7"
-                      d="M27.788,15.436a1.429,1.429,0,0,1-1.89.143l-.162-.143L14.107,3.574,2.478,15.436a1.429,1.429,0,0,1-1.89.143l-.162-.143a1.5,1.5,0,0,1-.141-1.927l.141-.166L13.081.434a1.43,1.43,0,0,1,1.89-.143l.162.143L27.788,13.343A1.5,1.5,0,0,1,27.788,15.436Z"
-                      transform="translate(0)"
-                      fill="#fff"
-                    />
-                  </g>
-                </g>
-              </svg>
+                Next
+              </span>
             </Button>
           </div>
         </Row>

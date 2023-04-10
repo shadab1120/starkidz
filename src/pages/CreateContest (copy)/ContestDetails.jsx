@@ -1,5 +1,5 @@
-import { useEffect, useState, Fragment } from "react";
-import { Row, Col, Button } from "reactstrap";
+import { useEffect, useState,Fragment } from "react";
+import { Row, Col, FormGroup, Button } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -18,13 +18,13 @@ const ContestDetails = ({ handleStepChange }) => {
   const { data: age_bracket_list } = useQuery('getAgeBracketsList', mApi.getAgeBracketsList);
   const { data: contest_category } = useQuery('getContestTypeList', mApi.getContestTypeList);
   const [level, setLevel] = useState([]);
-  const [ageGroup, setAgeGroup] = useState([]);
+  const [ageGroup,setAgeGroup] = useState([]);
   const prizeLevel = [
-    { "label": "Country Level", "id": 1, "type": "Prize for Country", "name": "country_level" },
-    { "label": "State Level", "id": 2, "type": "Prize for State", "name": "state_level" },
-    { "label": "District Level", "id": 3, "type": "Prize for District", "name": "district_level" },
-    { "label": "City Level", "id": 4, "type": "Prize for City", "name": "city_level" },
-    { "label": "School Level", "id": 5, "type": "Prize for School", "name": "school_level" }]
+    { "label": "Country Level", "id": 1 ,"type" :"Prize for Country","name":"country_level"},
+    { "label": "State Level", "id": 2 ,"type" :"Prize for State","name":"state_level"},
+    { "label": "District Level", "id": 3 ,"type" :"Prize for District","name":"district_level"},
+    { "label": "City Level", "id": 4 ,"type" :"Prize for City","name":"city_level"},
+    { "label": "School Level", "id": 5 ,"type" :"Prize for School","name":"school_level"}]
 
   useEffect(() => {
     if (id && contest_data) {
@@ -60,8 +60,8 @@ const ContestDetails = ({ handleStepChange }) => {
     //};
   };
 
-  const handleAgeGroup = (e) => {
-    setAgeGroup(new Set([...ageGroup, e.target.value]))
+  const handleAgeGroup=(e)=>{
+    setAgeGroup(new Set([...ageGroup,e.target.value]))
   }
   const handleAddLevel = (id) => {
     setLevel(new Set([...level, id]))
@@ -251,7 +251,7 @@ const ContestDetails = ({ handleStepChange }) => {
             </Row>
             <br />
 
-            {Array.from(level)?.map((l, i) => {
+            {Array.from(level)?.map((l,i) => {
 
               return <Row key={l}>
                 <div className="form-group col-md-12 name-cls">
@@ -272,55 +272,55 @@ const ContestDetails = ({ handleStepChange }) => {
                   </label>
                   <hr />
                 </div>
-
-                {Array.from(ageGroup).map((age, a) => {
-                  return <Fragment key={a}>
-                    <div className="form-group col-md-2 name-cls">
-                      <label className="form-label" htmlFor="name">
-                        {age} Years
-                      </label>
-                    </div>
-                    <div className="form-group col-md-8 name-cls">
-                      <label className="form-label" htmlFor="name">
-                        Name
-                      </label>
-                      <input
-                        name={`name_${age}_${prizeLevel[i].name}`}
-                        className="form-control"
-                        placeholder="Name"
-                        ref={register({ required: "This field is required" })}
-                      />
-                      {errors[`name_${age}_${prizeLevel[i].name}`] && <span className="error">{errors[`name_${age}_${prizeLevel[i].name}`].message}</span>}
-                    </div>
-                    <div className="form-group col-md-6 name-cls">
-                      <label className="form-label" htmlFor="contest_type_2">
-                        Qty
-                      </label>
-                      <input
-                        name={`qty_${age}_${prizeLevel[i].name}`}
-                        className="form-control"
-                        placeholder="Qty"
-                        ref={register({ required: "This field is required" })}
-                      />
-                      {errors[`qty_${age}_${prizeLevel[i].name}`] && <span className="error">{errors[`qty_${age}_${prizeLevel[i].name}`].message}</span>}
-                    </div>
-                    <div className="form-group col-md-6 name-cls">
-                      <label className="form-label" htmlFor="contest_theme">
-                        Item
-                      </label>
-                      <input
-                        name={`item_${age}_${prizeLevel[i].name}`}
-                        className="form-control"
-                        placeholder="Item"
-                        ref={register({ required: "This field is required" })}
-                      />
-                      {errors[`item_${age}_${prizeLevel[i].name}`] && <span className="error">{errors[`item_${age}_${prizeLevel[i].name}`].message}</span>}
-                    </div>
-                    <hr />
+               
+                {Array.from(ageGroup).map((age,a)=>{
+                  return  <Fragment key={a}> 
+                   <div className="form-group col-md-2 name-cls">
+                   <label className="form-label" htmlFor="name">
+                    {age} Years
+                  </label>
+                </div>
+                  <div className="form-group col-md-8 name-cls">
+                  <label className="form-label" htmlFor="name">
+                    Name
+                  </label>
+                  <input
+                    name={`name_${age}_${prizeLevel[i].name}`}
+                    className="form-control"
+                    placeholder="Name"
+                    ref={register({ required: "This field is required" })}
+                  />
+                  {errors[`name_${age}_${prizeLevel[i].name}`] && <span className="error">{errors[`name_${age}_${prizeLevel[i].name}`].message}</span>}
+                </div>
+                <div className="form-group col-md-6 name-cls">
+                  <label className="form-label" htmlFor="contest_type_2">
+                    Qty
+                  </label>
+                  <input
+                     name={`qty_${age}_${prizeLevel[i].name}`}
+                    className="form-control"
+                    placeholder="Qty"
+                    ref={register({ required: "This field is required" })}
+                  />
+                  {errors[`qty_${age}_${prizeLevel[i].name}`] && <span className="error">{errors[`qty_${age}_${prizeLevel[i].name}`].message}</span>}
+                </div>
+                <div className="form-group col-md-6 name-cls">
+                  <label className="form-label" htmlFor="contest_theme">
+                    Item
+                  </label>
+                  <input
+                     name={`item_${age}_${prizeLevel[i].name}`}
+                    className="form-control"
+                    placeholder="Item"
+                    ref={register({ required: "This field is required" })}
+                  />
+                  {errors[`item_${age}_${prizeLevel[i].name}`] && <span className="error">{errors[`item_${age}_${prizeLevel[i].name}`].message}</span>}
+                </div>
+                  <hr/>
                   </Fragment>
-
+                 
                 })}
-
+              
 
               </Row>
             })}
@@ -332,13 +332,13 @@ const ContestDetails = ({ handleStepChange }) => {
                     gap: "10px",
                   }}
                 >
-                  <Button className="btn-primary" type="submit" onClick={() => handleStepChange("prev")}>
+                 <Button className="btn-primary" type="submit" onClick={() => handleStepChange("prev")}>
                     Back
                   </Button>
                   <Button className="btn-primary" type="submit">
                     Next
                   </Button>
-
+                  
                 </div>
               </Col>
             </Row>
