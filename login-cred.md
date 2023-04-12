@@ -17,3 +17,7 @@ client_admin@123
 Contestant
 zz@gmail.com
 1234
+
+git login details
+Shadabsheikh1120@gmail.com
+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
