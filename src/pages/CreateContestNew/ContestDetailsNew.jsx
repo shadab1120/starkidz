@@ -1,14 +1,15 @@
-import { useEffect, useState, Fragment } from "react";
+import { useEffect, useState } from "react";
 import { Row, Col, FormGroup, Label } from "reactstrap";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { useQuery } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
+import { useQuery, useMutation } from "react-query";
+import toast, { Toaster } from "react-hot-toast";
 import {
   CheckSquareOutlined,
   CloseSquareOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { Input, Button, Form, Select, Upload, Checkbox } from "antd";
+import { Input, Button, Form, Select, Upload } from "antd";
 import { setContestDetails } from "../../store/CreateContestSlice";
 import Api from "../../http/ContestApi";
 import mApi from "../../http/masterApis";
@@ -49,14 +50,14 @@ const ContestDetailsNew = ({ handleStepChange }) => {
   const params = useParams();
   const dispatch = useDispatch();
   const [imageData, setImageData] = useState({});
-  const [ageBracket, setAgeBracket] = useState(0);
   const [form] = Form.useForm();
-
+  const contestDetails = useSelector((state) => state.contest);
   const { id } = params;
 
   const { data: contest_list } = useQuery("getContestList", Api.getContestList);
   const { data: age_bracket_list } = useQuery("getAgeBracketsList", mApi.getAgeBracketsList);
   const { data: contest_category_type } = useQuery("getContestTypeList", mApi.getContestTypeList);
+  const manageMutation = useMutation(Api.manageContest);
 
 
   const contests = contest_list?.data?.map((c) => {
@@ -86,28 +87,76 @@ const ContestDetailsNew = ({ handleStepChange }) => {
     },
   };
 
+  useEffect(() => {
+    const { contest_type, age_bracket, contest_type_2, contest_name, contest_short_name } = contestDetails;
+    form.setFieldsValue({
+      contest_type: contest_type,
+      age_bracket: age_bracket,
+      contest_type_2: contest_type_2,
+      contest_name: contest_name,
+      contest_short_name: contest_short_name
+
+    });
+
+  }, [contestDetails, form])
+
+
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const onFinish = async (data) => {
+
+  const handleNext = async (data) => {
     const event = id ? `update` : `insert`;
     const payload = {
-      ...data,
       event: event,
       contest_image: imageData,
+      contest_theme: form.getFieldsValue()
     };
-
-    console.log("payload", payload);
+    //console.log('payload', payload)
     dispatch(setContestDetails(payload));
     handleStepChange("next");
   };
 
+  const onFinish = async (data) => {
+
+    const message = id ? `update` : `created`
+    const event = id ? `update` : `insert`;
+    const { contest_type, age_bracket, contest_type_2, contest_name, contest_short_name } = data;
+
+    const formData = new FormData();
+    formData.append('age_bracket', age_bracket);
+    formData.append('image', imageData);
+    formData.append('contest_name', contest_name);
+    formData.append('contest_short_name', contest_short_name);
+    formData.append('contest_type_2', contest_type_2);
+    formData.append('contest_type', contest_type);
+    formData.append('event', event);
+
+    manageMutation.mutate(formData, {
+
+      onSuccess: (response) => {
+        console.log('response', response)
+        if (response?.data?.status === 'Failed') {
+          return toast.error(response?.data?.msg);
+        }
+        //toast.success(`Contest ${message} successfully`);
+        //history.push(`${process.env.PUBLIC_URL}/monitor-contest`);
+      },
+    });
+  };
+
+
+
+
   return (
     <>
-      <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete="off" id="contestdetails">
+      <Form form={form}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off">
         <Row>
           <Col md={12} className="d-flex copyBox">
             <svg xmlns="http://www.w3.org/2000/svg" width="36" height="43" viewBox="0 0 36 43">
@@ -482,9 +531,7 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                 backgroundColor: "#D32F2F",
                 height: "40px",
               }}
-              // onClick={() => {
-              //   handleStepChange("next");
-              // }}
+              onClick={handleNext}
             >
               <span className="f-20">Next</span>
               <svg

@@ -3,7 +3,7 @@ import { Row, Col } from "reactstrap";
 import { Input, Button, Form, Select, Checkbox } from "antd";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import { setContestDetails } from "../../store/CreateContestSlice";
 import Api from "../../http/ContestApi";
 import mApi from "../../http/masterApis";
@@ -12,6 +12,7 @@ import "./styles/createTheme.css";
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import ka from "date-fns/locale/ka/index";
+import toast, { Toaster } from "react-hot-toast";
 
 const customStyles = {
   control: (base, state) => ({
@@ -44,15 +45,33 @@ const customStyles = {
 };
 
 const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
+  const params = useParams();
+  const dispatch = useDispatch();
+  const { id } = params;
   const [form] = Form.useForm();
-  const { data: contest_list } = useQuery("getContestList", Api.getContestList);
   const contestDetails = useSelector((state) => state.contest);
+  const { data: contest_list } = useQuery("getContestList", Api.getContestList);
+  const manageMutation = useMutation(Api.manageContest);
   const { age_bracket } = contestDetails;
   const [counter, setCounter] = useState(1)
 
-  const options = contest_list?.data?.map((c) => {
-    return { value: c.id, label: c.contest_theme?.substr(0, 50) };
-  });
+  // const options = contest_list?.data?.map((c) => {
+  //   return { value: c.id, label: c.contest_theme?.substr(0, 50) };
+  // });
+
+  useEffect(() => {
+    const { contest_type, age_bracket, contest_type_2, contest_name, contest_short_name } = contestDetails;
+    form.setFieldsValue({
+      contest_type: contest_type,
+      age_bracket: age_bracket,
+      contest_type_2: contest_type_2,
+      contest_name: contest_name,
+      contest_short_name: contest_short_name
+
+    });
+
+  }, [contestDetails, form])
+
 
   const handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -60,18 +79,7 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const onFinish = async (data) => {
-    const event = id ? `update` : `insert`;
-    const payload = {
-      ...data,
-      event: event,
-      contest_image: imageData,
-    };
 
-    console.log("payload", payload);
-    dispatch(setContestDetails(payload));
-    handleStepChange("next");
-  };
   const handleClickInc = () => {
     if (counter <= 2) {
       setCounter(counter + 1)
@@ -83,6 +91,50 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
       setCounter(counter - 1)
     }
   }
+
+
+  const handleNext = async () => {
+    const event = id ? `update` : `insert`;
+    const payload = {
+      ...contestDetails,
+      event: event,
+      contest_theme: form.getFieldsValue()
+    };
+    //console.log('payload', payload)
+    dispatch(setContestDetails(payload));
+    handleStepChange("next");
+  };
+
+
+  const onFinish = async (data) => {
+
+    const message = id ? `update` : `created`
+    const event = id ? `update` : `insert`;
+    const { contest_type, age_bracket, contest_type_2, contest_name, contest_short_name } = contestDetails;
+    const formData = new FormData();
+    formData.append('age_bracket', age_bracket);
+    formData.append('contest_name', contest_name);
+    formData.append('contest_short_name', contest_short_name);
+    formData.append('contest_type_2', contest_type_2);
+    formData.append('contest_type', contest_type);
+    formData.append('event', event);
+    formData.append('contest_theme', JSON.stringify(data));
+    manageMutation.mutate(formData, {
+
+      onSuccess: (response) => {
+        console.log('response', response)
+        if (response?.data?.status === 'Failed') {
+          return toast.error(response?.data?.msg);
+        }
+        //toast.success(`Contest ${message} successfully`);
+        //history.push(`${process.env.PUBLIC_URL}/monitor-contest`);
+      },
+    });
+  };
+
+
+
+
   return (
     <>
       <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete="off" id="contestdetails">
@@ -159,7 +211,6 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
         />
         {[...Array(counter).keys()].map((item, index) => (
           <Fragment key={index}>
-            {console.log('come', index)}
             <Row
               style={{
                 width: "100%",
@@ -207,7 +258,7 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
                       </Form.Item> */}
                     </div>
                     <Form.Item
-                      name={`theme_content_${k}`}
+                      name={`contest_theme_${index}_${k}`}
                       rules={[
                         {
                           required: true,
@@ -311,9 +362,7 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
               Save Draft
             </Button>
             <Button
-              onClick={() => {
-                handleStepChange("next");
-              }}
+              onClick={handleNext}
               className="d-flex align-center justify-content-center text-white"
               style={{
                 backgroundColor: "#D32F2F",

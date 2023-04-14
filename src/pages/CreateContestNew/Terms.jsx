@@ -1,5 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Row } from "reactstrap";
+import { useParams } from "react-router-dom";
+import { useQuery, useMutation } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
+import Api from "../../http/masterApis";
+import mApi from "../../http/ContestApi";
+import { setContestDetails } from "../../store/CreateContestSlice";
+import toast, { Toaster } from "react-hot-toast";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import Rocket from "../../assets/icons/rocket.svg";
 
@@ -39,7 +46,21 @@ const customStyles = {
 };
 
 const Terms = ({ handleStepChange }) => {
+  const params = useParams();
+  const dispatch = useDispatch();
+  const { id } = params;
   const [form] = Form.useForm();
+  const contestDetails = useSelector((state) => state.contest);
+  const manageMutation = useMutation(mApi.manageContest);
+
+  useEffect(() => {
+    const { terms_conditions } = contestDetails;
+    form.setFieldsValue({
+      terms_conditions
+
+    });
+
+  }, [contestDetails, form])
 
   const handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -47,13 +68,77 @@ const Terms = ({ handleStepChange }) => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const onFinish = async (data) => {
-    // const event = id ? `update` : `insert`
-    // const payload = {
-    //   ...data,
-    //   event: event
-    // };
+
+  const handleLaunch = async () => {
+
+    const message = id ? `update` : `created`
+    const event = id ? `update` : `insert`;
+    const { contest_type, age_bracket, contest_type_2, contest_name, contest_short_name, contest_theme,
+      district, state, contest_manager, start_date, contest_end_date, result_date, judge_level_data,
+      judging_parameter, level_judging, qa, qa_form, select_judge_form, prize, contest_prizes, about_contest } = contestDetails;
+
+    let { terms_conditions } = form.getFieldsValue();
+
+    const formData = new FormData();
+    formData.append('age_bracket', age_bracket);
+    formData.append('contest_name', contest_name);
+    formData.append('contest_short_name', contest_short_name);
+    formData.append('contest_type_2', contest_type_2);
+    formData.append('contest_type', contest_type);
+    formData.append('event', event);
+    formData.append('contest_theme', contest_theme);
+    formData.append('district', district);
+    formData.append('state', state);
+    formData.append('contest_manager', contest_manager);
+    formData.append('start_date', start_date);
+    formData.append('district', district);
+    formData.append('contest_end_date', contest_end_date);
+    formData.append('result_date', result_date);
+    formData.append('judging_parameter', judging_parameter);
+    formData.append('level_judging', level_judging);
+    formData.append('qa', qa);
+    formData.append('qa_form', qa_form);
+    formData.append('select_judge_form', select_judge_form);
+    formData.append('judge_level_data', judge_level_data);
+    formData.append('contest_prizes', contest_prizes);
+    formData.append('prize', prize);
+    formData.append('about_contest', about_contest);
+    formData.append('terms_conditions', terms_conditions);
+
+
+    manageMutation.mutate(formData, {
+
+      onSuccess: (response) => {
+        console.log('response', response)
+        if (response?.data?.status === 'Failed') {
+          return toast.error(response?.data?.msg);
+        }
+        //toast.success(`Contest ${message} successfully`);
+        //history.push(`${process.env.PUBLIC_URL}/monitor-contest`);
+      },
+    });
+
   };
+
+
+  const onFinish = async (data) => {
+    const event = id ? `update` : `insert`;
+    let { terms_conditions } = form.getFieldsValue();
+
+
+    const payload = {
+      ...contestDetails,
+      event: event,
+      terms_conditions
+
+    }
+    console.log('payload', payload)
+    dispatch(setContestDetails(payload));
+    //handleStepChange("next");
+
+  };
+
+
 
   return (
     <>
@@ -83,7 +168,7 @@ const Terms = ({ handleStepChange }) => {
         <Row className="py-2 px-4 d-flex flex-column">
           <h4 className="f-18 grey-accent">Write T&C</h4>
           <Form.Item
-            name="terms_condition"
+            name="terms_conditions"
             rules={[
               {
                 required: true,
@@ -172,9 +257,7 @@ const Terms = ({ handleStepChange }) => {
                 backgroundColor: "#D32F2F",
                 height: "40px",
               }}
-              onClick={() => {
-                handleStepChange("next");
-              }}
+              onClick={handleLaunch}
               className="d-flex align-items-center justify-content-center text-white"
             >
               <img src={Rocket} height="22" alt="" className="mr-2" />

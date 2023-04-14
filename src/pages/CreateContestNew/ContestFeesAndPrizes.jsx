@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Card, Col, Table } from "reactstrap";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import CopyIcon from "../../assets/icons/copy.svg";
@@ -6,11 +6,15 @@ import PlusIcon from "../../assets/icons/plus.svg";
 import Checked from "../../assets/icons/checked.svg";
 import Rocket from "../../assets/icons/rocket.svg";
 import { Button, Form, Select, Input } from "antd";
-import { useQuery } from "react-query";
 import Trophy from "../../assets/icons/gold-winner-trophy-icon.svg";
 import Api from "../../http/masterApis";
 import "./styles/ContestFeesAndPrizes.css";
+import { useParams } from "react-router-dom";
+import { useQuery, useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
+import { setContestDetails } from "../../store/CreateContestSlice";
+import toast, { Toaster } from "react-hot-toast";
+import mApi from "../../http/ContestApi";
 
 const customStyles = {
   control: (base, state) => ({
@@ -45,16 +49,33 @@ const customStyles = {
 };
 
 const ContestFeesAndPrizes = ({ handleStepChange }) => {
-  const [prize, setPrize] = useState([]);
+
+  const params = useParams();
+  const dispatch = useDispatch();
+  const { id } = params;
+  const [form] = Form.useForm();
   const contestDetails = useSelector((state) => state.contest);
+  const manageMutation = useMutation(mApi.manageContest);
+
+  const [prize, setPrize] = useState([]);
   const { age_bracket } = contestDetails;
   const { data: prize_list } = useQuery('getPrizeList', Api.getPrizeList);
-  const [form] = Form.useForm();
   const [prizeLabel, setPrizeLabel] = useState([]);
   const [counterCounty, setCounterCountry] = useState(0)
   const [counterState, setCounterState] = useState(0)
   const [counterCity, setCounterCity] = useState(0)
   const [counterSchool, setCounterSchool] = useState(0)
+
+  useEffect(() => {
+    let { prize } = contestDetails;
+    console.log('contestDetails', contestDetails)
+    form.setFieldsValue({
+      prize,
+
+    });
+
+  }, [contestDetails, form])
+
 
   const prizeOption = prize_list?.data?.map((c) => {
     return { value: c.id, label: c.prize_name };
@@ -81,18 +102,81 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
     }
 
   }
-  console.log('counterCounty', counterCounty, 'counterState', counterState, 'counterCity', counterCity, 'counterSchool', counterSchool)
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const onFinish = async (data) => {
-    // const event = id ? `update` : `insert`
-    // const payload = {
-    //   ...data,
-    //   event: event
-    // };
+  const handleNext = async () => {
+    const event = id ? `update` : `insert`;
+    let { judging_parameter, level_judging, qa, qa_form, select_judge_form } = form.getFieldsValue();
+    let fe_data = form.getFieldsValue();
+
+
+    const payload = {
+      ...contestDetails,
+      event: event,
+      judging_parameter,
+      level_judging,
+      qa,
+      qa_form,
+      select_judge_form,
+      contest_prizes: JSON.stringify(fe_data)
+
+    }
+    console.log('payload', payload)
+    dispatch(setContestDetails(payload));
+    // handleStepChange("next");
   };
+
+
+  const onFinish = async (data) => {
+
+    const message = id ? `update` : `created`
+    const event = id ? `update` : `insert`;
+    const { contest_type, age_bracket, contest_type_2, contest_name, contest_short_name, contest_theme,
+      district, state, contest_manager, start_date, contest_end_date, result_date, judge_level_data,
+      judging_parameter, level_judging, qa, qa_form, select_judge_form } = contestDetails;
+
+    let fe_data = form.getFieldsValue();
+
+    const formData = new FormData();
+    formData.append('age_bracket', age_bracket);
+    formData.append('contest_name', contest_name);
+    formData.append('contest_short_name', contest_short_name);
+    formData.append('contest_type_2', contest_type_2);
+    formData.append('contest_type', contest_type);
+    formData.append('event', event);
+    formData.append('contest_theme', contest_theme);
+    formData.append('district', district);
+    formData.append('state', state);
+    formData.append('contest_manager', contest_manager);
+    formData.append('start_date', start_date);
+    formData.append('district', district);
+    formData.append('contest_end_date', contest_end_date);
+    formData.append('result_date', result_date);
+    formData.append('judging_parameter', judging_parameter);
+    formData.append('level_judging', level_judging);
+    formData.append('qa', qa);
+    formData.append('qa_form', qa_form);
+    formData.append('select_judge_form', select_judge_form);
+    formData.append('judge_level_data', judge_level_data);
+    formData.append('contest_prizes', JSON.stringify(fe_data));
+    formData.append('prize', prize);
+
+    manageMutation.mutate(formData, {
+
+      onSuccess: (response) => {
+        console.log('response', response)
+        if (response?.data?.status === 'Failed') {
+          return toast.error(response?.data?.msg);
+        }
+        //toast.success(`Contest ${message} successfully`);
+        //history.push(`${process.env.PUBLIC_URL}/monitor-contest`);
+      },
+    });
+  };
+
+
 
   return (
     <>
@@ -151,7 +235,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                   <div className="mt-2 text-center w-100 total-score py-1">
                     <Form.Item
                       className="form-control input-fees "
-                      name="contest_name"
+                      name={`contest_fee_${index}`}
                       rules={[
                         {
                           required: true,
@@ -243,20 +327,6 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
         {counterCounty > 0 &&
           <Row className="table-parameter p-2 mx-2 my-3">
             Prizes for Country
-            <div className="px-2 w-100">
-              <Form.Item
-                name="district"
-                rules={[
-                  {
-                    required: true,
-                    message: "This field is required",
-                  },
-                ]}
-                className="w-50"
-              >
-
-              </Form.Item>
-            </div>
             <div
               className="w-100"
               style={{
@@ -268,7 +338,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                 <thead>
                   <tr>
                     <th>Age / Prizes	</th>
-                    {prizeLabel.map((item) => {
+                    {prizeLabel.map((item, index) => {
                       return <th className="vertical-align-middle" colSpan={prizeLabel.length}>
                         <span>{item.label}</span>
                       </th>
@@ -276,7 +346,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {age_bracket?.map((item) => (<tr>
+                  {age_bracket?.map((item, index) => (<tr>
                     <th scope="row" className="f-14 vertical-align-middle">
                       {item.replace("-", " to ")}
                     </th>
@@ -285,7 +355,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                         return <>
                           <td>
                             <Form.Item
-                              name="contest_name"
+                              name={`contest_prizes_district_name_${index}`}
                               rules={[
                                 {
                                   required: true,
@@ -299,7 +369,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                           </td>
                           <td>
                             <Form.Item
-                              name="contest_name"
+                              name={`contest_prizes_district_qty_${index}`}
                               rules={[
                                 {
                                   required: true,
@@ -313,7 +383,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                           </td>
                           <td>
                             <Form.Item
-                              name="contest_name"
+                              name={`contest_prizes_district_item_${index}`}
                               rules={[
                                 {
                                   required: true,
@@ -338,20 +408,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
         {counterState > 0 &&
           <Row className="table-parameter p-2 mx-2 my-3">
             Prizes for State
-            <div className="px-2 w-100">
-              <Form.Item
-                name="district"
-                rules={[
-                  {
-                    required: true,
-                    message: "This field is required",
-                  },
-                ]}
-                className="w-50"
-              >
 
-              </Form.Item>
-            </div>
             <div
               className="w-100"
               style={{
@@ -371,16 +428,16 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {age_bracket?.map((item) => (<tr>
+                  {age_bracket?.map((item, l) => (<tr>
                     <th scope="row" className="f-14 vertical-align-middle">
                       {item.replace("-", " to ")}
                     </th>
                     {
-                      prizeLabel?.map((label) => {
+                      prizeLabel?.map((label, index) => {
                         return <>
                           <td>
                             <Form.Item
-                              name="contest_name"
+                              name={`contest_prizes_state_name_${l}`}
                               rules={[
                                 {
                                   required: true,
@@ -394,7 +451,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                           </td>
                           <td>
                             <Form.Item
-                              name="contest_name"
+                              name={`contest_prizes_state_qty_${l}`}
                               rules={[
                                 {
                                   required: true,
@@ -408,7 +465,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                           </td>
                           <td>
                             <Form.Item
-                              name="contest_name"
+                              name={`contest_prizes_state_item_${l}`}
                               rules={[
                                 {
                                   required: true,
@@ -433,20 +490,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
         {counterCity > 0 &&
           <Row className="table-parameter p-2 mx-2 my-3">
             Prizes for City
-            <div className="px-2 w-100">
-              <Form.Item
-                name="district"
-                rules={[
-                  {
-                    required: true,
-                    message: "This field is required",
-                  },
-                ]}
-                className="w-50"
-              >
 
-              </Form.Item>
-            </div>
             <div
               className="w-100"
               style={{
@@ -466,7 +510,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {age_bracket?.map((item) => (<tr>
+                  {age_bracket?.map((item, index) => (<tr>
                     <th scope="row" className="f-14 vertical-align-middle">
                       {item.replace("-", " to ")}
                     </th>
@@ -475,7 +519,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                         return <>
                           <td>
                             <Form.Item
-                              name="contest_name"
+                              name={`contest_prize_city_name_${index}`}
                               rules={[
                                 {
                                   required: true,
@@ -489,7 +533,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                           </td>
                           <td>
                             <Form.Item
-                              name="contest_name"
+                              name={`contest_prize_city_qty_${index}`}
                               rules={[
                                 {
                                   required: true,
@@ -503,7 +547,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                           </td>
                           <td>
                             <Form.Item
-                              name="contest_name"
+                              name={`contest_prize_city_item_${index}`}
                               rules={[
                                 {
                                   required: true,
@@ -528,20 +572,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
         {counterSchool > 0 &&
           <Row className="table-parameter p-2 mx-2 my-3">
             Prizes for School
-            <div className="px-2 w-100">
-              <Form.Item
-                name="district"
-                rules={[
-                  {
-                    required: true,
-                    message: "This field is required",
-                  },
-                ]}
-                className="w-50"
-              >
 
-              </Form.Item>
-            </div>
             <div
               className="w-100"
               style={{
@@ -561,7 +592,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {age_bracket?.map((item) => (<tr>
+                  {age_bracket?.map((item, index) => (<tr>
                     <th scope="row" className="f-14 vertical-align-middle">
                       {item.replace("-", " to ")}
                     </th>
@@ -570,7 +601,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                         return <>
                           <td>
                             <Form.Item
-                              name="contest_name"
+                              name={`contest_prize_school_name_${index}`}
                               rules={[
                                 {
                                   required: true,
@@ -584,7 +615,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                           </td>
                           <td>
                             <Form.Item
-                              name="contest_name"
+                              name={`contest_prize_school_qty_${index}`}
                               rules={[
                                 {
                                   required: true,
@@ -598,7 +629,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                           </td>
                           <td>
                             <Form.Item
-                              name="contest_name"
+                              name={`contest_prize_school_item_${index}`}
                               rules={[
                                 {
                                   required: true,
@@ -698,9 +729,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
                 backgroundColor: "#D32F2F",
                 height: "40px",
               }}
-              onClick={() => {
-                handleStepChange("next");
-              }}
+              onClick={handleNext}
               className="d-flex align-items-center justify-content-center text-white"
             >
               <img src={Rocket} height="22" alt="" className="mr-2" />

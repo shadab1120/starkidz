@@ -1,19 +1,32 @@
-import React, { useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Container, FormGroup, Label } from "reactstrap";
-import { useQuery } from "react-query";
-// import Select from "react-select";
+import { useQuery, useMutation } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
+import moment from "moment"
+import { DATE_FORMAT } from "./../../utils/Utils"
+import { useParams } from "react-router-dom";
 import Rocket from "../../assets/icons/rocket.svg";
 import "./styles/DurationLocation.css";
 import { RiArrowLeftSLine } from "react-icons/ri";
+import { setContestDetails } from "../../store/CreateContestSlice";
 import { Button, Form, Select, DatePicker, Checkbox } from "antd";
+import toast, { Toaster } from "react-hot-toast";
 import Api from "../../http/masterApis";
+import mApi from "../../http/ContestApi";
+
 const DurationLocation = ({ handleStepChange }) => {
   const defaultValues = {
     states: null,
     district: null,
   };
 
+  const params = useParams();
+  const dispatch = useDispatch();
+  const { id } = params;
   const [form] = Form.useForm();
+  const contestDetails = useSelector((state) => state.contest);
+  const manageMutation = useMutation(mApi.manageContest);
+
   const { data: state_list } = useQuery('getStateList', Api.getStateList);
   const { data: city_list } = useQuery('getCityList', Api.getCityList);
   const { data: district_list } = useQuery('getDistrictList', Api.getDistrictList);
@@ -36,24 +49,104 @@ const DurationLocation = ({ handleStepChange }) => {
     return { value: c.id, label: `${c.district_name}` };
   });
 
+  useEffect(() => {
+    let { district, state, contest_manager, start_date, contest_end_date, result_date } = contestDetails;
+
+    start_date = moment(start_date, DATE_FORMAT).format(DATE_FORMAT);
+    contest_end_date = moment(contest_end_date, DATE_FORMAT).format(DATE_FORMAT);
+    result_date = moment(result_date, DATE_FORMAT).format(DATE_FORMAT);
+
+
+    // console.log('contestDetails', contestDetails)
+
+    form.setFieldsValue({
+      district,
+      state,
+      contest_manager: contest_manager,
+      //start_date: start_date,
+      // contest_end_date: contest_end_date,
+      //result_date
+
+    });
+
+  }, [contestDetails, form])
+
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const onFinish = async (data) => {
-    // const event = id ? `update` : `insert`
-    // const payload = {
-    //   ...data,
-    //   event: event
-    // };
+
+  const handleNext = async () => {
+    const event = id ? `update` : `insert`;
+    let { start_date, contest_end_date, contest_manager, district, state, result_date } = form.getFieldsValue();
+    start_date = moment(start_date).format(DATE_FORMAT);
+    contest_end_date = moment(contest_end_date).format(DATE_FORMAT);
+    result_date = moment(result_date).format(DATE_FORMAT);
+
+
+    const payload = {
+      ...contestDetails,
+      event: event,
+      district,
+      state,
+      contest_manager,
+      start_date,
+      contest_end_date,
+      result_date
+    }
+    console.log('payload', payload)
+    dispatch(setContestDetails(payload));
+    handleStepChange("next");
   };
+
+
+  const onFinish = async (data) => {
+
+    const message = id ? `update` : `created`
+    const event = id ? `update` : `insert`;
+    const { contest_type, age_bracket, contest_type_2, contest_name, contest_short_name, contest_theme, } = contestDetails;
+    let { district, state, contest_manager, start_date, contest_end_date, result_date } = data
+    start_date = moment(start_date).format(DATE_FORMAT);
+    contest_end_date = moment(contest_end_date).format(DATE_FORMAT);
+    result_date = moment(result_date).format(DATE_FORMAT);
+
+    const formData = new FormData();
+    formData.append('age_bracket', age_bracket);
+    formData.append('contest_name', contest_name);
+    formData.append('contest_short_name', contest_short_name);
+    formData.append('contest_type_2', contest_type_2);
+    formData.append('contest_type', contest_type);
+    formData.append('event', event);
+    formData.append('contest_theme', contest_theme);
+    formData.append('district', district);
+    formData.append('state', state);
+    formData.append('contest_manager', contest_manager);
+    formData.append('start_date', start_date);
+    formData.append('district', district);
+    formData.append('contest_end_date', contest_end_date);
+    formData.append('result_date', result_date);
+
+    manageMutation.mutate(formData, {
+
+      onSuccess: (response) => {
+        console.log('response', response)
+        if (response?.data?.status === 'Failed') {
+          return toast.error(response?.data?.msg);
+        }
+        //toast.success(`Contest ${message} successfully`);
+        //history.push(`${process.env.PUBLIC_URL}/monitor-contest`);
+      },
+    });
+  };
+
+
 
   const handleReset = () => {
     setDistrictArrayList([]);
     setStateLabel("");
-    form.resetFields(['district','states']);
+    form.resetFields(['district', 'states']);
   }
 
   return (
@@ -161,7 +254,7 @@ const DurationLocation = ({ handleStepChange }) => {
                       Contest End Date
                     </span>
                     <Form.Item
-                      name="end_date"
+                      name="contest_end_date"
                       rules={[
                         {
                           required: true,
@@ -189,7 +282,7 @@ const DurationLocation = ({ handleStepChange }) => {
                 <Label>Select State</Label>
                 <div>
                   <Form.Item
-                    name="states"
+                    name="state"
                     rules={[
                       {
                         required: true,
@@ -221,7 +314,7 @@ const DurationLocation = ({ handleStepChange }) => {
               <Label>Result Out Date</Label>
 
               <Form.Item
-                name="date"
+                name="result_date"
                 rules={[
                   {
                     required: true,
@@ -242,7 +335,7 @@ const DurationLocation = ({ handleStepChange }) => {
               </Form.Item>
               <Label>Contest Manager</Label>
               <Form.Item
-                name="content_manager"
+                name="contest_manager"
                 rules={[
                   {
                     required: true,
@@ -304,7 +397,7 @@ const DurationLocation = ({ handleStepChange }) => {
           {districtArrayList.length > 0 &&
             <Row className="mt-3 districtlist_section">
               <Col md={12} className="d-flex justify-content-between">
-                <div  onClick={handleReset}>
+                <div onClick={handleReset}>
                   <span>{stateLabel}</span>
                   <svg xmlns="http://www.w3.org/2000/svg" className="mx-2" width="23" height="22" viewBox="0 0 23 22">
                     <g id="Cross_button" data-name="Cross button" transform="translate(-309 -500)">
@@ -470,9 +563,7 @@ const DurationLocation = ({ handleStepChange }) => {
                 backgroundColor: "#D32F2F",
                 height: "40px",
               }}
-              onClick={() => {
-                handleStepChange("next");
-              }}
+              onClick={handleNext}
               className="d-flex align-items-center justify-content-center text-white"
             >
               <img src={Rocket} height="22" alt="" className="mr-2" />

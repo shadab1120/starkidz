@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Card, Col, Table } from "reactstrap";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import EditIcon from "../../assets/icons/exclude-icon.svg";
 import DeleteIcon from "./delete-icon.svg";
-import { useQuery } from "react-query";
+import _ from "lodash";
 import { useParams } from "react-router-dom";
+import { useQuery, useMutation } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
 import Rocket from "../../assets/icons/rocket.svg";
 import { Button, Form, Select, Input } from "antd";
-import Api from "../../http/masterApis"
+import Api from "../../http/masterApis";
+import mApi from "../../http/ContestApi";
 import "./styles/JudgingNew.css";
-import { useDispatch, useSelector } from "react-redux";
+import { setContestDetails } from "../../store/CreateContestSlice";
+import toast, { Toaster } from "react-hot-toast";
 const customStyles = {
   control: (base, state) => ({
     ...base,
@@ -101,23 +105,42 @@ const customTableStyles = {
 
 const JudgingNew = ({ handleStepChange }) => {
   const params = useParams();
-  const [form] = Form.useForm();
+  const dispatch = useDispatch();
   const { id } = params;
+  const [form] = Form.useForm();
   const contestDetails = useSelector((state) => state.contest);
+  const manageMutation = useMutation(mApi.manageContest);
+
   const { age_bracket } = contestDetails;
   const [judgingParametersLabel, setJudgingParametersLabel] = useState('');
   const [judgingParameters, setJudgingParameters] = useState(0);
   const [judgingLabel, setJudgingLabel] = useState(0);
+  const [qualityAnalyticsLabel,setQualityAnalyticsLabel] = useState([])
+  const [qualityAnalytics,setQualityAnalytics] = useState([])
 
   const { data: user_list } = useQuery('getUsers', Api.getUsers);
-  const [roleList, setRoleList] = useState([])
+
   const { data: judge_params } = useQuery('getJudgingParametersList', Api.getJudgingParametersList);
   const { data: role_list } = useQuery('getRole', Api.getRole);
   const { data: selected_role } = useQuery(['getRoleByName', id], Api.getRoleByName);
-  const { data: multi_selected_role } = useQuery(['getMultiSelectUsers', roleList?.join()], Api.getMultiSelectUsers);
+  const { data: multi_selected_role } = useQuery(['getMultiSelectUsers', qualityAnalyticsLabel], Api.getMultiSelectUsers);
   const { data: multi_selected_judge_role } = useQuery(['getMultiSelectUsers', 'judge'], Api.getMultiSelectUsers);
 
-  console.log('multi_selected_role', multi_selected_judge_role)
+
+  useEffect(() => {
+    let { district, state, contest_manager, start_date, contest_end_date, result_date } = contestDetails;
+    form.setFieldsValue({
+      district,
+      state,
+      contest_manager: contest_manager,
+      //start_date: start_date,
+      // contest_end_date: contest_end_date,
+      //result_date
+
+    });
+
+  }, [contestDetails, form])
+
 
   const judgingParametersOption = judge_params?.data?.map((c) => {
     return { value: c.id, label: c.judging_para_name };
@@ -127,7 +150,7 @@ const JudgingNew = ({ handleStepChange }) => {
     return { value: c.id, label: c.name };
   });
   const roleListOption = role_list?.data?.map((c) => {
-    return { value: c.role, label: c.role_name };
+    return { value: c.id, label: c.role_name };
   });
 
   const multiSelectedRole = multi_selected_role?.data?.map((c) => {
@@ -141,9 +164,6 @@ const JudgingNew = ({ handleStepChange }) => {
     return { value: c.id, label: c.name };
   });
 
-  const onChangeMultiSelect = (evt) => {
-    setRoleList([...evt])
-  }
 
   const handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -151,13 +171,77 @@ const JudgingNew = ({ handleStepChange }) => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const onFinish = async (data) => {
-    // const event = id ? `update` : `insert`
-    // const payload = {
-    //   ...data,
-    //   event: event
-    // };
+  const handleNext = async () => {
+    const event = id ? `update` : `insert`;
+    let { judging_parameter, level_judging, qa, qa_form, select_judge_form } = form.getFieldsValue();
+    let qa_data = form.getFieldsValue();
+    qa_data = _.omit(qa_data, ["judging_parameter", "level_judging", "qa", "qa_form", "select_judge_form"])
+
+
+    const payload = {
+      ...contestDetails,
+      event: event,
+      judging_parameter,
+      level_judging,
+      qa,
+      qa_form,
+      select_judge_form,
+      judge_level_data: JSON.stringify(qa_data)
+
+    }
+    console.log('payload', payload)
+    dispatch(setContestDetails(payload));
+    handleStepChange("next");
   };
+
+
+  const onFinish = async (data) => {
+
+    const message = id ? `update` : `created`
+    const event = id ? `update` : `insert`;
+    const { contest_type, age_bracket, contest_type_2, contest_name, contest_short_name, contest_theme,
+      district, state, contest_manager, start_date, contest_end_date, result_date } = contestDetails;
+
+    let { judging_parameter, level_judging, qa, qa_form, select_judge_form } = form.getFieldsValue();
+    let qa_data = form.getFieldsValue();
+    qa_data = _.omit(qa_data, ["judging_parameter", "level_judging", "qa", "qa_form", "select_judge_form"])
+
+
+    const formData = new FormData();
+    formData.append('age_bracket', age_bracket);
+    formData.append('contest_name', contest_name);
+    formData.append('contest_short_name', contest_short_name);
+    formData.append('contest_type_2', contest_type_2);
+    formData.append('contest_type', contest_type);
+    formData.append('event', event);
+    formData.append('contest_theme', contest_theme);
+    formData.append('district', district);
+    formData.append('state', state);
+    formData.append('contest_manager', contest_manager);
+    formData.append('start_date', start_date);
+    formData.append('district', district);
+    formData.append('contest_end_date', contest_end_date);
+    formData.append('result_date', result_date);
+    formData.append('judging_parameter', judging_parameter);
+    formData.append('level_judging', level_judging);
+    formData.append('qa', qa);
+    formData.append('qa_form', qa_form);
+    formData.append('select_judge_form', select_judge_form);
+    formData.append('judge_level_data', JSON.stringify(qa_data));
+
+    manageMutation.mutate(formData, {
+
+      onSuccess: (response) => {
+        console.log('response', response)
+        if (response?.data?.status === 'Failed') {
+          return toast.error(response?.data?.msg);
+        }
+        //toast.success(`Contest ${message} successfully`);
+        //history.push(`${process.env.PUBLIC_URL}/monitor-contest`);
+      },
+    });
+  };
+
 
   return (
     <>
@@ -234,7 +318,7 @@ const JudgingNew = ({ handleStepChange }) => {
             </h5>
 
             <Form.Item
-              name="district"
+              name="judging_parameter"
               rules={[
                 {
                   required: true,
@@ -269,7 +353,7 @@ const JudgingNew = ({ handleStepChange }) => {
                       Weightage for <span className="red-accent">{item}</span>
                     </th>
                   ))}
-                  <th>Action</th>
+                  {/* <th>Action</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -278,9 +362,8 @@ const JudgingNew = ({ handleStepChange }) => {
                     1
                   </th>
                   <td>
-                    {/* <Select className="w-100" options={options} placeholder="choose parameter 1"></Select> */}
                     <Form.Item
-                      name="contest_name"
+                      name={`judging_parameter`}
                       rules={[
                         {
                           required: true,
@@ -297,7 +380,7 @@ const JudgingNew = ({ handleStepChange }) => {
                       <div className=" d-flex justify-content-center align-items-center">
                         <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
                           <Form.Item
-                            name="contest_name"
+                            name={`judging_parameter_weightage_${index}`}
                             rules={[
                               {
                                 required: true,
@@ -312,9 +395,9 @@ const JudgingNew = ({ handleStepChange }) => {
                       </div>
                     </td>
                   ))}
-                  <td className="text-center">
+                  {/* <td className="text-center">
                     <img src={DeleteIcon} alt="" />
-                  </td>
+                  </td> */}
                 </tr>
               </tbody>
             </Table>
@@ -344,7 +427,8 @@ const JudgingNew = ({ handleStepChange }) => {
                   placeholder="Quality Analytics From"
                   className="basic-single"
                   mode="multiple"
-                  onChange={onChangeMultiSelect}
+                  //onChange={onChangeMultiSelect}
+                  onChange={(value, index) => { setQualityAnalyticsLabel(index?.map((l)=>l.label)); setQualityAnalytics(value) }}
                   options={roleListOption}
                 //maxTagCount={2}
                 />
@@ -405,7 +489,7 @@ const JudgingNew = ({ handleStepChange }) => {
             <p className="f-18 grey-accent m-0">Level of Judging</p>
             <div>
               <Form.Item
-                name="lable_judging"
+                name="level_judging"
                 rules={[
                   {
                     required: true,
@@ -430,7 +514,7 @@ const JudgingNew = ({ handleStepChange }) => {
             <p className="f-18 grey-accent m-0">Judges Level - {item + 1}</p>
             <div className="mt-2 text-center w-100 total-score py-1">
               <Form.Item
-                name="judge_name"
+                name={`judge_name_${item}_${index}`}
                 rules={[
                   {
                     required: true,
@@ -453,7 +537,7 @@ const JudgingNew = ({ handleStepChange }) => {
             <p className="f-18 grey-accent m-0">Percentage of entries judged at level - {item + 1}</p>
             <div className="mt-2 text-center w-100 total-score py-1">
               <Form.Item
-                name="contest_name"
+                name={`percentage_of_judge_level_${item}_${index}`}
                 rules={[
                   {
                     required: true,
@@ -469,7 +553,7 @@ const JudgingNew = ({ handleStepChange }) => {
             <p className="f-18 grey-accent m-0">Judging TAT [in days]</p>
             <div className="mt-2 text-center w-100 total-score py-1">
               <Form.Item
-                name="contest_name"
+                name={`judging_tat_${item}_${index}`}
                 rules={[
                   {
                     required: true,
@@ -553,9 +637,7 @@ const JudgingNew = ({ handleStepChange }) => {
                 backgroundColor: "#D32F2F",
                 height: "40px",
               }}
-              onClick={() => {
-                handleStepChange("next");
-              }}
+              onClick={handleNext}
               className="d-flex align-items-center justify-content-center text-white"
             >
               <img src={Rocket} height="22" alt="" className="mr-2" />

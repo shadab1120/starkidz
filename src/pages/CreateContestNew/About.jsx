@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Row } from "reactstrap";
 import { Button, Form, Input } from "antd";
+import { useParams } from "react-router-dom";
+import { useQuery, useMutation } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
+import Api from "../../http/masterApis";
+import mApi from "../../http/ContestApi";
+import { setContestDetails } from "../../store/CreateContestSlice";
+import toast, { Toaster } from "react-hot-toast";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import Rocket from "../../assets/icons/rocket.svg";
 import "./styles/JudgingNew.css";
@@ -38,7 +45,22 @@ const customStyles = {
 };
 
 const About = ({ handleStepChange }) => {
+
+  const params = useParams();
+  const dispatch = useDispatch();
+  const { id } = params;
   const [form] = Form.useForm();
+  const contestDetails = useSelector((state) => state.contest);
+  const manageMutation = useMutation(mApi.manageContest);
+
+  useEffect(() => {
+    const { about_contest } = contestDetails;
+    form.setFieldsValue({
+      about_contest
+
+    });
+
+  }, [contestDetails, form])
 
   const handleChange = ({ target: { value } }) => {
     console.log(`selected ${value}`);
@@ -46,14 +68,73 @@ const About = ({ handleStepChange }) => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const onFinish = async (data) => {
-    console.log('data', data)
-    // const event = id ? `update` : `insert`
-    // const payload = {
-    //   ...data,
-    //   event: event
-    // };
+
+  const handleNext = async () => {
+    const event = id ? `update` : `insert`;
+    let { about_contest } = form.getFieldsValue();
+
+
+    const payload = {
+      ...contestDetails,
+      event: event,
+      about_contest
+
+    }
+    console.log('payload', payload)
+    dispatch(setContestDetails(payload));
+    handleStepChange("next");
   };
+
+
+  const onFinish = async (data) => {
+
+    const message = id ? `update` : `created`
+    const event = id ? `update` : `insert`;
+    const { contest_type, age_bracket, contest_type_2, contest_name, contest_short_name, contest_theme,
+      district, state, contest_manager, start_date, contest_end_date, result_date, judge_level_data,
+      judging_parameter, level_judging, qa, qa_form, select_judge_form, prize, contest_prizes } = contestDetails;
+
+    let { about_contest } = form.getFieldsValue();
+
+    const formData = new FormData();
+    formData.append('age_bracket', age_bracket);
+    formData.append('contest_name', contest_name);
+    formData.append('contest_short_name', contest_short_name);
+    formData.append('contest_type_2', contest_type_2);
+    formData.append('contest_type', contest_type);
+    formData.append('event', event);
+    formData.append('contest_theme', contest_theme);
+    formData.append('district', district);
+    formData.append('state', state);
+    formData.append('contest_manager', contest_manager);
+    formData.append('start_date', start_date);
+    formData.append('district', district);
+    formData.append('contest_end_date', contest_end_date);
+    formData.append('result_date', result_date);
+    formData.append('judging_parameter', judging_parameter);
+    formData.append('level_judging', level_judging);
+    formData.append('qa', qa);
+    formData.append('qa_form', qa_form);
+    formData.append('select_judge_form', select_judge_form);
+    formData.append('judge_level_data', judge_level_data);
+    formData.append('contest_prizes', contest_prizes);
+    formData.append('prize', prize);
+    formData.append('about_contest', about_contest);
+
+    manageMutation.mutate(formData, {
+
+      onSuccess: (response) => {
+        console.log('response', response)
+        if (response?.data?.status === 'Failed') {
+          return toast.error(response?.data?.msg);
+        }
+        //toast.success(`Contest ${message} successfully`);
+        //history.push(`${process.env.PUBLIC_URL}/monitor-contest`);
+      },
+    });
+  };
+
+
 
 
   return (
@@ -84,7 +165,7 @@ const About = ({ handleStepChange }) => {
         <Row className="py-2 px-4 d-flex flex-column">
           <h4 className="f-18 grey-accent">Write About</h4>
           <Form.Item
-            name="aboutus"
+            name="about_contest"
             rules={[
               {
                 required: true,
@@ -132,8 +213,8 @@ const About = ({ handleStepChange }) => {
             }}
           >
             <Button
-             type="primary"
-             htmlType="submit"
+              type="primary"
+              htmlType="submit"
               className="d-flex align-items-center justify-content-center text-white"
               style={{
                 backgroundColor: "#918A8A",
@@ -174,9 +255,7 @@ const About = ({ handleStepChange }) => {
                 backgroundColor: "#D32F2F",
                 height: "40px",
               }}
-              onClick={() => {
-                handleStepChange("next");
-              }}
+              onClick={handleNext}
               className="d-flex align-items-center justify-content-center text-white"
             >
               <img src={Rocket} height="22" alt="" className="mr-2" />
