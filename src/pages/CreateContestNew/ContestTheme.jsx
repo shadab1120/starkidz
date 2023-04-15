@@ -48,7 +48,7 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
   const { data: contest_list } = useQuery("getContestList", Api.getContestList);
   const contestDetails = useSelector((state) => state.contest);
   const { age_bracket } = contestDetails;
-  const [counter, setCounter] = useState(1)
+  const [counter, setCounter] = useState(1);
 
   const options = contest_list?.data?.map((c) => {
     return { value: c.id, label: c.contest_theme?.substr(0, 50) };
@@ -61,28 +61,26 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
     console.log("Failed:", errorInfo);
   };
   const onFinish = async (data) => {
-    const event = id ? `update` : `insert`;
-    const payload = {
-      ...data,
-      event: event,
-      contest_image: imageData,
-    };
-
-    console.log("payload", payload);
-    dispatch(setContestDetails(payload));
-    handleStepChange("next");
+    // const event = id ? `update` : `insert`;
+    // const payload = {
+    //   ...data,
+    //   event: event,
+    //   contest_image: imageData,
+    // };
+    // console.log("payload", payload);
+    // dispatch(setContestDetails(payload));
+    // handleStepChange("next");
   };
   const handleClickInc = () => {
     if (counter <= 2) {
-      setCounter(counter + 1)
+      setCounter(counter + 1);
     }
-
-  }
+  };
   const handleClickDec = () => {
     if (counter > 0) {
-      setCounter(counter - 1)
+      setCounter(counter - 1);
     }
-  }
+  };
   return (
     <>
       <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete="off" id="contestdetails">
@@ -159,7 +157,7 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
         />
         {[...Array(counter).keys()].map((item, index) => (
           <Fragment key={index}>
-            {console.log('come', index)}
+            {console.log("come", index)}
             <Row
               style={{
                 width: "100%",
@@ -172,27 +170,28 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
               </Col>
               <Row className="w-100 mt-4">
                 {age_bracket?.map((item, k) => {
-                  return <Col md={4} lg={4} className="d-flex flex-column" key={k}>
-                    <div
-                      className="d-flex align-center"
-                      style={{
-                        gap: ".6rem",
-                      }}
-                    >
-                      <Button
-                        htmlType="submit"
+                  return (
+                    <Col md={4} lg={4} className="d-flex flex-column" key={k}>
+                      <div
+                        className="d-flex align-center"
                         style={{
-                          backgroundColor: "#D32F2F",
-                          borderRadius: "21px",
-                          border: "none",
-                          padding: "0.5rem 1rem",
-                          width: "90%",
-                          fontStyle: "italic",
+                          gap: ".6rem",
                         }}
                       >
-                        Theme for {item}
-                      </Button>
-                      {/* <Form.Item
+                        <Button
+                          htmlType="submit"
+                          style={{
+                            backgroundColor: "#D32F2F",
+                            borderRadius: "21px",
+                            border: "none",
+                            padding: "0.5rem 1rem",
+                            width: "90%",
+                            fontStyle: "italic",
+                          }}
+                        >
+                          Theme for {item}
+                        </Button>
+                        {/* <Form.Item
                         name={`theme_content_check_${k}`}
                       // rules={[
                       //   {
@@ -205,21 +204,21 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
 
                         </Checkbox>
                       </Form.Item> */}
-                    </div>
-                    <Form.Item
-                      name={`theme_content_${k}`}
-                      rules={[
-                        {
-                          required: true,
-                          message: "This field is required",
-                        },
-                      ]}
-                    >
-                      <Input placeholder="Type in Theme" className="mt-3 themeText form-control" />
-                    </Form.Item>
-                  </Col>
-                })
-                }
+                      </div>
+                      <Form.Item
+                        name={`theme_content_${k}`}
+                        rules={[
+                          {
+                            required: true,
+                            message: "This field is required",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="Type in Theme" className="mt-3 themeText form-control" />
+                      </Form.Item>
+                    </Col>
+                  );
+                })}
               </Row>
             </Row>
             <hr

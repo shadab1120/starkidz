@@ -7,7 +7,7 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import Rocket from "../../assets/icons/rocket.svg";
 import { Button, Form, Select, Input } from "antd";
-import Api from "../../http/masterApis"
+import Api from "../../http/masterApis";
 import "./styles/JudgingNew.css";
 import { useDispatch, useSelector } from "react-redux";
 const customStyles = {
@@ -98,26 +98,25 @@ const customTableStyles = {
   }),
 };
 
-
 const JudgingNew = ({ handleStepChange }) => {
   const params = useParams();
   const [form] = Form.useForm();
   const { id } = params;
   const contestDetails = useSelector((state) => state.contest);
   const { age_bracket } = contestDetails;
-  const [judgingParametersLabel, setJudgingParametersLabel] = useState('');
+  const [judgingParametersLabel, setJudgingParametersLabel] = useState("");
   const [judgingParameters, setJudgingParameters] = useState(0);
   const [judgingLabel, setJudgingLabel] = useState(0);
 
-  const { data: user_list } = useQuery('getUsers', Api.getUsers);
-  const [roleList, setRoleList] = useState([])
-  const { data: judge_params } = useQuery('getJudgingParametersList', Api.getJudgingParametersList);
-  const { data: role_list } = useQuery('getRole', Api.getRole);
-  const { data: selected_role } = useQuery(['getRoleByName', id], Api.getRoleByName);
-  const { data: multi_selected_role } = useQuery(['getMultiSelectUsers', roleList?.join()], Api.getMultiSelectUsers);
-  const { data: multi_selected_judge_role } = useQuery(['getMultiSelectUsers', 'judge'], Api.getMultiSelectUsers);
+  const { data: user_list } = useQuery("getUsers", Api.getUsers);
+  const [roleList, setRoleList] = useState([]);
+  const { data: judge_params } = useQuery("getJudgingParametersList", Api.getJudgingParametersList);
+  const { data: role_list } = useQuery("getRole", Api.getRole);
+  const { data: selected_role } = useQuery(["getRoleByName", id], Api.getRoleByName);
+  const { data: multi_selected_role } = useQuery(["getMultiSelectUsers", roleList?.join()], Api.getMultiSelectUsers);
+  const { data: multi_selected_judge_role } = useQuery(["getMultiSelectUsers", "judge"], Api.getMultiSelectUsers);
 
-  console.log('multi_selected_role', multi_selected_judge_role)
+  console.log("multi_selected_role", multi_selected_judge_role);
 
   const judgingParametersOption = judge_params?.data?.map((c) => {
     return { value: c.id, label: c.judging_para_name };
@@ -142,8 +141,8 @@ const JudgingNew = ({ handleStepChange }) => {
   });
 
   const onChangeMultiSelect = (evt) => {
-    setRoleList([...evt])
-  }
+    setRoleList([...evt]);
+  };
 
   const handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -247,7 +246,10 @@ const JudgingNew = ({ handleStepChange }) => {
                 placeholder="Judging Parameters"
                 className="basic-single"
                 styles={customStyles}
-                onChange={(value, index) => { setJudgingParametersLabel(index?.label); setJudgingParameters(value) }}
+                onChange={(value, index) => {
+                  setJudgingParametersLabel(index?.label);
+                  setJudgingParameters(value);
+                }}
                 options={judgingParametersOption}
               />
             </Form.Item>
@@ -287,7 +289,6 @@ const JudgingNew = ({ handleStepChange }) => {
                           message: "This field is required",
                         },
                       ]}
-
                     >
                       <Input placeholder="Enter Contest Name" className="p-2" />
                     </Form.Item>
@@ -295,9 +296,10 @@ const JudgingNew = ({ handleStepChange }) => {
                   {age_bracket?.map((item, index) => (
                     <td className="text-center">
                       <div className=" d-flex justify-content-center align-items-center">
-                        <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
+                        <div className="bg-white w-75  border-radius-10 position-relative">
                           <Form.Item
                             name="contest_name"
+                            className="m-0"
                             rules={[
                               {
                                 required: true,
@@ -306,8 +308,8 @@ const JudgingNew = ({ handleStepChange }) => {
                             ]}
                           >
                             <Input placeholder="Enter Contest Name" className="p-2" />
+                            <img className="edit-icon" src={EditIcon} alt="" />
                           </Form.Item>
-                          <img className="edit-icon" src={EditIcon} alt="" />
                         </div>
                       </div>
                     </td>
@@ -346,7 +348,7 @@ const JudgingNew = ({ handleStepChange }) => {
                   mode="multiple"
                   onChange={onChangeMultiSelect}
                   options={roleListOption}
-                //maxTagCount={2}
+                  //maxTagCount={2}
                 />
               </Form.Item>
             </div>
@@ -396,7 +398,7 @@ const JudgingNew = ({ handleStepChange }) => {
                   mode="multiple"
                   onChange={handleChange}
                   options={userList}
-                //  maxTagCount={2}
+                  //  maxTagCount={2}
                 />
               </Form.Item>
             </div>
@@ -419,69 +421,70 @@ const JudgingNew = ({ handleStepChange }) => {
                   styles={customTableStyles}
                   onChange={(value) => setJudgingLabel(value)}
                   options={judgeLabel}
-                //  maxTagCount={2}
+                  //  maxTagCount={2}
                 />
               </Form.Item>
             </div>
           </Col>
         </Row>
-        {[...Array(judgingLabel).keys()].map((item, index) => (<Row className="mt-2">
-          <Col md={3}>
-            <p className="f-18 grey-accent m-0">Judges Level - {item + 1}</p>
-            <div className="mt-2 text-center w-100 total-score py-1">
-              <Form.Item
-                name="judge_name"
-                rules={[
-                  {
-                    required: true,
-                    message: "This field is required",
-                  },
-                ]}
-                className="w-50"
-              >
-                <Select
-                  placeholder="Judging Parameters"
-                  className="basic-single"
-                  styles={customStyles}
-                  onChange={handleChange}
-                  options={judgeList}
-                />
-              </Form.Item>
-            </div>
-          </Col>
-          <Col md={5}>
-            <p className="f-18 grey-accent m-0">Percentage of entries judged at level - {item + 1}</p>
-            <div className="mt-2 text-center w-100 total-score py-1">
-              <Form.Item
-                name="contest_name"
-                rules={[
-                  {
-                    required: true,
-                    message: "This field is required",
-                  },
-                ]}
-              >
-                <Input placeholder="Enter Contest Name" className="p-2" />
-              </Form.Item>
-            </div>
-          </Col>
-          <Col md={4}>
-            <p className="f-18 grey-accent m-0">Judging TAT [in days]</p>
-            <div className="mt-2 text-center w-100 total-score py-1">
-              <Form.Item
-                name="contest_name"
-                rules={[
-                  {
-                    required: true,
-                    message: "This field is required",
-                  },
-                ]}
-              >
-                <Input placeholder="Enter Contest Name" className="p-2" />
-              </Form.Item>
-            </div>
-          </Col>
-        </Row>
+        {[...Array(judgingLabel).keys()].map((item, index) => (
+          <Row className="mt-2">
+            <Col md={3}>
+              <p className="f-18 grey-accent m-0">Judges Level - {item + 1}</p>
+              <div className="mt-2 text-center w-100 total-score py-1">
+                <Form.Item
+                  name="judge_name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "This field is required",
+                    },
+                  ]}
+                  className="w-50"
+                >
+                  <Select
+                    placeholder="Judging Parameters"
+                    className="basic-single"
+                    styles={customStyles}
+                    onChange={handleChange}
+                    options={judgeList}
+                  />
+                </Form.Item>
+              </div>
+            </Col>
+            <Col md={5}>
+              <p className="f-18 grey-accent m-0">Percentage of entries judged at level - {item + 1}</p>
+              <div className="mt-2 text-center w-100 total-score py-1">
+                <Form.Item
+                  name="contest_name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "This field is required",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter Contest Name" className="p-2" />
+                </Form.Item>
+              </div>
+            </Col>
+            <Col md={4}>
+              <p className="f-18 grey-accent m-0">Judging TAT [in days]</p>
+              <div className="mt-2 text-center w-100 total-score py-1">
+                <Form.Item
+                  name="contest_name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "This field is required",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter Contest Name" className="p-2" />
+                </Form.Item>
+              </div>
+            </Col>
+          </Row>
         ))}
         {/* Button */}
         <Row className="mb-4 mt-5 d-flex px-4 justify-content-between">
