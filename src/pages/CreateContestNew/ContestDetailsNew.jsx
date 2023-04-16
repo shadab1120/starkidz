@@ -59,7 +59,6 @@ const ContestDetailsNew = ({ handleStepChange }) => {
   const { data: contest_category_type } = useQuery("getContestTypeList", mApi.getContestTypeList);
   const manageMutation = useMutation(Api.manageContest);
 
-
   const contests = contest_list?.data?.map((c) => {
     return { value: c.id, label: c.about_contest?.substr(0, 50) };
   });
@@ -429,6 +428,44 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                         // {...register("contest_category", { required: `This field is required` })}
                         placeholder="Enter Contest Name"
                       ></Select> */}
+                    </FormGroup>
+                  </Col>
+                  <Col md={12}>
+                    <FormGroup>
+                      <Label>Type of Entry</Label>
+                      <Form.Item
+                        name="contest_type_2"
+                        rules={[
+                          {
+                            required: true,
+                            message: "This field is required",
+                          },
+                        ]}
+                      >
+                        <Select
+                          mode="multiple"
+                          placeholder="select the multiple type of entries"
+                          className="basic-single"
+                          style={{
+                            width: "100%",
+                          }}
+                          onChange={handleChange}
+                          menuItemSelectedIcon={
+                            <CheckSquareOutlined
+                              style={{
+                                color: "#d32f2f",
+                              }}
+                            />
+                          }
+                          removeIcon={<CloseSquareOutlined style={{ color: "#d32f2f" }} />}
+                        >
+                          {contest_category_options?.map((option) => (
+                            <Select.Option key={option.value} value={option.value}>
+                              <span className="type_option">{option.label}</span>
+                            </Select.Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
                     </FormGroup>
                   </Col>
                   {/* <Col md={12}>

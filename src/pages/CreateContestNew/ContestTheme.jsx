@@ -53,7 +53,7 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
   const { data: contest_list } = useQuery("getContestList", Api.getContestList);
   const manageMutation = useMutation(Api.manageContest);
   const { age_bracket } = contestDetails;
-  const [counter, setCounter] = useState(1)
+  const [counter, setCounter] = useState(1);
 
   // const options = contest_list?.data?.map((c) => {
   //   return { value: c.id, label: c.contest_theme?.substr(0, 50) };
@@ -79,16 +79,14 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-
   const handleClickInc = () => {
     if (counter <= 2) {
-      setCounter(counter + 1)
+      setCounter(counter + 1);
     }
-
-  }
+  };
   const handleClickDec = () => {
     if (counter > 0) {
-      setCounter(counter - 1)
+      setCounter(counter - 1);
     }
   }
 
@@ -223,27 +221,28 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
               </Col>
               <Row className="w-100 mt-4">
                 {age_bracket?.map((item, k) => {
-                  return <Col md={4} lg={4} className="d-flex flex-column" key={k}>
-                    <div
-                      className="d-flex align-center"
-                      style={{
-                        gap: ".6rem",
-                      }}
-                    >
-                      <Button
-                        htmlType="submit"
+                  return (
+                    <Col md={4} lg={4} className="d-flex flex-column" key={k}>
+                      <div
+                        className="d-flex align-center"
                         style={{
-                          backgroundColor: "#D32F2F",
-                          borderRadius: "21px",
-                          border: "none",
-                          padding: "0.5rem 1rem",
-                          width: "90%",
-                          fontStyle: "italic",
+                          gap: ".6rem",
                         }}
                       >
-                        Theme for {item}
-                      </Button>
-                      {/* <Form.Item
+                        <Button
+                          htmlType="submit"
+                          style={{
+                            backgroundColor: "#D32F2F",
+                            borderRadius: "21px",
+                            border: "none",
+                            padding: "0.5rem 1rem",
+                            width: "90%",
+                            fontStyle: "italic",
+                          }}
+                        >
+                          Theme for {item}
+                        </Button>
+                        {/* <Form.Item
                         name={`theme_content_check_${k}`}
                       // rules={[
                       //   {

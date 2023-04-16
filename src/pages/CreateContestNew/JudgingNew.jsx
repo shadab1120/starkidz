@@ -102,7 +102,6 @@ const customTableStyles = {
   }),
 };
 
-
 const JudgingNew = ({ handleStepChange }) => {
   const params = useParams();
   const dispatch = useDispatch();
@@ -112,7 +111,7 @@ const JudgingNew = ({ handleStepChange }) => {
   const manageMutation = useMutation(mApi.manageContest);
 
   const { age_bracket } = contestDetails;
-  const [judgingParametersLabel, setJudgingParametersLabel] = useState('');
+  const [judgingParametersLabel, setJudgingParametersLabel] = useState("");
   const [judgingParameters, setJudgingParameters] = useState(0);
   const [judgingLabel, setJudgingLabel] = useState(0);
   const [qualityAnalyticsLabel,setQualityAnalyticsLabel] = useState([])
@@ -331,7 +330,10 @@ const JudgingNew = ({ handleStepChange }) => {
                 placeholder="Judging Parameters"
                 className="basic-single"
                 styles={customStyles}
-                onChange={(value, index) => { setJudgingParametersLabel(index?.label); setJudgingParameters(value) }}
+                onChange={(value, index) => {
+                  setJudgingParametersLabel(index?.label);
+                  setJudgingParameters(value);
+                }}
                 options={judgingParametersOption}
               />
             </Form.Item>
@@ -370,7 +372,6 @@ const JudgingNew = ({ handleStepChange }) => {
                           message: "This field is required",
                         },
                       ]}
-
                     >
                       <Input placeholder="Enter Contest Name" className="p-2" />
                     </Form.Item>
@@ -378,9 +379,14 @@ const JudgingNew = ({ handleStepChange }) => {
                   {age_bracket?.map((item, index) => (
                     <td className="text-center">
                       <div className=" d-flex justify-content-center align-items-center">
-                        <div className="bg-white w-75 py-1 px-3 border-radius-10 position-relative">
+                        <div className="bg-white w-75  border-radius-10 position-relative">
                           <Form.Item
+<<<<<<< HEAD
                             name={`judging_parameter_weightage_${index}`}
+=======
+                            name="contest_name"
+                            className="m-0"
+>>>>>>> 7998aeb620eab507828fb38229d41ecf5607ce47
                             rules={[
                               {
                                 required: true,
@@ -389,8 +395,8 @@ const JudgingNew = ({ handleStepChange }) => {
                             ]}
                           >
                             <Input placeholder="Enter Contest Name" className="p-2" />
+                            <img className="edit-icon" src={EditIcon} alt="" />
                           </Form.Item>
-                          <img className="edit-icon" src={EditIcon} alt="" />
                         </div>
                       </div>
                     </td>
@@ -430,7 +436,7 @@ const JudgingNew = ({ handleStepChange }) => {
                   //onChange={onChangeMultiSelect}
                   onChange={(value, index) => { setQualityAnalyticsLabel(index?.map((l)=>l.label)); setQualityAnalytics(value) }}
                   options={roleListOption}
-                //maxTagCount={2}
+                  //maxTagCount={2}
                 />
               </Form.Item>
             </div>
@@ -480,7 +486,7 @@ const JudgingNew = ({ handleStepChange }) => {
                   mode="multiple"
                   onChange={handleChange}
                   options={userList}
-                //  maxTagCount={2}
+                  //  maxTagCount={2}
                 />
               </Form.Item>
             </div>
@@ -503,7 +509,7 @@ const JudgingNew = ({ handleStepChange }) => {
                   styles={customTableStyles}
                   onChange={(value) => setJudgingLabel(value)}
                   options={judgeLabel}
-                //  maxTagCount={2}
+                  //  maxTagCount={2}
                 />
               </Form.Item>
             </div>
