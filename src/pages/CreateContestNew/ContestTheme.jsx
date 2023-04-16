@@ -118,7 +118,7 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
     formData.append('contest_type_2', contest_type_2);
     formData.append('contest_type', contest_type);
     formData.append('event', event);
-    formData.append('contest_theme', JSON.stringify(data));
+    formData.append('contest_theme', data);
     manageMutation.mutate(formData, {
 
       onSuccess: (response) => {

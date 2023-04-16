@@ -120,7 +120,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
       qa,
       qa_form,
       select_judge_form,
-      contest_prizes: JSON.stringify(fe_data)
+      contest_prizes: fe_data
 
     }
     console.log('payload', payload)
@@ -160,7 +160,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
     formData.append('qa_form', qa_form);
     formData.append('select_judge_form', select_judge_form);
     formData.append('judge_level_data', judge_level_data);
-    formData.append('contest_prizes', JSON.stringify(fe_data));
+    formData.append('contest_prizes',fe_data);
     formData.append('prize', prize);
 
     manageMutation.mutate(formData, {

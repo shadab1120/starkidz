@@ -186,7 +186,7 @@ const JudgingNew = ({ handleStepChange }) => {
       qa,
       qa_form,
       select_judge_form,
-      judge_level_data: JSON.stringify(qa_data)
+      judge_level_data:qa_data
 
     }
     console.log('payload', payload)
@@ -227,7 +227,7 @@ const JudgingNew = ({ handleStepChange }) => {
     formData.append('qa', qa);
     formData.append('qa_form', qa_form);
     formData.append('select_judge_form', select_judge_form);
-    formData.append('judge_level_data', JSON.stringify(qa_data));
+    formData.append('judge_level_data',qa_data);
 
     manageMutation.mutate(formData, {
 
