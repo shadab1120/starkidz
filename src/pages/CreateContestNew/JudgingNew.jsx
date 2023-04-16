@@ -381,12 +381,7 @@ const JudgingNew = ({ handleStepChange }) => {
                       <div className=" d-flex justify-content-center align-items-center">
                         <div className="bg-white w-75  border-radius-10 position-relative">
                           <Form.Item
-<<<<<<< HEAD
                             name={`judging_parameter_weightage_${index}`}
-=======
-                            name="contest_name"
-                            className="m-0"
->>>>>>> 7998aeb620eab507828fb38229d41ecf5607ce47
                             rules={[
                               {
                                 required: true,

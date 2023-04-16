@@ -216,7 +216,7 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                   placeholder="Contest Type"
                   rules={[
                     {
-                      required: true,
+                      required: false,
                       message: "This field is required",
                     },
                   ]}
@@ -434,7 +434,7 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                     <FormGroup>
                       <Label>Type of Entry</Label>
                       <Form.Item
-                        name="contest_type_2"
+                        name="type_of_entry"
                         rules={[
                           {
                             required: true,
@@ -459,8 +459,11 @@ const ContestDetailsNew = ({ handleStepChange }) => {
                           }
                           removeIcon={<CloseSquareOutlined style={{ color: "#d32f2f" }} />}
                         >
-                          {contest_category_options?.map((option) => (
-                            <Select.Option key={option.value} value={option.value}>
+                          {[{ "id": 0, "label": "Audio" },
+                          { "id": 1, "label": "Video" },
+                          { "id": 2, "label": "Document" },
+                          { "id": 3, "label": "Image" }]?.map((option) => (
+                            <Select.Option key={option.id} value={option.id}>
                               <span className="type_option">{option.label}</span>
                             </Select.Option>
                           ))}

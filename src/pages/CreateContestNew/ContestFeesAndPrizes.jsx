@@ -125,7 +125,7 @@ const ContestFeesAndPrizes = ({ handleStepChange }) => {
     }
     console.log('payload', payload)
     dispatch(setContestDetails(payload));
-    // handleStepChange("next");
+    handleStepChange("next");
   };
 
 

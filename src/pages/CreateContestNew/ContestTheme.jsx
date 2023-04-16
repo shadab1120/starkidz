@@ -233,6 +233,7 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
                           htmlType="submit"
                           style={{
                             backgroundColor: "#D32F2F",
+                            color:"#FFFFFF",
                             borderRadius: "21px",
                             border: "none",
                             padding: "0.5rem 1rem",
@@ -242,34 +243,21 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
                         >
                           Theme for {item}
                         </Button>
-                        {/* <Form.Item
-                        name={`theme_content_check_${k}`}
-                      // rules={[
-                      //   {
-                      //     validator: (_, value) =>
-                      //       value ? Promise.resolve() : Promise.reject(new Error('This field is required')),
-                      //   },
-                      // ]}
+                      </div>
+                      <Form.Item
+                        name={`contest_theme_${index}_${k}`}
+                        rules={[
+                          {
+                            required: true,
+                            message: "This field is required",
+                          },
+                        ]}
                       >
-                        <Checkbox>
-
-                        </Checkbox>
-                      </Form.Item> */}
-                    </div>
-                    <Form.Item
-                      name={`contest_theme_${index}_${k}`}
-                      rules={[
-                        {
-                          required: true,
-                          message: "This field is required",
-                        },
-                      ]}
-                    >
-                      <Input placeholder="Type in Theme" className="mt-3 themeText form-control" />
-                    </Form.Item>
-                  </Col>
-                })
-                }
+                        <Input placeholder="Type in Theme" className="mt-3 themeText form-control" />
+                      </Form.Item>
+                    </Col>
+                    )
+                })}
               </Row>
             </Row>
             <hr
@@ -288,6 +276,7 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
                 backgroundColor: "#A15353",
                 borderRadius: "9px",
                 border: "none",
+                color:"#FFFFFF",
                 padding: "0.5rem 1rem",
               }}
               onClick={handleClickInc}
@@ -300,6 +289,7 @@ const ContestTheme = ({ handleStepChange, ageBracket = [0, 3] }) => {
               style={{
                 backgroundColor: "#A15353",
                 borderRadius: "9px",
+                color:"#FFFFFF",
                 border: "none",
                 padding: "0.5rem 1rem",
               }}

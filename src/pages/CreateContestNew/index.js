@@ -16,7 +16,7 @@ import About from "./About";
 const totalSteps = 7;
 
 const CreateContestNew = () => {
-  const [step, setStep] = useState(7);
+  const [step, setStep] = useState(1);
 
   // step change handl2
   const handleStepChange = (type) => {
