@@ -9,6 +9,8 @@ import { setContestDetails } from "../../store/CreateContestSlice";
 import toast, { Toaster } from "react-hot-toast";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import Rocket from "../../assets/icons/rocket.svg";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 import "./styles/JudgingNew.css";
 import { Button, Form, Select, Input } from "antd";
@@ -52,6 +54,7 @@ const Terms = ({ handleStepChange }) => {
   const [form] = Form.useForm();
   const contestDetails = useSelector((state) => state.contest);
   const manageMutation = useMutation(mApi.manageContest);
+  const [value, setValue] = useState('');
 
   useEffect(() => {
     const { terms_conditions } = contestDetails;
@@ -167,24 +170,7 @@ const Terms = ({ handleStepChange }) => {
         />
         <Row className="py-2 px-4 d-flex flex-column">
           <h4 className="f-18 grey-accent">Write T&C</h4>
-          <Form.Item
-            name="terms_conditions"
-            rules={[
-              {
-                required: true,
-                message: "This field is required",
-              },
-            ]}
-          >
-            <TextArea
-              rows={20}
-              style={{
-                backgroundColor: "#f6f6f6",
-              }}
-              placeholder="Text Editor for T&C"
-              onChange={handleChange}
-            />
-          </Form.Item>
+          <ReactQuill theme="snow" value={value} onChange={handleChange} />;
         </Row>
 
         {/* Button */}
